@@ -342,81 +342,99 @@ const Standings = ({ tournamentData, audioControls, auth }) => {
                     </div>
                   </div>
                   <div className="match-score">
-                    <input 
-                      type="number" 
-                      placeholder="0" 
-                      min="0" 
-                      max="6"
-                      value={tournamentData.getMatchScore(player1.id, player2.id, selectedPhase).player1 || ''}
-                      disabled={(() => {
-                        const matchData = tournamentData.getMatchScore(player1.id, player2.id, selectedPhase);
-                        const isAdmin = auth?.currentUser?.isAdmin;
-                        const currentPlayerId = auth?.currentUser?.playerId;
-                        const isPlayer1 = currentPlayerId === player1.id;
-                        const isPlayer2 = currentPlayerId === player2.id;
-                        const isInvolved = isPlayer1 || isPlayer2;
-                        
-                        // Admin puede editar siempre
-                        if (isAdmin) return false;
-                        
-                        // Si está locked, solo admin puede editar
-                        if (matchData.locked) return true;
-                        
-                        // Si no está locked, solo los jugadores involucrados pueden editar
-                        return !isInvolved;
-                      })()}
-                      onChange={(e) => {
-                        const score1 = parseInt(e.target.value) || 0;
-                        const score2 = tournamentData.getMatchScore(player1.id, player2.id, selectedPhase).player2 || 0;
-                        tournamentData.updateMatchScore(player1.id, player2.id, selectedPhase, score1, score2);
-                      }}
-                      className={`score-input ${
-                        (() => {
-                          const scores = tournamentData.getMatchScore(player1.id, player2.id, selectedPhase);
-                          if (scores.player1 > scores.player2) return 'winning';
-                          if (scores.player1 < scores.player2) return 'losing';
-                          return '';
-                        })()
-                      }`}
-                    />
-                    <span>-</span>
-                    <input 
-                      type="number" 
-                      placeholder="0" 
-                      min="0" 
-                      max="6"
-                      value={tournamentData.getMatchScore(player1.id, player2.id, selectedPhase).player2 || ''}
-                      disabled={(() => {
-                        const matchData = tournamentData.getMatchScore(player1.id, player2.id, selectedPhase);
-                        const isAdmin = auth?.currentUser?.isAdmin;
-                        const currentPlayerId = auth?.currentUser?.playerId;
-                        const isPlayer1 = currentPlayerId === player1.id;
-                        const isPlayer2 = currentPlayerId === player2.id;
-                        const isInvolved = isPlayer1 || isPlayer2;
-                        
-                        // Admin puede editar siempre
-                        if (isAdmin) return false;
-                        
-                        // Si está locked, solo admin puede editar
-                        if (matchData.locked) return true;
-                        
-                        // Si no está locked, solo los jugadores involucrados pueden editar
-                        return !isInvolved;
-                      })()}
-                      onChange={(e) => {
-                        const score1 = tournamentData.getMatchScore(player1.id, player2.id, selectedPhase).player1 || 0;
-                        const score2 = parseInt(e.target.value) || 0;
-                        tournamentData.updateMatchScore(player1.id, player2.id, selectedPhase, score1, score2);
-                      }}
-                      className={`score-input ${
-                        (() => {
-                          const scores = tournamentData.getMatchScore(player1.id, player2.id, selectedPhase);
-                          if (scores.player2 > scores.player1) return 'winning';
-                          if (scores.player2 < scores.player1) return 'losing';
-                          return '';
-                        })()
-                      }`}
-                    />
+                    {(() => {
+                      const matchData = tournamentData.getMatchScore(player1.id, player2.id, selectedPhase);
+                      const isAdmin = auth?.currentUser?.isAdmin;
+                      const currentPlayerId = auth?.currentUser?.playerId;
+                      const isPlayer1 = currentPlayerId === player1.id;
+                      const isPlayer2 = currentPlayerId === player2.id;
+                      const isInvolved = isPlayer1 || isPlayer2;
+                      const canEdit = isAdmin || (!matchData.locked && isInvolved);
+                      
+                      return (
+                        <>
+                          <div className="score-control">
+                            {canEdit && (
+                              <button 
+                                className="score-btn decrease"
+                                onClick={() => {
+                                  const currentScore = matchData.player1 || 0;
+                                  if (currentScore > 0) {
+                                    tournamentData.updateMatchScore(player1.id, player2.id, selectedPhase, currentScore - 1, matchData.player2 || 0);
+                                  }
+                                }}
+                                title="Restar punto"
+                              >
+                                -
+                              </button>
+                            )}
+                            <input 
+                              type="text" 
+                              readOnly
+                              value={matchData.player1 || 0}
+                              className={`score-display ${
+                                matchData.player1 > matchData.player2 ? 'winning' : 
+                                matchData.player1 < matchData.player2 ? 'losing' : ''
+                              }`}
+                            />
+                            {canEdit && (
+                              <button 
+                                className="score-btn increase"
+                                onClick={() => {
+                                  const currentScore = matchData.player1 || 0;
+                                  if (currentScore < 6) {
+                                    tournamentData.updateMatchScore(player1.id, player2.id, selectedPhase, currentScore + 1, matchData.player2 || 0);
+                                  }
+                                }}
+                                title="Sumar punto"
+                              >
+                                +
+                              </button>
+                            )}
+                          </div>
+                          <span className="vs-divider">-</span>
+                          <div className="score-control">
+                            {canEdit && (
+                              <button 
+                                className="score-btn decrease"
+                                onClick={() => {
+                                  const currentScore = matchData.player2 || 0;
+                                  if (currentScore > 0) {
+                                    tournamentData.updateMatchScore(player1.id, player2.id, selectedPhase, matchData.player1 || 0, currentScore - 1);
+                                  }
+                                }}
+                                title="Restar punto"
+                              >
+                                -
+                              </button>
+                            )}
+                            <input 
+                              type="text" 
+                              readOnly
+                              value={matchData.player2 || 0}
+                              className={`score-display ${
+                                matchData.player2 > matchData.player1 ? 'winning' : 
+                                matchData.player2 < matchData.player1 ? 'losing' : ''
+                              }`}
+                            />
+                            {canEdit && (
+                              <button 
+                                className="score-btn increase"
+                                onClick={() => {
+                                  const currentScore = matchData.player2 || 0;
+                                  if (currentScore < 6) {
+                                    tournamentData.updateMatchScore(player1.id, player2.id, selectedPhase, matchData.player1 || 0, currentScore + 1);
+                                  }
+                                }}
+                                title="Sumar punto"
+                              >
+                                +
+                              </button>
+                            )}
+                          </div>
+                        </>
+                      );
+                    })()}
                     {tournamentData.getMatchScore(player1.id, player2.id, selectedPhase).locked && 
                      (auth?.currentUser?.isAdmin || 
                       auth?.currentUser?.playerId === player1.id || 

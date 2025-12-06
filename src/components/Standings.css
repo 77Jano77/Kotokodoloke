@@ -582,8 +582,14 @@
   gap: 1rem;
 }
 
-.score-input {
-  width: 80px;
+.score-control {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.score-display {
+  width: 50px;
   padding: 0.8rem;
   text-align: center;
   font-size: 1.2rem;
@@ -592,32 +598,60 @@
   font-family: 'Press Start 2P', cursive;
   background: white;
   transition: background-color 0.3s ease, color 0.3s ease;
-  position: relative;
-  z-index: 1;
+  cursor: default;
 }
 
-/* Asegurar que los spinners (flechitas) sean visibles y funcionales en Chrome/Edge/Safari */
-.score-input::-webkit-inner-spin-button,
-.score-input::-webkit-outer-spin-button {
-  opacity: 1;
-  height: 100%;
-  width: 20px;
+.score-display.winning {
+  background-color: #22c55e;
+  color: #ffffff;
+  border-color: #16a34a;
+}
+
+.score-display.losing {
+  background-color: #ef4444;
+  color: #ffffff;
+  border-color: #dc2626;
+}
+
+.score-btn {
+  width: 35px;
+  height: 35px;
+  padding: 0;
+  font-size: 1.5rem;
+  font-weight: bold;
+  border: 3px solid var(--shadow-dark);
+  background: var(--poke-blue);
+  color: white;
   cursor: pointer;
-  position: relative;
-  z-index: 2;
-  -webkit-appearance: auto;
+  transition: all 0.2s;
+  font-family: 'Press Start 2P', cursive;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
-.score-input:disabled {
-  opacity: 0.9;
-  cursor: not-allowed;
+.score-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 3px 3px 0 var(--shadow-dark);
 }
 
-.score-input:disabled::-webkit-inner-spin-button,
-.score-input:disabled::-webkit-outer-spin-button {
-  cursor: not-allowed;
-  opacity: 0.5;
-  pointer-events: none;
+.score-btn:active {
+  transform: translateY(0);
+  box-shadow: none;
+}
+
+.score-btn.increase {
+  background: #22c55e;
+}
+
+.score-btn.decrease {
+  background: #ef4444;
+}
+
+.vs-divider {
+  font-size: 1.5rem;
+  font-weight: bold;
+  margin: 0 0.5rem;
 }
 
 .score-input.winning {
