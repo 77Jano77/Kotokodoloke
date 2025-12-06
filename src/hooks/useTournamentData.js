@@ -83,7 +83,7 @@ export const useTournamentData = () => {
   const updatePlayer = (playerId, updates) => {
     const newData = {
       ...data,
-      players: data.players.map(p =>
+      players: (data.players || []).map(p =>
         p.id === playerId ? { ...p, ...updates } : p
       ),
     };
@@ -91,9 +91,10 @@ export const useTournamentData = () => {
   };
 
   const deletePlayer = (playerId) => {
+    const players = data.players || [];
     const newData = {
       ...data,
-      players: data.players.filter(p => p.id !== playerId),
+      players: players.filter(p => p.id !== playerId),
     };
     updateFirebase(newData);
   };
@@ -101,7 +102,7 @@ export const useTournamentData = () => {
   const addReward = (playerId, reward) => {
     const newData = {
       ...data,
-      players: data.players.map(p =>
+      players: (data.players || []).map(p =>
         p.id === playerId
           ? { ...p, rewards: [...p.rewards, reward] }
           : p
@@ -113,7 +114,7 @@ export const useTournamentData = () => {
   const removeReward = (playerId, rewardIndex) => {
     const newData = {
       ...data,
-      players: data.players.map(p =>
+      players: (data.players || []).map(p =>
         p.id === playerId
           ? {
               ...p,
@@ -229,7 +230,7 @@ export const useTournamentData = () => {
     
     const newData = {
       ...data,
-      players: data.players.map(p => {
+      players: (data.players || []).map(p => {
         if (p.id === player1Id || p.id === player2Id) {
           return {
             ...p,
@@ -259,7 +260,7 @@ export const useTournamentData = () => {
   const incrementManualRolls = (playerId) => {
     const newData = {
       ...data,
-      players: data.players.map(p =>
+      players: (data.players || []).map(p =>
         p.id === playerId
           ? { ...p, manualExtraRolls: (p.manualExtraRolls || 0) + 1 }
           : p
@@ -271,7 +272,7 @@ export const useTournamentData = () => {
   const decrementManualRolls = (playerId) => {
     const newData = {
       ...data,
-      players: data.players.map(p =>
+      players: (data.players || []).map(p =>
         p.id === playerId && p.manualExtraRolls > 0
           ? { ...p, manualExtraRolls: p.manualExtraRolls - 1 }
           : p
