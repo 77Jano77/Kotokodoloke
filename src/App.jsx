@@ -36,7 +36,7 @@ function App() {
     home: <Home tournamentData={tournamentData} audioControls={audioControls} auth={auth} />,
     players: <Players tournamentData={tournamentData} audioControls={audioControls} auth={auth} />,
     roulette: <Roulette tournamentData={tournamentData} audioControls={audioControls} auth={auth} />,
-    standings: <Standings tournamentData={tournamentData} audioControls={audioControls} />,
+    standings: <Standings tournamentData={tournamentData} audioControls={audioControls} auth={auth} />,
     resources: <Resources audioControls={audioControls} tournamentData={tournamentData} auth={auth} />,
     downloads: <Downloads audioControls={audioControls} />,
     gallery: <Gallery tournamentData={tournamentData} audioControls={audioControls} auth={auth} />,

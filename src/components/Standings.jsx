@@ -1,7 +1,7 @@
 import { useState, useEffect, useRef } from 'react';
 import './Standings.css';
 
-const Standings = ({ tournamentData, audioControls }) => {
+const Standings = ({ tournamentData, audioControls, auth }) => {
   const audioRef = useRef(null);
   const [selectedPhase, setSelectedPhase] = useState('all');
   const [showAddPointsModal, setShowAddPointsModal] = useState(false);
@@ -67,12 +67,14 @@ const Standings = ({ tournamentData, audioControls }) => {
       </audio>
       <div className="standings-header">
         <h1 className="pixel-text">⚔️ PVP</h1>
-        <button 
-          className="pixel-button add-points-btn"
-          onClick={() => setShowAddPointsModal(true)}
-        >
-          ➕ AÑADIR PUNTOS
-        </button>
+        {auth?.currentUser?.isAdmin && (
+          <button 
+            className="pixel-button add-points-btn"
+            onClick={() => setShowAddPointsModal(true)}
+          >
+            ➕ AÑADIR PUNTOS
+          </button>
+        )}
       </div>
 
       {/* Phase Filter */}
