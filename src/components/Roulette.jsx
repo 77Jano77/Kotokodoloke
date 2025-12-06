@@ -210,7 +210,7 @@ const Roulette = ({ tournamentData, audioControls, auth }) => {
                     {auth.currentUser?.isAdmin && (
                       <button
                         className="pixel-button add-roll-btn"
-                        onClick={() => tournamentData.addManualExtraRoll(parseInt(selectedPlayer))}
+                        onClick={() => tournamentData.incrementManualRolls(parseInt(selectedPlayer))}
                         disabled={isRolling}
                       >
                         ➕ AÑADIR TIRADA EXTRA (ADMIN)
