@@ -295,7 +295,7 @@ const Players = ({ tournamentData, audioControls, auth }) => {
 
       {/* Players Grid */}
       <div className="players-grid">
-        {tournamentData.players.map(player => {
+        {(tournamentData.players || []).map(player => {
           const canEdit = isAdmin || player.id === auth.currentUser?.playerId;
           
           return (

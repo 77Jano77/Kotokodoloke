@@ -297,10 +297,10 @@ const Standings = ({ tournamentData, audioControls }) => {
           ))}
         </div>
         
-        {tournamentData.players.length >= 2 ? (
+        {(tournamentData.players || []).length >= 2 ? (
           <div className="matches-grid">
-            {tournamentData.players.map((player1, i) => 
-              tournamentData.players.slice(i + 1).map((player2, j) => (
+            {(tournamentData.players || []).map((player1, i) => 
+              (tournamentData.players || []).slice(i + 1).map((player2, j) => (
                 <div key={`${player1.id}-${player2.id}`} className="match-card">
                   <div className="match-players">
                     <div className="match-player">
