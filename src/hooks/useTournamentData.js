@@ -81,20 +81,43 @@ export const useTournamentData = () => {
   };
 
   const updatePlayer = (playerId, updates) => {
+    const players = data.players || [];
+    const oldPlayer = players.find(p => p.id === playerId);
+    
+    // Si se está cambiando el nombre, actualizar también el registro de capturas
+    let captureRecords = data.captureRecords || [];
+    if (updates.name && oldPlayer && oldPlayer.name !== updates.name) {
+      captureRecords = captureRecords.map(record => 
+        record.playerName === oldPlayer.name 
+          ? { ...record, playerName: updates.name }
+          : record
+      );
+    }
+    
     const newData = {
       ...data,
-      players: (data.players || []).map(p =>
+      players: players.map(p =>
         p.id === playerId ? { ...p, ...updates } : p
       ),
+      captureRecords
     };
     updateFirebase(newData);
   };
 
   const deletePlayer = (playerId) => {
     const players = data.players || [];
+    const playerToDelete = players.find(p => p.id === playerId);
+    
+    // Eliminar también el registro de capturas asociado
+    const captureRecords = data.captureRecords || [];
+    const filteredRecords = playerToDelete 
+      ? captureRecords.filter(r => r.playerName !== playerToDelete.name)
+      : captureRecords;
+    
     const newData = {
       ...data,
       players: players.filter(p => p.id !== playerId),
+      captureRecords: filteredRecords
     };
     updateFirebase(newData);
   };

@@ -48,13 +48,20 @@ const Resources = ({ audioControls, tournamentData }) => {
   }, [audioControls?.volume, audioControls?.isMuted]);
 
   const createNewRecord = () => {
-    if (!newPlayerName.trim()) {
-      alert('⚠️ Introduce un nombre de jugador');
+    if (!newPlayerName) {
+      alert('⚠️ Selecciona un jugador');
+      return;
+    }
+
+    // Verificar que no exista ya un registro para este jugador
+    const existingRecord = captureRecords.find(r => r.playerName === newPlayerName);
+    if (existingRecord) {
+      alert('⚠️ Ya existe un registro para este jugador');
       return;
     }
 
     const recordData = {
-      playerName: newPlayerName.trim(),
+      playerName: newPlayerName,
       kantoZones: CAPTURE_ZONES.kanto.map(zone => ({ ...zone, captured: false })),
       seviZones: CAPTURE_ZONES.seviIslands.map(zone => ({ ...zone, captured: false }))
     };
@@ -504,19 +511,34 @@ const Resources = ({ audioControls, tournamentData }) => {
             <div className="new-record-form pixel-card">
               <h3>Crear Nuevo Registro</h3>
               <div className="form-group">
-                <label htmlFor="player-name-input">NOMBRE DEL JUGADOR</label>
-                <input
-                  type="text"
+                <label htmlFor="player-name-input">SELECCIONA JUGADOR</label>
+                <select
                   id="player-name-input"
                   className="pixel-input"
                   value={newPlayerName}
                   onChange={(e) => setNewPlayerName(e.target.value)}
-                  onKeyPress={(e) => e.key === 'Enter' && createNewRecord()}
-                  placeholder="Introduce el nombre..."
-                />
+                >
+                  <option value="">-- Selecciona un jugador --</option>
+                  {(tournamentData.players || [])
+                    .filter(player => !captureRecords.find(r => r.playerName === player.name))
+                    .map(player => (
+                      <option key={player.id} value={player.name}>
+                        {player.name}
+                      </option>
+                    ))}
+                </select>
+                {(tournamentData.players || []).length === 0 && (
+                  <small style={{color: '#888', fontSize: '0.7rem'}}>
+                    No hay jugadores creados. Ve a la sección JUGADORES primero.
+                  </small>
+                )}
               </div>
               <div className="form-buttons">
-                <button className="pixel-button" onClick={createNewRecord}>
+                <button 
+                  className="pixel-button" 
+                  onClick={createNewRecord}
+                  disabled={!newPlayerName}
+                >
                   ✓ CREAR
                 </button>
                 <button 
