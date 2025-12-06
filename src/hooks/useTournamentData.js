@@ -204,25 +204,28 @@ export const useTournamentData = () => {
     return totalWins;
   };
 
-  const getTopPlayers = (limit = 3) => {
+  const getSortedPlayers = (filterPhase = null) => {
     const players = data.players || [];
-    return [...players]
-      .sort((a, b) => {
-        const pointsA = calculatePlayerPoints(a.id);
-        const pointsB = calculatePlayerPoints(b.id);
-        if (pointsB !== pointsA) {
-          return pointsB - pointsA;
-        }
-        const winsA = calculatePlayerWins(a.id);
-        const winsB = calculatePlayerWins(b.id);
-        if (winsB !== winsA) {
-          return winsB - winsA;
-        }
-        const badgesA = a.badges.filter(Boolean).length;
-        const badgesB = b.badges.filter(Boolean).length;
-        return badgesB - badgesA;
-      })
-      .slice(0, limit);
+    return [...players].sort((a, b) => {
+      // 1. Ordenar por puntos totales (o de la fase específica)
+      const pointsA = calculatePlayerPoints(a.id, filterPhase);
+      const pointsB = calculatePlayerPoints(b.id, filterPhase);
+      if (pointsB !== pointsA) return pointsB - pointsA;
+      
+      // 2. En caso de empate, ordenar por victorias (o de la fase específica)
+      const winsA = calculatePlayerWins(a.id, filterPhase);
+      const winsB = calculatePlayerWins(b.id, filterPhase);
+      if (winsB !== winsA) return winsB - winsA;
+      
+      // 3. En caso de empate, ordenar por medallas
+      const badgesA = (a.badges || []).filter(Boolean).length;
+      const badgesB = (b.badges || []).filter(Boolean).length;
+      return badgesB - badgesA;
+    });
+  };
+
+  const getTopPlayers = (limit = 3, filterPhase = null) => {
+    return getSortedPlayers(filterPhase).slice(0, limit);
   };
 
   const updateMatchScore = (phase, player1Id, player2Id, player1Score, player2Score) => {
@@ -335,6 +338,7 @@ export const useTournamentData = () => {
     addComment,
     calculatePlayerPoints,
     calculatePlayerWins,
+    getSortedPlayers,
     getTopPlayers,
     updateMatchScore,
     setCurrentPhase,
