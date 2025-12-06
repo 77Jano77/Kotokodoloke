@@ -357,21 +357,13 @@ const Standings = ({ tournamentData, audioControls, auth }) => {
                         const isInvolved = isPlayer1 || isPlayer2;
                         
                         // Admin puede editar siempre
-                        if (isAdmin) {
-                          console.log('✅ ADMIN - Input habilitado para:', player1.name, 'vs', player2.name);
-                          return false;
-                        }
+                        if (isAdmin) return false;
                         
                         // Si está locked, solo admin puede editar
-                        if (matchData.locked) {
-                          console.log('🔒 Locked - Input deshabilitado para:', player1.name, 'vs', player2.name);
-                          return true;
-                        }
+                        if (matchData.locked) return true;
                         
                         // Si no está locked, solo los jugadores involucrados pueden editar
-                        const result = !isInvolved;
-                        console.log(result ? '❌' : '✅', 'Player', currentPlayerId, (result ? 'NO' : 'SÍ'), 'puede editar:', player1.name, 'vs', player2.name);
-                        return result;
+                        return !isInvolved;
                       })()}
                       onChange={(e) => {
                         const score1 = parseInt(e.target.value) || 0;
