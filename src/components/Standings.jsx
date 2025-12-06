@@ -349,10 +349,10 @@ const Standings = ({ tournamentData, audioControls, auth }) => {
                       max="6"
                       value={tournamentData.getMatchScore(player1.id, player2.id, selectedPhase).player1 || ''}
                       disabled={
-                        tournamentData.getMatchScore(player1.id, player2.id, selectedPhase).locked ||
-                        (!auth?.currentUser?.isAdmin && 
-                         auth?.currentUser?.playerId !== player1.id && 
-                         auth?.currentUser?.playerId !== player2.id)
+                        !auth?.currentUser?.isAdmin && 
+                        (tournamentData.getMatchScore(player1.id, player2.id, selectedPhase).locked ||
+                         (auth?.currentUser?.playerId !== player1.id && 
+                          auth?.currentUser?.playerId !== player2.id))
                       }
                       onChange={(e) => {
                         const score1 = parseInt(e.target.value) || 0;
@@ -376,10 +376,10 @@ const Standings = ({ tournamentData, audioControls, auth }) => {
                       max="6"
                       value={tournamentData.getMatchScore(player1.id, player2.id, selectedPhase).player2 || ''}
                       disabled={
-                        tournamentData.getMatchScore(player1.id, player2.id, selectedPhase).locked ||
-                        (!auth?.currentUser?.isAdmin && 
-                         auth?.currentUser?.playerId !== player1.id && 
-                         auth?.currentUser?.playerId !== player2.id)
+                        !auth?.currentUser?.isAdmin && 
+                        (tournamentData.getMatchScore(player1.id, player2.id, selectedPhase).locked ||
+                         (auth?.currentUser?.playerId !== player1.id && 
+                          auth?.currentUser?.playerId !== player2.id))
                       }
                       onChange={(e) => {
                         const score1 = tournamentData.getMatchScore(player1.id, player2.id, selectedPhase).player1 || 0;
