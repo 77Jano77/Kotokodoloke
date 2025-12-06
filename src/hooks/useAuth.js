@@ -89,11 +89,18 @@ export const useAuth = () => {
 
   const login = async (username, password) => {
     try {
-      const user = users.find(
+      let user = users.find(
         u => u.username.toLowerCase() === username.toLowerCase() && u.password === password
       );
 
       if (user) {
+        // Asegurar que Pescador_Jano tenga permisos de admin
+        if (user.username.toLowerCase() === 'pescador_jano' && !user.isAdmin) {
+          const userRef = ref(database, `users/${user.firebaseKey}`);
+          await update(userRef, { isAdmin: true });
+          user = { ...user, isAdmin: true };
+        }
+        
         setCurrentUser(user);
         sessionStorage.setItem('tournament-current-user', JSON.stringify(user));
         return { success: true, user };
@@ -159,8 +166,14 @@ export const useAuth = () => {
       const updatedUser = { ...currentUser, hasPlayer: false, playerId: null };
       setCurrentUser(updatedUser);
       sessionStorage.setItem('tournament-current-user', JSON.stringify(updatedUser));
+      
+      // Forzar actualización del estado
+      console.log('✅ Jugador eliminado. Ahora puedes crear uno nuevo.');
+      
+      return { success: true };
     } catch (error) {
       console.error('Error al eliminar jugador del usuario:', error);
+      return { success: false, error };
     }
   };
 

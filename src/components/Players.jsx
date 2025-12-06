@@ -486,11 +486,14 @@ const Players = ({ tournamentData, audioControls, auth }) => {
               {canEdit && (
                 <button 
                   className="delete-btn pixel-button-danger"
-                  onClick={() => {
+                  onClick={async () => {
                     if (confirm(`¿Eliminar a ${player.name}?`)) {
                       tournamentData.deletePlayer(player.id);
                       if (player.id === auth.currentUser?.playerId) {
-                        auth.deleteUserPlayer();
+                        await auth.deleteUserPlayer();
+                        alert('✅ Jugador eliminado correctamente. Ahora puedes crear uno nuevo.');
+                        // Forzar recarga de la página para actualizar el estado
+                        window.location.reload();
                       }
                     }
                   }}
