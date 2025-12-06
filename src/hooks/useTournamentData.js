@@ -47,9 +47,10 @@ export const useTournamentData = () => {
 
   const addPlayer = (playerData = {}) => {
     const playerId = Date.now();
+    const players = data.players || [];
     const newPlayer = {
       id: playerId,
-      name: playerData.name || `Jugador ${data.players.length + 1}`,
+      name: playerData.name || `Jugador ${players.length + 1}`,
       trainerName: playerData.trainerName || '',
       avatarImage: playerData.avatarImage || '',
       fullBodyImage: playerData.fullBodyImage || '',
@@ -72,7 +73,7 @@ export const useTournamentData = () => {
 
     const newData = {
       ...data,
-      players: [...data.players, newPlayer],
+      players: [...players, newPlayer],
     };
 
     updateFirebase(newData);
