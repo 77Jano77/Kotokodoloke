@@ -19,6 +19,7 @@ const Home = ({ tournamentData, audioControls, auth }) => {
   const [selectedRule, setSelectedRule] = useState(null);
   const [videoVersion, setVideoVersion] = useState(1); // 1, 2, or 3
   const [newComment, setNewComment] = useState({});
+  const [selectedImage, setSelectedImage] = useState(null);
   
   // Obtener últimas 3 imágenes de la galería
   const latestImages = (tournamentData.gallery || [])
@@ -289,13 +290,10 @@ const Home = ({ tournamentData, audioControls, auth }) => {
             {latestImages.map(image => (
               <div key={image.id} className="post-card pixel-card">
                 <div className="post-header">
-                  <span className="post-author">👤 {image.author}</span>
-                  <span className="post-date">
-                    {new Date(image.timestamp).toLocaleDateString('es-ES')}
-                  </span>
+                  <span className="post-title">{image.description || 'Sin título'}</span>
                 </div>
                 
-                <div className="post-image-container">
+                <div className="post-image-container" onClick={() => setSelectedImage(image)}>
                   <img src={image.url} alt={image.description} className="post-image" />
                 </div>
                 
@@ -583,6 +581,20 @@ const Home = ({ tournamentData, audioControls, auth }) => {
                 </div>
               </>
             )}
+          </div>
+        </div>
+      )}
+
+      {/* Image Modal */}
+      {selectedImage && (
+        <div className="image-modal-overlay" onClick={() => setSelectedImage(null)}>
+          <div className="image-modal-content" onClick={(e) => e.stopPropagation()}>
+            <img 
+              src={selectedImage.url} 
+              alt={selectedImage.description} 
+              className="image-modal-full"
+              onClick={() => setSelectedImage(null)}
+            />
           </div>
         </div>
       )}
