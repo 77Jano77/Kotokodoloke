@@ -348,7 +348,12 @@ const Standings = ({ tournamentData, audioControls, auth }) => {
                       min="0" 
                       max="6"
                       value={tournamentData.getMatchScore(player1.id, player2.id, selectedPhase).player1 || ''}
-                      disabled={tournamentData.getMatchScore(player1.id, player2.id, selectedPhase).locked}
+                      disabled={
+                        tournamentData.getMatchScore(player1.id, player2.id, selectedPhase).locked ||
+                        (!auth?.currentUser?.isAdmin && 
+                         auth?.currentUser?.playerId !== player1.id && 
+                         auth?.currentUser?.playerId !== player2.id)
+                      }
                       onChange={(e) => {
                         const score1 = parseInt(e.target.value) || 0;
                         const score2 = tournamentData.getMatchScore(player1.id, player2.id, selectedPhase).player2 || 0;
@@ -370,7 +375,12 @@ const Standings = ({ tournamentData, audioControls, auth }) => {
                       min="0" 
                       max="6"
                       value={tournamentData.getMatchScore(player1.id, player2.id, selectedPhase).player2 || ''}
-                      disabled={tournamentData.getMatchScore(player1.id, player2.id, selectedPhase).locked}
+                      disabled={
+                        tournamentData.getMatchScore(player1.id, player2.id, selectedPhase).locked ||
+                        (!auth?.currentUser?.isAdmin && 
+                         auth?.currentUser?.playerId !== player1.id && 
+                         auth?.currentUser?.playerId !== player2.id)
+                      }
                       onChange={(e) => {
                         const score1 = tournamentData.getMatchScore(player1.id, player2.id, selectedPhase).player1 || 0;
                         const score2 = parseInt(e.target.value) || 0;
@@ -385,7 +395,10 @@ const Standings = ({ tournamentData, audioControls, auth }) => {
                         })()
                       }`}
                     />
-                    {tournamentData.getMatchScore(player1.id, player2.id, selectedPhase).locked && (
+                    {tournamentData.getMatchScore(player1.id, player2.id, selectedPhase).locked && 
+                     (auth?.currentUser?.isAdmin || 
+                      auth?.currentUser?.playerId === player1.id || 
+                      auth?.currentUser?.playerId === player2.id) && (
                       <button 
                         className="reset-match-btn pixel-button"
                         onClick={() => tournamentData.resetMatchScore(player1.id, player2.id, selectedPhase)}
