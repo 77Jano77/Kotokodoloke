@@ -438,6 +438,57 @@
 }
 
 /* Rules Section */
+/* Compact Rules Section */
+.rules-section-compact {
+  margin: 2rem auto;
+  max-width: 1200px;
+  padding: 0 1rem;
+}
+
+.rules-grid-compact {
+  display: flex;
+  justify-content: center;
+  gap: 1rem;
+  flex-wrap: wrap;
+}
+
+.rule-button-compact {
+  background: white;
+  padding: 0.75rem 1.25rem;
+  text-align: center;
+  transition: all 0.3s;
+  cursor: pointer;
+  border: 3px solid var(--shadow-dark);
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 0.75rem;
+  min-width: 180px;
+  flex: 0 1 auto;
+}
+
+.rule-button-compact:hover {
+  transform: translateY(-4px);
+  border-color: var(--poke-blue);
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+}
+
+.rule-pokemon-sprite {
+  width: 36px;
+  height: 36px;
+  image-rendering: pixelated;
+  filter: drop-shadow(1px 1px 0 var(--shadow-medium));
+}
+
+.rule-title-compact {
+  font-size: 0.85rem;
+  font-weight: bold;
+  color: var(--poke-red);
+  text-shadow: 1px 1px 0 var(--shadow-light);
+  letter-spacing: 0.5px;
+}
+
+/* Old rules section styles (kept for modal compatibility) */
 .rules-section {
   margin-bottom: 3rem;
 }
@@ -840,6 +891,17 @@
 
   .section-title {
     font-size: 1.5rem;
+  }
+
+  /* Compact Rules Responsive */
+  .rules-grid-compact {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .rule-button-compact {
+    min-width: auto;
+    width: 100%;
   }
 
   .rules-grid {

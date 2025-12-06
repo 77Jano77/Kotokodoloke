@@ -226,6 +226,59 @@ const Home = ({ tournamentData, audioControls, auth }) => {
         </div>
       </section>
 
+      {/* Rules Info */}
+      <section className="rules-section-compact">
+        <div className="rules-grid-compact">
+          <button 
+            className="rule-button-compact pixel-button"
+            onClick={() => setSelectedRule('modalidades')}
+          >
+            <img 
+              src="https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/25.png" 
+              alt="Pikachu"
+              className="rule-pokemon-sprite"
+            />
+            <span className="rule-title-compact">MODALIDADES</span>
+          </button>
+
+          <button 
+            className="rule-button-compact pixel-button"
+            onClick={() => setSelectedRule('compartida')}
+          >
+            <img 
+              src="https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/102.png" 
+              alt="Exeggcute"
+              className="rule-pokemon-sprite"
+            />
+            <span className="rule-title-compact">EXP. COMPARTIDA</span>
+          </button>
+
+          <button 
+            className="rule-button-compact pixel-button"
+            onClick={() => setSelectedRule('aliento')}
+          >
+            <img 
+              src="https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/113.png" 
+              alt="Chansey"
+              className="rule-pokemon-sprite"
+            />
+            <span className="rule-title-compact">ÚLTIMO ALIENTO</span>
+          </button>
+
+          <button 
+            className="rule-button-compact pixel-button"
+            onClick={() => setSelectedRule('niveles')}
+          >
+            <img 
+              src="https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/150.png" 
+              alt="Mewtwo"
+              className="rule-pokemon-sprite"
+            />
+            <span className="rule-title-compact">NIVEL MÁX. GYM</span>
+          </button>
+        </div>
+      </section>
+
       {/* Latest Gallery Posts */}
       {latestImages.length > 0 && (
         <section className="latest-posts-section">
@@ -330,49 +383,6 @@ const Home = ({ tournamentData, audioControls, auth }) => {
             </div>
             {renderPodiumPlayer(podiumPlayers[2], 2)}
           </div>
-        </div>
-      </section>
-
-      {/* Rules Info */}
-      <section className="rules-section">
-        <h2 className="section-title pixel-text">📜 REGLAS DEL TORNEO</h2>
-        
-        <div className="rules-grid">
-          <button 
-            className="rule-button pixel-card"
-            onClick={() => setSelectedRule('modalidades')}
-          >
-            <div className="rule-icon">⚔️</div>
-            <h3>MODALIDADES</h3>
-            <span className="click-hint">Click para más info</span>
-          </button>
-
-          <button 
-            className="rule-button pixel-card"
-            onClick={() => setSelectedRule('compartida')}
-          >
-            <div className="rule-icon">👥</div>
-            <h3>EXPERIENCIA COMPARTIDA</h3>
-            <span className="click-hint">Click para más info</span>
-          </button>
-
-          <button 
-            className="rule-button pixel-card"
-            onClick={() => setSelectedRule('aliento')}
-          >
-            <div className="rule-icon">💫</div>
-            <h3>ÚLTIMO ALIENTO</h3>
-            <span className="click-hint">Click para más info</span>
-          </button>
-
-          <button 
-            className="rule-button pixel-card rule-button-highlight"
-            onClick={() => setSelectedRule('niveles')}
-          >
-            <div className="rule-icon">📊</div>
-            <h3>NIVEL MÁXIMO PARA CADA GYM</h3>
-            <span className="click-hint">Click para más info</span>
-          </button>
         </div>
       </section>
 
