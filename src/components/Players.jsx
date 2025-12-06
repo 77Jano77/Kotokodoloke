@@ -500,12 +500,12 @@ const Players = ({ tournamentData, audioControls, auth }) => {
 
             {/* Badges Section */}
             <div className="badges-section">
-              <h3>MEDALLAS ({player.badges.filter(Boolean).length}/8)</h3>
+              <h3>MEDALLAS ({(player.badges || []).filter(Boolean).length}/8)</h3>
               <div className="badges-grid">
                 {KANTO_BADGES.map((badge, index) => (
                   <button
                     key={badge.id}
-                    className={`badge-btn ${player.badges[index] ? 'obtained' : ''} ${!canEdit ? 'disabled' : ''}`}
+                    className={`badge-btn ${(player.badges || [])[index] ? 'obtained' : ''} ${!canEdit ? 'disabled' : ''}`}
                     onClick={() => canEdit && handleBadgeToggle(player.id, index)}
                     title={badge.name}
                     disabled={!canEdit}
@@ -518,10 +518,10 @@ const Players = ({ tournamentData, audioControls, auth }) => {
 
             {/* Rewards Section */}
             <div className="rewards-section">
-              <h3>RECOMPENSAS ({player.rewards.length})</h3>
-              {player.rewards.length > 0 ? (
+              <h3>RECOMPENSAS ({(player.rewards || []).length})</h3>
+              {(player.rewards || []).length > 0 ? (
                 <ul className="rewards-list">
-                  {player.rewards.map((reward, index) => (
+                  {(player.rewards || []).map((reward, index) => (
                     <li key={index} className="reward-item">
                       <span>{reward}</span>
                       {canEdit && (
