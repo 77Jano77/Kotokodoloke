@@ -128,7 +128,7 @@ const Players = ({ tournamentData, audioControls, auth }) => {
       return;
     }
 
-    const newTeam = [...player.team];
+    const newTeam = [...(player.team || [])];
     if (pokemonName) {
       newTeam[slotIndex] = typeof newTeam[slotIndex] === 'object' 
         ? { ...newTeam[slotIndex], name: pokemonName }
@@ -153,7 +153,7 @@ const Players = ({ tournamentData, audioControls, auth }) => {
       return;
     }
 
-    const newTeam = [...player.team];
+    const newTeam = [...(player.team || [])];
     if (newTeam[slotIndex]) {
       newTeam[slotIndex] = typeof newTeam[slotIndex] === 'object'
         ? { ...newTeam[slotIndex], ability: abilityName || null }
@@ -166,7 +166,7 @@ const Players = ({ tournamentData, audioControls, auth }) => {
     const player = (tournamentData.players || []).find(p => p.id === playerId);
     if (!player) return;
 
-    const newTeam = [...player.team];
+    const newTeam = [...(player.team || [])];
     if (newTeam[slotIndex]) {
       newTeam[slotIndex] = typeof newTeam[slotIndex] === 'object'
         ? { ...newTeam[slotIndex], nickname: nickname || null }
@@ -371,7 +371,7 @@ const Players = ({ tournamentData, audioControls, auth }) => {
             <div className="team-section">
               <h3>EQUIPO POKÉMON</h3>
               <div className="pokemon-slots">
-                {player.team.map((pokemon, index) => {
+                {(player.team || []).map((pokemon, index) => {
                   const pokemonData = pokemon ? POKEDEX_DATA.find(p => p.name === (typeof pokemon === 'object' ? pokemon.name : pokemon)) : null;
                   
                   return (
