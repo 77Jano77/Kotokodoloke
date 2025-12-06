@@ -5,7 +5,7 @@ import { POKEDEX_DATA } from '../data/pokedex';
 import { ABILITIES_DATA } from '../data/abilities';
 import { CAPTURE_ZONES } from '../data/captureZones';
 
-const Resources = ({ audioControls, tournamentData }) => {
+const Resources = ({ audioControls, tournamentData, auth }) => {
   const audioRef = useRef(null);
   const [activeTab, setActiveTab] = useState('types');
   const [searchTerm, setSearchTerm] = useState('');
@@ -58,6 +58,15 @@ const Resources = ({ audioControls, tournamentData }) => {
     if (existingRecord) {
       alert('⚠️ Ya existe un registro para este jugador');
       return;
+    }
+
+    // Verificar que el usuario solo pueda crear registro para su propio jugador (excepto admin)
+    if (!auth.currentUser?.isAdmin) {
+      const userPlayer = (tournamentData.players || []).find(p => p.id === auth.currentUser?.playerId);
+      if (!userPlayer || userPlayer.name !== newPlayerName) {
+        alert('⚠️ Solo puedes crear el registro de zonas para tu propio personaje');
+        return;
+      }
     }
 
     const recordData = {
@@ -149,6 +158,10 @@ const Resources = ({ audioControls, tournamentData }) => {
     const record = captureRecords.find(r => r.id === recordId);
     if (!record) return;
 
+    // Obtener datos del Pokémon a eliminar antes de borrarlo
+    const capturedPokemon = zone.capturedPokemon;
+    const pokemonNumber = capturedPokemon?.pokemon;
+
     const zones = region === 'kanto' ? 'kantoZones' : 'seviZones';
     const updatedZones = record[zones].map(z => {
       if (z.id === zone.id) {
@@ -164,6 +177,27 @@ const Resources = ({ audioControls, tournamentData }) => {
     tournamentData.updateCaptureRecord(recordId, {
       [zones]: updatedZones
     });
+
+    // Eliminar el Pokémon del equipo del jugador si lo tiene
+    if (pokemonNumber) {
+      const pokemonData = POKEDEX_DATA.find(p => p.number === parseInt(pokemonNumber));
+      if (pokemonData) {
+        const player = (tournamentData.players || []).find(p => p.name === record.playerName);
+        if (player && player.team) {
+          const updatedTeam = player.team.map(pokemon => {
+            if (!pokemon) return pokemon;
+            const pokemonName = typeof pokemon === 'object' ? pokemon.name : pokemon;
+            // Eliminar si coincide el nombre del Pokémon
+            if (pokemonName === pokemonData.name) {
+              return null;
+            }
+            return pokemon;
+          });
+          
+          tournamentData.updatePlayer(player.id, { team: updatedTeam });
+        }
+      }
+    }
 
     setSelectedZoneForCapture(null);
     setCaptureData({ pokemon: '', ability: '', nickname: '' });
@@ -543,7 +577,17 @@ const Resources = ({ audioControls, tournamentData }) => {
                 >
                   <option value="">-- Selecciona un jugador --</option>
                   {(tournamentData.players || [])
-                    .filter(player => !captureRecords.find(r => r.playerName === player.name))
+                    .filter(player => {
+                      // Filtrar jugadores que ya tienen registro
+                      if (captureRecords.find(r => r.playerName === player.name)) return false;
+                      
+                      // Si no es admin, solo mostrar el jugador propio
+                      if (!auth.currentUser?.isAdmin) {
+                        return player.id === auth.currentUser?.playerId;
+                      }
+                      
+                      return true;
+                    })
                     .map(player => (
                       <option key={player.id} value={player.name}>
                         {player.name}
@@ -617,6 +661,10 @@ const Resources = ({ audioControls, tournamentData }) => {
                 const totalCompleted = kantoCompleted + seviCompleted;
                 const totalZones = (record.kantoZones || []).length + (record.seviZones || []).length;
 
+                // Verificar permisos: solo el propietario del personaje o admin pueden editar
+                const userPlayer = (tournamentData.players || []).find(p => p.id === auth.currentUser?.playerId);
+                const canEdit = auth.currentUser?.isAdmin || (userPlayer && userPlayer.name === record.playerName);
+
                 return (
                   <div className="capture-record-expanded pixel-card">
                     <div className="record-header">
@@ -625,17 +673,24 @@ const Resources = ({ audioControls, tournamentData }) => {
                         <span className="progress-badge">
                           {totalCompleted}/{totalZones} zonas
                         </span>
-                        <button 
-                          className="delete-record-btn"
-                          onClick={(e) => {
-                            e.stopPropagation();
-                            deleteRecord(record.id);
-                            setExpandedRecord(null);
-                          }}
-                          title="Eliminar registro"
-                        >
-                          🗑️
-                        </button>
+                        {!canEdit && (
+                          <span className="view-only-badge" style={{ fontSize: '0.65rem', padding: '0.3rem 0.5rem' }}>
+                            👁️ SOLO LECTURA
+                          </span>
+                        )}
+                        {canEdit && (
+                          <button 
+                            className="delete-record-btn"
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              deleteRecord(record.id);
+                              setExpandedRecord(null);
+                            }}
+                            title="Eliminar registro"
+                          >
+                            🗑️
+                          </button>
+                        )}
                       </div>
                     </div>
 
@@ -648,8 +703,9 @@ const Resources = ({ audioControls, tournamentData }) => {
                         {(record.kantoZones || []).map(zone => (
                           <div 
                             key={zone.id} 
-                            className={`zone-item ${zone.captured ? 'captured' : ''}`}
-                            onClick={() => openCaptureModal(record.id, 'kanto', zone)}
+                            className={`zone-item ${zone.captured ? 'captured' : ''} ${!canEdit ? 'read-only' : ''}`}
+                            onClick={() => canEdit && openCaptureModal(record.id, 'kanto', zone)}
+                            style={{ cursor: canEdit ? 'pointer' : 'not-allowed', opacity: canEdit ? 1 : 0.7 }}
                           >
                             {zone.captured && zone.capturedPokemon && (
                               <div className="zone-pokemon-sprite">
@@ -685,8 +741,9 @@ const Resources = ({ audioControls, tournamentData }) => {
                         {(record.seviZones || []).map(zone => (
                           <div 
                             key={zone.id} 
-                            className={`zone-item ${zone.captured ? 'captured' : ''}`}
-                            onClick={() => openCaptureModal(record.id, 'sevi', zone)}
+                            className={`zone-item ${zone.captured ? 'captured' : ''} ${!canEdit ? 'read-only' : ''}`}
+                            onClick={() => canEdit && openCaptureModal(record.id, 'sevi', zone)}
+                            style={{ cursor: canEdit ? 'pointer' : 'not-allowed', opacity: canEdit ? 1 : 0.7 }}
                           >
                             {zone.captured && zone.capturedPokemon && (
                               <div className="zone-pokemon-sprite">
