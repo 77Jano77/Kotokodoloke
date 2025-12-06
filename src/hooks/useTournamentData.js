@@ -127,11 +127,19 @@ export const useTournamentData = () => {
   };
 
   const addGalleryImage = (imageData) => {
-    const newData = {
-      ...data,
-      gallery: [...(data.gallery || []), imageData],
-    };
-    updateFirebase(newData);
+    console.log('addGalleryImage llamado con:', imageData);
+    console.log('Galería actual:', data.gallery);
+    try {
+      const newData = {
+        ...data,
+        gallery: [...(data.gallery || []), imageData],
+      };
+      console.log('Nueva data a guardar:', newData.gallery.length, 'imágenes');
+      updateFirebase(newData);
+    } catch (error) {
+      console.error('Error en addGalleryImage:', error);
+      throw error;
+    }
   };
 
   const deleteGalleryImage = (imageId) => {

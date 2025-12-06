@@ -44,12 +44,54 @@ const Gallery = ({ audioControls, auth, tournamentData }) => {
     const file = e.target.files[0];
     if (!file) return;
 
+    console.log('Archivo seleccionado:', file.name, file.size);
+    
+    if (file.size > 2 * 1024 * 1024) {
+      alert('⚠️ La imagen es demasiado grande. Máximo 2MB\n\nTip: Reduce el tamaño o la calidad antes de subirla.');
+      return;
+    }
+
     const reader = new FileReader();
     reader.onload = () => {
-      setNewImage(prev => ({
-        ...prev,
-        url: reader.result
-      }));
+      const img = new Image();
+      img.onload = () => {
+        // Comprimir la imagen si es muy grande
+        const canvas = document.createElement('canvas');
+        let width = img.width;
+        let height = img.height;
+        
+        // Redimensionar si es muy grande (máx 1200px)
+        const maxSize = 1200;
+        if (width > maxSize || height > maxSize) {
+          if (width > height) {
+            height = (height / width) * maxSize;
+            width = maxSize;
+          } else {
+            width = (width / height) * maxSize;
+            height = maxSize;
+          }
+        }
+        
+        canvas.width = width;
+        canvas.height = height;
+        
+        const ctx = canvas.getContext('2d');
+        ctx.drawImage(img, 0, 0, width, height);
+        
+        // Comprimir a 80% de calidad
+        const compressedDataUrl = canvas.toDataURL('image/jpeg', 0.8);
+        console.log('Imagen comprimida');
+        
+        setNewImage(prev => ({
+          ...prev,
+          url: compressedDataUrl
+        }));
+      };
+      img.src = reader.result;
+    };
+    reader.onerror = (error) => {
+      console.error('Error al leer archivo:', error);
+      alert('❌ Error al cargar la imagen');
     };
     reader.readAsDataURL(file);
   };
@@ -62,24 +104,43 @@ const Gallery = ({ audioControls, auth, tournamentData }) => {
       return;
     }
 
-    const imageToAdd = {
-      id: Date.now(),
-      ...newImage,
-      userId: auth.currentUser.id,
-      username: auth.currentUser.username,
-      date: new Date().toLocaleDateString()
-    };
+    if (!auth.currentUser) {
+      alert('⚠️ DEBES INICIAR SESIÓN PARA SUBIR IMÁGENES');
+      setShowUploadModal(false);
+      return;
+    }
 
-    tournamentData.addGalleryImage(imageToAdd);
+    try {
+      const imageToAdd = {
+        id: Date.now(),
+        url: newImage.url,
+        title: newImage.title,
+        comment: newImage.comment || '',
+        author: newImage.author || auth.currentUser.username || 'Anónimo',
+        userId: auth.currentUser.id || '',
+        username: auth.currentUser.username || 'Anónimo',
+        timestamp: Date.now(),
+        date: new Date().toLocaleDateString('es-ES')
+      };
+
+      console.log('Intentando subir imagen:', imageToAdd);
+      tournamentData.addGalleryImage(imageToAdd);
+      
+      alert('✅ IMAGEN SUBIDA CORRECTAMENTE');
     
-    // Reset form
-    setNewImage({
-      url: '',
-      title: '',
-      comment: '',
-      author: auth.currentUser.username
-    });
-    setShowUploadModal(false);
+      
+      // Reset form
+      setNewImage({
+        url: '',
+        title: '',
+        comment: '',
+        author: auth.currentUser?.username || ''
+      });
+      setShowUploadModal(false);
+    } catch (error) {
+      console.error('Error al subir imagen:', error);
+      alert('❌ ERROR AL SUBIR LA IMAGEN. Intenta de nuevo.');
+    }
   };
 
   const handleDeleteImage = (imageId) => {
