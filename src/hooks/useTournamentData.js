@@ -129,7 +129,7 @@ export const useTournamentData = () => {
   const addGalleryImage = (imageData) => {
     const newData = {
       ...data,
-      gallery: [...data.gallery, imageData],
+      gallery: [...(data.gallery || []), imageData],
     };
     updateFirebase(newData);
   };
@@ -137,7 +137,7 @@ export const useTournamentData = () => {
   const deleteGalleryImage = (imageId) => {
     const newData = {
       ...data,
-      gallery: data.gallery.filter(img => img.id !== imageId),
+      gallery: (data.gallery || []).filter(img => img.id !== imageId),
     };
     updateFirebase(newData);
   };
