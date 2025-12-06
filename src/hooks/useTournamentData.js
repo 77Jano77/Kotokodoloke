@@ -15,6 +15,9 @@ export const useTournamentData = () => {
   useEffect(() => {
     const tournamentRef = ref(database, 'tournament');
     
+    // Limpiar datos antiguos de LocalStorage
+    localStorage.removeItem('pokemon-tournament-data');
+    
     const unsubscribe = onValue(tournamentRef, (snapshot) => {
       const firebaseData = snapshot.val();
       if (firebaseData) {
