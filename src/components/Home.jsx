@@ -58,7 +58,7 @@ const Home = ({ tournamentData, audioControls }) => {
     }
 
     const medals = ['🥇', '🥈', '🥉'];
-    const badgeCount = player.badges.filter(Boolean).length;
+    const badgeCount = (player.badges || []).filter(Boolean).length;
 
     return (
       <div className="podium-player-card">
@@ -95,7 +95,7 @@ const Home = ({ tournamentData, audioControls }) => {
             <span className="badges-label">MEDALLAS</span>
             <div className="badges-mini">
               {KANTO_BADGES.map((badge, i) => (
-                player.badges[i] ? (
+                (player.badges || [])[i] ? (
                   <img 
                     key={i} 
                     src={badge.image} 
@@ -105,7 +105,7 @@ const Home = ({ tournamentData, audioControls }) => {
                   />
                 ) : null
               ))}
-              {player.badges.filter(Boolean).length === 0 && (
+              {(player.badges || []).filter(Boolean).length === 0 && (
                 <span className="no-badges-text">Ninguna</span>
               )}
             </div>
