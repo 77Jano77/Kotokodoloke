@@ -97,6 +97,27 @@
   display: inline-block;
 }
 
+/* Admin control badge */
+.admin-control-badge {
+  font-size: 0.8rem;
+  margin-left: 8px;
+  animation: crownSpin 3s ease-in-out infinite;
+  display: inline-block;
+  filter: drop-shadow(0 0 5px rgba(251, 191, 36, 0.6));
+}
+
+@keyframes crownSpin {
+  0%, 100% { transform: rotate(0deg); }
+  25% { transform: rotate(-10deg); }
+  75% { transform: rotate(10deg); }
+}
+
+/* Admin editable card */
+.player-card.admin-editable {
+  border: 3px solid #fbbf24;
+  box-shadow: 0 4px 15px rgba(251, 191, 36, 0.3);
+}
+
 .player-card.read-only {
   opacity: 0.85;
   position: relative;

@@ -469,11 +469,16 @@ const Players = ({ tournamentData, audioControls, auth }) => {
           const canEdit = isAdmin || player.id === auth.currentUser?.playerId;
           
           return (
-          <div key={player.id} className={`player-card pixel-card ${!canEdit ? 'read-only' : ''}`}>
+          <div key={player.id} className={`player-card pixel-card ${!canEdit ? 'read-only' : ''} ${isAdmin && canEdit ? 'admin-editable' : ''}`}>
             {/* Card Header */}
             <div className="player-card-header">
               <div className="player-info-top">
-                <h2 className="player-name">{player.name}</h2>
+                <h2 className="player-name">
+                  {player.name}
+                  {isAdmin && canEdit && player.id !== auth.currentUser?.playerId && (
+                    <span className="admin-control-badge" title="Controlado por admin">👑</span>
+                  )}
+                </h2>
                 {player.trainerName && (
                   <p className="trainer-name">"{player.trainerName}"</p>
                 )}

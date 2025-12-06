@@ -13,9 +13,9 @@ function Header({ currentSection, setCurrentSection, currentUser, onLogout }) {
   ];
 
   return (
-    <header className="pixel-header">
+    <header className={`pixel-header ${currentUser?.isAdmin ? 'admin-mode' : ''}`}>
       {currentUser && (
-        <div className="user-info-bar">
+        <div className={`user-info-bar ${currentUser.isAdmin ? 'admin-bar' : ''}`}>
           <div className="user-info-content">
             <FaUser className="user-icon" />
             <span className="username">{currentUser.username}</span>

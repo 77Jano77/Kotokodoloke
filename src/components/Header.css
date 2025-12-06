@@ -25,18 +25,39 @@
 
 .admin-badge {
   font-family: 'Press Start 2P', cursive;
-  font-size: 0.6rem;
-  color: var(--poke-yellow);
-  background: rgba(251, 191, 36, 0.2);
-  padding: 4px 8px;
-  border: 2px solid var(--poke-yellow);
+  font-size: 0.65rem;
+  color: #000;
+  background: linear-gradient(135deg, #fbbf24 0%, #f59e0b 100%);
+  padding: 6px 12px;
+  border: 3px solid #fbbf24;
   border-radius: 4px;
   animation: adminGlow 2s ease-in-out infinite;
+  box-shadow: 0 0 10px rgba(251, 191, 36, 0.5);
+  font-weight: bold;
+  text-shadow: 1px 1px 0px rgba(255, 255, 255, 0.3);
 }
 
 @keyframes adminGlow {
-  0%, 100% { box-shadow: 0 0 5px rgba(251, 191, 36, 0.3); }
-  50% { box-shadow: 0 0 15px rgba(251, 191, 36, 0.6); }
+  0%, 100% { 
+    box-shadow: 0 0 10px rgba(251, 191, 36, 0.5), 0 0 20px rgba(251, 191, 36, 0.3);
+    transform: scale(1);
+  }
+  50% { 
+    box-shadow: 0 0 20px rgba(251, 191, 36, 0.8), 0 0 30px rgba(251, 191, 36, 0.5);
+    transform: scale(1.05);
+  }
+}
+
+/* Estilos para modo admin */
+.pixel-header.admin-mode {
+  border-bottom: 6px solid #fbbf24;
+  box-shadow: 0 4px 20px rgba(251, 191, 36, 0.3), 0 0 40px rgba(251, 191, 36, 0.2);
+}
+
+.user-info-bar.admin-bar {
+  background: linear-gradient(90deg, var(--bg-primary) 0%, rgba(251, 191, 36, 0.1) 50%, var(--bg-primary) 100%);
+  border-bottom: 2px solid #fbbf24;
+  box-shadow: 0 2px 10px rgba(251, 191, 36, 0.2);
 }
 
 .header-content {
