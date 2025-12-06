@@ -1,0 +1,436 @@
+.roulette-container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 2rem 1rem;
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+}
+
+.roulette-container > h1 {
+  text-align: center;
+  font-size: 2rem;
+  color: var(--poke-red);
+  text-shadow: 3px 3px 0 var(--shadow-dark);
+}
+
+.roulette-title {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 2rem;
+  margin-bottom: 1rem;
+}
+
+.roulette-title h1 {
+  text-align: center;
+  font-size: 2rem;
+  color: var(--poke-red);
+  text-shadow: 3px 3px 0 var(--shadow-dark);
+  margin: 0;
+}
+
+.delibird-title-sprite {
+  width: 80px;
+  height: 80px;
+  image-rendering: pixelated;
+  animation: bounce 1s infinite;
+}
+
+@keyframes bounce {
+  0%, 100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-10px);
+  }
+}
+
+@media (max-width: 768px) {
+  .roulette-title {
+    gap: 1rem;
+  }
+
+  .roulette-title h1 {
+    font-size: 1.3rem;
+  }
+
+  .delibird-title-sprite {
+    width: 50px;
+    height: 50px;
+  }
+}
+
+/* Rewards Info */
+.rewards-info {
+  background: linear-gradient(135deg, var(--poke-yellow) 0%, var(--poke-red) 100%);
+  padding: 1.5rem;
+  color: white;
+}
+
+.rewards-info h2 {
+  font-size: 1.2rem;
+  margin-bottom: 1.5rem;
+  text-align: center;
+  text-shadow: 2px 2px 0 var(--shadow-dark);
+}
+
+.rewards-list-info {
+  display: grid;
+  gap: 0.8rem;
+}
+
+.reward-info-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0.8rem;
+  background: rgba(0,0,0,0.3);
+  border: 2px solid rgba(255,255,255,0.3);
+}
+
+.reward-name {
+  font-size: 0.9rem;
+  font-weight: bold;
+}
+
+.reward-prob {
+  font-size: 0.8rem;
+  background: rgba(255,255,255,0.2);
+  padding: 0.3rem 0.6rem;
+  border: 1px solid rgba(255,255,255,0.3);
+}
+
+/* Dice Roller */
+.dice-roller {
+  background: white;
+  padding: 2rem;
+  text-align: center;
+  min-height: 400px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 2rem;
+}
+
+.dice-roller h2 {
+  font-size: 1.5rem;
+  color: var(--poke-yellow);
+  margin-bottom: 1rem;
+  text-shadow: 2px 2px 0 rgba(0,0,0,0.3);
+}
+
+.player-selector {
+  max-width: 400px;
+  margin: 0 auto;
+  width: 100%;
+}
+
+.player-selector label {
+  display: block;
+  font-size: 0.9rem;
+  color: #cbd5e1;
+  margin-bottom: 0.5rem;
+  font-weight: bold;
+}
+
+.rolls-info {
+  margin-top: 1rem;
+  padding: 1rem;
+  background: var(--shadow-light);
+  border: 3px solid var(--poke-yellow);
+  text-align: center;
+}
+
+.rolls-info p {
+  margin: 0.3rem 0;
+  font-size: 0.9rem;
+  color: var(--poke-yellow);
+}
+
+.rolls-info strong {
+  font-size: 1.2rem;
+  color: white;
+}
+
+.rolls-detail {
+  font-size: 0.7rem !important;
+  color: #cbd5e1 !important;
+  margin-top: 0.5rem !important;
+}
+
+.add-roll-btn {
+  margin-top: 1rem;
+  background: var(--type-grass);
+  font-size: 0.7rem;
+  padding: 0.6rem 1rem;
+}
+
+.add-roll-btn:hover {
+  transform: translateY(-2px);
+}
+
+/* Dice Display */
+.dice-display {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin: 2rem 0;
+}
+
+.dice-face {
+  width: 150px;
+  height: 150px;
+  background: white;
+  border: 6px solid var(--shadow-dark);
+  box-shadow: 8px 8px 0 var(--shadow-dark);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 8rem;
+  transition: transform 0.1s;
+}
+
+.dice-display.rolling .dice-face {
+  animation: diceRoll 0.1s linear infinite;
+}
+
+.roulette-gif {
+  width: 300px;
+  height: 300px;
+  object-fit: contain;
+  image-rendering: pixelated;
+  animation: pixelPulse 1s ease-in-out infinite;
+}
+
+@keyframes diceRoll {
+  0% { transform: rotate(0deg) scale(1); }
+  25% { transform: rotate(90deg) scale(1.1); }
+  50% { transform: rotate(180deg) scale(1); }
+  75% { transform: rotate(270deg) scale(1.1); }
+  100% { transform: rotate(360deg) scale(1); }
+}
+
+.roll-btn {
+  max-width: 300px;
+  margin: 0 auto;
+  background: var(--type-fire);
+  font-size: 1rem;
+  padding: 1rem 2rem;
+}
+
+.roll-btn:disabled {
+  background: var(--shadow-medium);
+  cursor: not-allowed;
+  opacity: 0.5;
+}
+
+/* Result Display */
+.result-display {
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+}
+
+.result-animation {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1.5rem;
+  animation: pixelSlideIn 0.5s ease-out;
+}
+
+.result-icon {
+  font-size: 5rem;
+  animation: pixelBounce 1s ease-in-out infinite;
+}
+
+.result-animation h3 {
+  font-size: 1.5rem;
+  color: var(--poke-red);
+  text-shadow: 2px 2px 0 var(--shadow-light);
+}
+
+.result-player,
+.result-reward {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 1rem 2rem;
+  background: var(--shadow-light);
+  border: 3px solid var(--shadow-medium);
+  width: 100%;
+  max-width: 400px;
+}
+
+.result-label {
+  font-size: 0.8rem;
+  color: var(--text-secondary);
+  font-weight: bold;
+}
+
+.result-value {
+  font-size: 1.2rem;
+  color: var(--poke-blue);
+  font-weight: bold;
+}
+
+.reset-btn {
+  max-width: 300px;
+  margin: 0 auto;
+  background: var(--type-water);
+}
+
+/* Rewards History */
+.rewards-history {
+  background: white;
+  padding: 1.5rem;
+}
+
+.rewards-history h2 {
+  font-size: 1.3rem;
+  color: var(--poke-red);
+  margin-bottom: 1.5rem;
+  text-align: center;
+}
+
+.history-list {
+  display: grid;
+  gap: 1rem;
+}
+
+.history-player {
+  background: var(--shadow-light);
+  border: 3px solid var(--shadow-medium);
+  padding: 1rem;
+}
+
+.history-player-header {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  margin-bottom: 1rem;
+  padding-bottom: 0.8rem;
+  border-bottom: 2px solid var(--shadow-medium);
+}
+
+.history-avatar {
+  width: 50px;
+  height: 50px;
+  border: 3px solid var(--shadow-dark);
+  object-fit: cover;
+  image-rendering: pixelated;
+}
+
+.history-player-header h3 {
+  flex: 1;
+  font-size: 1.1rem;
+  color: var(--poke-blue);
+}
+
+.reward-count {
+  font-size: 1.5rem;
+  font-weight: bold;
+  color: var(--poke-red);
+  background: var(--poke-yellow);
+  padding: 0.3rem 0.8rem;
+  border: 2px solid var(--shadow-dark);
+}
+
+.history-rewards {
+  list-style: none;
+  padding: 0;
+  display: grid;
+  gap: 0.5rem;
+}
+
+.history-rewards li {
+  padding: 0.5rem;
+  background: white;
+  border: 2px solid var(--shadow-medium);
+  font-size: 0.85rem;
+}
+
+.reward-bullet {
+  color: var(--poke-red);
+  font-weight: bold;
+  margin-right: 0.5rem;
+}
+
+.no-history {
+  text-align: center;
+  padding: 3rem;
+  color: var(--text-secondary);
+}
+
+.no-history .empty-icon {
+  font-size: 4rem;
+  margin-bottom: 1rem;
+  opacity: 0.3;
+}
+
+/* Instructions */
+.roulette-instructions {
+  background: var(--bg-light);
+  padding: 1.5rem;
+}
+
+.roulette-instructions h3 {
+  font-size: 1.1rem;
+  color: var(--poke-blue);
+  margin-bottom: 1rem;
+  text-align: center;
+}
+
+.roulette-instructions ol {
+  list-style-position: inside;
+  padding: 0;
+  margin-bottom: 1rem;
+}
+
+.roulette-instructions li {
+  padding: 0.5rem 0;
+  border-bottom: 2px solid var(--shadow-light);
+  font-size: 0.9rem;
+}
+
+.roulette-instructions li:last-child {
+  border-bottom: none;
+}
+
+.instruction-note {
+  margin-top: 1rem;
+  padding: 1rem;
+  background: var(--poke-yellow);
+  border: 3px solid var(--poke-red);
+  font-size: 0.8rem;
+  line-height: 1.6;
+}
+
+.instruction-note strong {
+  color: var(--poke-red);
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .roulette-container > h1 {
+    font-size: 1.5rem;
+  }
+
+  .dice-face {
+    width: 100px;
+    height: 100px;
+    font-size: 5rem;
+  }
+
+  .result-animation h3 {
+    font-size: 1.2rem;
+  }
+
+  .reward-info-item {
+    flex-direction: column;
+    gap: 0.5rem;
+    text-align: center;
+  }
+}

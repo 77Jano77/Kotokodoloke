@@ -1,0 +1,652 @@
+.standings-container {
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: 2rem 1rem;
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+}
+
+.standings-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 1rem;
+}
+
+.standings-header h1 {
+  font-size: 2rem;
+  color: var(--poke-yellow);
+  text-shadow: 3px 3px 0 var(--shadow-dark);
+}
+
+.add-points-btn {
+  background: var(--type-electric);
+}
+
+/* Phase Filter */
+.phase-filter {
+  background: white;
+  padding: 1.5rem;
+}
+
+.phase-filter label {
+  display: block;
+  font-size: 0.9rem;
+  font-weight: bold;
+  color: #1e293b;
+  margin-bottom: 1rem;
+}
+
+.phase-buttons {
+  display: flex;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+}
+
+.phase-btn {
+  padding: 0.8rem 1.2rem;
+  background: var(--shadow-light);
+  border: 3px solid var(--shadow-medium);
+  font-family: 'Press Start 2P', cursive;
+  font-size: 0.7rem;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.phase-btn:hover {
+  background: var(--shadow-medium);
+  transform: translateY(-2px);
+}
+
+.phase-btn.active {
+  background: var(--poke-red);
+  color: white;
+  border-color: var(--shadow-dark);
+  box-shadow: 4px 4px 0 var(--shadow-dark);
+}
+
+/* Standings Table */
+.standings-table-container {
+  background: white;
+  padding: 0;
+  overflow-x: auto;
+}
+
+.standings-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.85rem;
+}
+
+.standings-table thead {
+  background: var(--poke-red);
+  color: white;
+}
+
+.standings-table th {
+  padding: 1rem 0.8rem;
+  text-align: left;
+  font-weight: bold;
+  border: 2px solid var(--shadow-dark);
+  font-size: 0.75rem;
+}
+
+.standings-table tbody tr {
+  border-bottom: 3px solid var(--shadow-light);
+  transition: all 0.2s;
+}
+
+.standings-table tbody tr:hover {
+  background: var(--shadow-light);
+}
+
+.standings-table tbody tr.position-1 {
+  background: linear-gradient(to right, rgba(255, 215, 0, 0.2), transparent);
+}
+
+.standings-table tbody tr.position-2 {
+  background: linear-gradient(to right, rgba(192, 192, 192, 0.2), transparent);
+}
+
+.standings-table tbody tr.position-3 {
+  background: linear-gradient(to right, rgba(205, 127, 50, 0.2), transparent);
+}
+
+.standings-table td {
+  padding: 1rem 0.8rem;
+  border: 2px solid var(--shadow-light);
+}
+
+/* Position Cell */
+.position-cell {
+  text-align: center;
+  font-weight: bold;
+}
+
+.position-number {
+  font-size: 1.5rem;
+  color: #1e40af;
+  font-weight: bold;
+}
+
+.medal {
+  display: block;
+  font-size: 1.5rem;
+  margin-top: 0.3rem;
+}
+
+/* Avatar Cell */
+.avatar-cell {
+  text-align: center;
+}
+
+.player-avatar {
+  width: 60px;
+  height: 60px;
+  border: 3px solid var(--shadow-dark);
+  object-fit: cover;
+  image-rendering: pixelated;
+}
+
+.avatar-placeholder {
+  width: 60px;
+  height: 60px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--shadow-light);
+  border: 3px solid var(--shadow-medium);
+  font-size: 2rem;
+}
+
+/* Player Cell */
+.player-info {
+  display: flex;
+  flex-direction: column;
+  gap: 0.3rem;
+}
+
+.player-name {
+  font-size: 1rem;
+  font-weight: bold;
+  color: #1e40af;
+}
+
+.trainer-name {
+  font-size: 0.75rem;
+  color: #64748b;
+  font-style: italic;
+}
+
+/* Mode Cell */
+.mode-cell {
+  text-align: center;
+}
+
+.mode-badge {
+  display: inline-block;
+  padding: 0.4rem 0.8rem;
+  font-size: 0.65rem;
+  font-weight: bold;
+  color: white;
+  border: 2px solid var(--shadow-dark);
+}
+
+.mode-badge.hardcore {
+  background: #d32f2f;
+}
+
+.mode-badge.softcore {
+  background: #1976d2;
+}
+
+/* Badges Cell */
+.badges-display {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  align-items: center;
+}
+
+.badge-count {
+  font-size: 1.2rem;
+  font-weight: bold;
+  color: var(--poke-red);
+}
+
+.badge-bar {
+  width: 80px;
+  height: 12px;
+  background: var(--shadow-light);
+  border: 2px solid var(--shadow-dark);
+  position: relative;
+  overflow: hidden;
+}
+
+.badge-progress {
+  height: 100%;
+  background: var(--poke-yellow);
+  transition: width 0.3s;
+}
+
+/* Points Cell */
+.points-cell {
+  text-align: center;
+}
+
+.points-number {
+  font-size: 1.8rem;
+  font-weight: bold;
+  color: var(--poke-red);
+  text-shadow: 2px 2px 0 var(--shadow-light);
+}
+
+/* Wins Cell */
+.wins-cell {
+  text-align: center;
+}
+
+.wins-number {
+  font-size: 1.5rem;
+  font-weight: bold;
+  color: #22c55e;
+  text-shadow: 2px 2px 0 var(--shadow-light);
+}
+
+/* Team Cell */
+.team-cell {
+  text-align: center;
+}
+
+.team-count {
+  font-size: 1rem;
+  font-weight: bold;
+  color: var(--text-secondary);
+}
+
+.team-count.full {
+  color: var(--type-grass);
+}
+
+/* Rewards Cell */
+.rewards-cell {
+  text-align: center;
+}
+
+.rewards-count {
+  font-size: 1.2rem;
+  font-weight: bold;
+  color: var(--poke-blue);
+}
+
+/* No Players Message */
+.no-players-message {
+  text-align: center;
+  padding: 4rem 2rem;
+  color: var(--text-secondary);
+}
+
+.no-players-message .empty-icon {
+  font-size: 5rem;
+  margin-bottom: 1rem;
+  opacity: 0.3;
+}
+
+/* Modal */
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0,0,0,0.8);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+  animation: fadeIn 0.2s;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+.modal-content {
+  background: white;
+  padding: 2rem;
+  max-width: 500px;
+  width: 90%;
+  animation: pixelSlideIn 0.3s ease-out;
+}
+
+.modal-content h2 {
+  font-size: 1.3rem;
+  color: var(--poke-blue);
+  margin-bottom: 1.5rem;
+  text-align: center;
+}
+
+.modal-form {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.form-group label {
+  display: block;
+  font-size: 0.8rem;
+  font-weight: bold;
+  color: var(--text-secondary);
+  margin-bottom: 0.5rem;
+}
+
+.points-selector {
+  display: flex;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+}
+
+.points-preset {
+  flex: 1;
+  font-size: 0.7rem;
+  padding: 0.8rem;
+}
+
+.modal-actions {
+  display: flex;
+  gap: 1rem;
+}
+
+.modal-actions button {
+  flex: 1;
+}
+
+.confirm-btn {
+  background: var(--type-grass);
+}
+
+.cancel-btn {
+  background: var(--shadow-medium);
+}
+
+/* Stats Summary */
+.stats-summary {
+  background: linear-gradient(135deg, var(--poke-blue) 0%, var(--poke-red) 100%);
+  padding: 2rem;
+  color: white;
+}
+
+.stats-summary h2 {
+  font-size: 1.3rem;
+  text-align: center;
+  margin-bottom: 1.5rem;
+  text-shadow: 2px 2px 0 var(--shadow-dark);
+}
+
+.stats-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+  gap: 1rem;
+}
+
+.stat-box {
+  background: rgba(255,255,255,0.2);
+  border: 3px solid rgba(255,255,255,0.3);
+  padding: 1.5rem;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.stat-value {
+  font-size: 2.5rem;
+  font-weight: bold;
+  text-shadow: 2px 2px 0 rgba(0,0,0,0.3);
+}
+
+.stat-label {
+  font-size: 0.7rem;
+  opacity: 0.9;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .standings-header {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .standings-header h1 {
+    font-size: 1.5rem;
+  }
+
+  .standings-table {
+    font-size: 0.7rem;
+  }
+
+  .standings-table th,
+  .standings-table td {
+    padding: 0.5rem 0.3rem;
+  }
+
+  .player-avatar,
+  .avatar-placeholder {
+    width: 40px;
+    height: 40px;
+    font-size: 1.5rem;
+  }
+
+  .position-number {
+    font-size: 1rem;
+  }
+
+  .medal {
+    font-size: 1rem;
+  }
+
+  .points-number {
+    font-size: 1.2rem;
+  }
+
+  .phase-buttons {
+    flex-direction: column;
+  }
+
+  .phase-btn {
+    width: 100%;
+  }
+}
+
+/* Matches Section */
+.matches-section {
+  background: white;
+  padding: 2rem;
+}
+
+.matches-section h2 {
+  font-size: 1.5rem;
+  color: var(--poke-red);
+  margin-bottom: 1.5rem;
+  text-align: center;
+}
+
+.matches-tabs {
+  display: flex;
+  gap: 0.5rem;
+  margin-bottom: 2rem;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+
+.match-phase-btn {
+  padding: 0.8rem 1.5rem;
+  background: var(--shadow-light);
+  border: 3px solid var(--shadow-medium);
+  font-family: 'Press Start 2P', cursive;
+  font-size: 0.7rem;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.match-phase-btn:hover {
+  background: var(--shadow-medium);
+  transform: translateY(-2px);
+}
+
+.match-phase-btn.active {
+  background: var(--poke-yellow);
+  border-color: var(--poke-red);
+  box-shadow: 4px 4px 0 var(--shadow-dark);
+}
+
+.matches-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+  gap: 1.5rem;
+}
+
+.match-card {
+  background: var(--shadow-light);
+  border: 3px solid var(--shadow-dark);
+  padding: 1.5rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.match-players {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+}
+
+.match-player {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.5rem;
+  flex: 1;
+}
+
+.match-result {
+  font-size: 0.7rem;
+  padding: 0.3rem 0.6rem;
+  margin-top: 0.3rem;
+  font-weight: bold;
+  border: 2px solid;
+  text-shadow: 1px 1px 0 rgba(0, 0, 0, 0.3);
+}
+
+.match-result.winner {
+  background-color: #22c55e;
+  color: #ffffff;
+  border-color: #16a34a;
+}
+
+.match-result.loser {
+  background-color: #ef4444;
+  color: #ffffff;
+  border-color: #dc2626;
+}
+
+.match-avatar {
+  width: 60px;
+  height: 60px;
+  border: 3px solid var(--shadow-dark);
+  object-fit: cover;
+  image-rendering: pixelated;
+}
+
+.match-player span {
+  font-size: 0.8rem;
+  text-align: center;
+  word-break: break-word;
+}
+
+.vs-text {
+  font-size: 1.5rem;
+  font-weight: bold;
+  color: var(--poke-red);
+  text-shadow: 2px 2px 0 var(--shadow-dark);
+}
+
+.match-score {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 1rem;
+}
+
+.score-input {
+  width: 60px;
+  padding: 0.8rem;
+  text-align: center;
+  font-size: 1.2rem;
+  font-weight: bold;
+  border: 3px solid var(--shadow-dark);
+  font-family: 'Press Start 2P', cursive;
+  background: white;
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+.score-input:disabled {
+  opacity: 0.9;
+  cursor: not-allowed;
+}
+
+.score-input.winning {
+  background-color: #22c55e;
+  color: #ffffff;
+  border-color: #16a34a;
+  font-weight: bold;
+}
+
+.score-input.losing {
+  background-color: #ef4444;
+  color: #ffffff;
+  border-color: #dc2626;
+  font-weight: bold;
+}
+
+.reset-match-btn {
+  padding: 0.5rem 0.8rem;
+  font-size: 1rem;
+  background: var(--poke-yellow);
+  border: 3px solid var(--shadow-dark);
+  cursor: pointer;
+  transition: all 0.2s;
+  margin-left: 0.5rem;
+}
+
+.reset-match-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 4px 4px 0 var(--shadow-dark);
+}
+
+.match-score span {
+  font-size: 1.5rem;
+  font-weight: bold;
+}
+
+.no-matches {
+  text-align: center;
+  padding: 3rem;
+  color: var(--text-secondary);
+  font-size: 0.9rem;
+}
+
+@media (max-width: 768px) {
+  .matches-grid {
+    grid-template-columns: 1fr;
+  }
+  
+  .match-avatar {
+    width: 50px;
+    height: 50px;
+  }
+}

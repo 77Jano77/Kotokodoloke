@@ -1,0 +1,24 @@
+{
+  "name": "torneo-pokemon-react",
+  "private": true,
+  "version": "1.0.0",
+  "type": "module",
+  "description": "Aplicación de gestión de torneo Pokémon Nuzlocke",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview",
+    "lint": "echo 'No linting configured'"
+  },
+  "dependencies": {
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1",
+    "react-icons": "^5.0.1"
+  },
+  "devDependencies": {
+    "@types/react": "^18.3.3",
+    "@types/react-dom": "^18.3.0",
+    "@vitejs/plugin-react": "^4.3.1",
+    "vite": "^5.3.1"
+  }
+}

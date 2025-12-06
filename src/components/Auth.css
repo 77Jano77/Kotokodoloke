@@ -1,0 +1,306 @@
+.auth-container {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+  position: relative;
+  overflow: hidden;
+}
+
+.auth-background {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
+  z-index: 0;
+}
+
+.auth-pokeball {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 500px;
+  height: 500px;
+  border-radius: 50%;
+  background: linear-gradient(to bottom, #ef4444 0%, #ef4444 50%, #f8f9fa 50%, #f8f9fa 100%);
+  opacity: 0.05;
+  animation: pokeballSpin 20s linear infinite;
+}
+
+@keyframes pokeballSpin {
+  from {
+    transform: translate(-50%, -50%) rotate(0deg);
+  }
+  to {
+    transform: translate(-50%, -50%) rotate(360deg);
+  }
+}
+
+.auth-card {
+  position: relative;
+  z-index: 1;
+  width: 100%;
+  max-width: 450px;
+  background: var(--bg-secondary);
+  border: 4px solid var(--poke-yellow);
+  padding: 40px;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
+  animation: authSlideIn 0.5s ease-out;
+}
+
+@keyframes authSlideIn {
+  from {
+    opacity: 0;
+    transform: translateY(-30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.auth-header {
+  text-align: center;
+  margin-bottom: 30px;
+}
+
+.auth-header h1 {
+  font-size: 1.5rem;
+  color: var(--poke-yellow);
+  margin-bottom: 10px;
+}
+
+.auth-subtitle {
+  font-family: 'Press Start 2P', cursive;
+  font-size: 0.9rem;
+  color: var(--poke-red);
+  text-shadow: 2px 2px 0 rgba(0, 0, 0, 0.5);
+}
+
+.auth-tabs {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 30px;
+}
+
+.auth-tab {
+  flex: 1;
+  padding: 12px;
+  background: var(--bg-primary);
+  border: 3px solid var(--text-secondary);
+  color: var(--text-secondary);
+  font-family: 'Press Start 2P', cursive;
+  font-size: 0.7rem;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.auth-tab:hover {
+  border-color: var(--poke-yellow);
+  color: var(--poke-yellow);
+  transform: translateY(-2px);
+}
+
+.auth-tab.active {
+  background: var(--poke-yellow);
+  border-color: var(--poke-yellow);
+  color: var(--bg-primary);
+  transform: translateY(0);
+}
+
+.auth-form {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.form-group label {
+  font-family: 'Press Start 2P', cursive;
+  font-size: 0.7rem;
+  color: var(--poke-yellow);
+}
+
+.pixel-input {
+  padding: 12px;
+  background: var(--bg-primary);
+  border: 3px solid var(--text-secondary);
+  color: var(--text-primary);
+  font-family: 'Press Start 2P', cursive;
+  font-size: 0.75rem;
+  transition: all 0.2s ease;
+}
+
+.pixel-input:focus {
+  outline: none;
+  border-color: var(--poke-yellow);
+  box-shadow: 0 0 0 2px rgba(251, 191, 36, 0.2);
+}
+
+.password-warning {
+  margin-top: 8px;
+  padding: 8px;
+  background: rgba(251, 191, 36, 0.15);
+  border: 2px solid rgba(251, 191, 36, 0.5);
+  border-radius: 4px;
+  font-family: 'Press Start 2P', cursive;
+  font-size: 0.55rem;
+  color: var(--poke-yellow);
+  line-height: 1.4;
+  text-align: center;
+}
+
+.recover-title {
+  font-family: 'Press Start 2P', cursive;
+  font-size: 0.8rem;
+  color: var(--poke-blue);
+  text-align: center;
+  margin-bottom: 10px;
+}
+
+.auth-error {
+  padding: 12px;
+  background: rgba(239, 68, 68, 0.2);
+  border: 2px solid var(--poke-red);
+  color: var(--poke-red);
+  font-family: 'Press Start 2P', cursive;
+  font-size: 0.65rem;
+  text-align: center;
+  line-height: 1.4;
+  animation: shake 0.5s ease;
+}
+
+.auth-success {
+  padding: 20px;
+  background: rgba(34, 197, 94, 0.2);
+  border: 3px solid #22c55e;
+  border-radius: 4px;
+  animation: successPulse 0.5s ease;
+}
+
+.success-title {
+  font-family: 'Press Start 2P', cursive;
+  font-size: 0.85rem;
+  color: #22c55e;
+  text-align: center;
+  margin-bottom: 15px;
+}
+
+.success-info {
+  font-family: 'Press Start 2P', cursive;
+  font-size: 0.7rem;
+  color: var(--text-primary);
+  margin: 10px 0;
+  line-height: 1.6;
+}
+
+.success-info strong {
+  color: var(--poke-yellow);
+  display: block;
+  margin-top: 5px;
+  font-size: 0.85rem;
+}
+
+.success-note {
+  font-family: 'Press Start 2P', cursive;
+  font-size: 0.6rem;
+  color: var(--text-secondary);
+  text-align: center;
+  margin-top: 15px;
+  padding-top: 15px;
+  border-top: 2px solid rgba(255, 255, 255, 0.2);
+}
+
+@keyframes shake {
+  0%, 100% { transform: translateX(0); }
+  25% { transform: translateX(-10px); }
+  75% { transform: translateX(10px); }
+}
+
+@keyframes successPulse {
+  0% { transform: scale(0.95); opacity: 0; }
+  50% { transform: scale(1.02); }
+  100% { transform: scale(1); opacity: 1; }
+}
+
+.auth-submit-btn {
+  padding: 15px;
+  background: var(--poke-red);
+  border: 3px solid var(--text-primary);
+  color: var(--text-primary);
+  font-size: 0.85rem;
+  margin-top: 10px;
+}
+
+.auth-submit-btn:hover {
+  background: var(--poke-yellow);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+}
+
+.auth-link-btn {
+  background: transparent;
+  border: none;
+  color: var(--poke-blue);
+  font-family: 'Press Start 2P', cursive;
+  font-size: 0.6rem;
+  cursor: pointer;
+  padding: 8px;
+  transition: all 0.2s ease;
+  text-align: center;
+}
+
+.auth-link-btn:hover {
+  color: var(--poke-yellow);
+  text-decoration: underline;
+}
+
+.auth-footer {
+  margin-top: 30px;
+  text-align: center;
+  padding-top: 20px;
+  border-top: 2px solid var(--text-secondary);
+}
+
+.auth-footer p {
+  font-size: 0.7rem;
+  color: var(--text-secondary);
+}
+
+@media (max-width: 768px) {
+  .auth-card {
+    padding: 30px 20px;
+  }
+
+  .auth-header h1 {
+    font-size: 1.2rem;
+  }
+
+  .auth-subtitle {
+    font-size: 0.75rem;
+  }
+
+  .auth-tab {
+    font-size: 0.6rem;
+    padding: 10px;
+  }
+
+  .pixel-input {
+    font-size: 0.7rem;
+    padding: 10px;
+  }
+
+  .auth-pokeball {
+    width: 300px;
+    height: 300px;
+  }
+}

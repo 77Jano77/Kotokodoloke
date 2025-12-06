@@ -1,0 +1,239 @@
+.pixel-header {
+  background: var(--bg-secondary);
+  border-bottom: 6px solid var(--poke-red);
+  box-shadow: 0 4px 20px rgba(0,0,0,0.5);
+  position: sticky;
+  top: 0;
+  z-index: 1000;
+}
+
+.user-info-bar {
+  background: var(--bg-primary);
+  border-bottom: 2px solid var(--poke-blue);
+  padding: 8px 0;
+}
+
+.user-info-content {
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: 0 2rem;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  justify-content: flex-end;
+}
+
+.admin-badge {
+  font-family: 'Press Start 2P', cursive;
+  font-size: 0.6rem;
+  color: var(--poke-yellow);
+  background: rgba(251, 191, 36, 0.2);
+  padding: 4px 8px;
+  border: 2px solid var(--poke-yellow);
+  border-radius: 4px;
+  animation: adminGlow 2s ease-in-out infinite;
+}
+
+@keyframes adminGlow {
+  0%, 100% { box-shadow: 0 0 5px rgba(251, 191, 36, 0.3); }
+  50% { box-shadow: 0 0 15px rgba(251, 191, 36, 0.6); }
+}
+
+.header-content {
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: 1rem 2rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 2rem;
+}
+
+.kakuna-logo {
+  width: 50px;
+  height: 50px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  animation: float 3s ease-in-out infinite;
+  flex-shrink: 0;
+}
+
+.logo-gif {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  image-rendering: pixelated;
+  image-rendering: -moz-crisp-edges;
+  image-rendering: crisp-edges;
+}
+
+.pixel-title {
+  font-size: 1.3rem;
+  color: var(--poke-yellow);
+  letter-spacing: 2px;
+  text-shadow: 3px 3px 0px rgba(0,0,0,0.3);
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+
+.user-icon {
+  color: var(--poke-blue);
+  font-size: 1rem;
+}
+
+.username {
+  font-family: 'Press Start 2P', cursive;
+  font-size: 0.65rem;
+  color: var(--poke-yellow);
+  white-space: nowrap;
+}
+
+.logout-btn {
+  min-width: auto !important;
+  padding: 8px !important;
+  background: var(--poke-red) !important;
+  border-color: var(--text-primary) !important;
+  color: var(--text-primary) !important;
+}
+
+.logout-btn:hover {
+  background: var(--poke-yellow) !important;
+  transform: scale(1.1) !important;
+}
+
+@keyframes float {
+  0%, 100% { transform: translateY(0px); }
+  50% { transform: translateY(-10px); }
+}
+
+.pixel-nav {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+  flex: 1;
+}
+
+.pixel-button {
+  font-family: 'Press Start 2P', cursive;
+  font-size: 0.5rem;
+  padding: 10px 14px;
+  background: var(--bg-primary);
+  color: var(--text-secondary);
+  border: 3px solid var(--border-color);
+  cursor: pointer;
+  transition: all 0.2s;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 5px;
+  min-width: 75px;
+  position: relative;
+}
+
+.pixel-button::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 0;
+  height: 100%;
+  background: var(--poke-red);
+  transition: width 0.3s;
+  z-index: -1;
+}
+
+.pixel-button:hover::before {
+  width: 100%;
+}
+
+.pixel-button:hover {
+  color: var(--poke-white);
+  border-color: var(--poke-yellow);
+  transform: translateY(-2px);
+}
+
+.pixel-button.active {
+  background: var(--poke-red);
+  color: var(--poke-white);
+  border-color: var(--poke-yellow);
+  box-shadow: 
+    4px 4px 0 rgba(0,0,0,0.3),
+    inset 0 0 0 2px var(--poke-yellow);
+}
+
+.pixel-button .icon {
+  font-size: 1.2rem;
+}
+
+.pixel-button span {
+  font-size: 0.5rem;
+  white-space: nowrap;
+}
+
+@media (max-width: 1024px) {
+  .header-content {
+    gap: 1rem;
+  }
+  
+  .pixel-nav {
+    flex: none;
+  }
+  
+  .pixel-button {
+    min-width: 70px;
+    font-size: 0.45rem;
+  }
+}
+
+@media (max-width: 768px) {
+  .user-info-content {
+    padding: 0 1rem;
+    gap: 8px;
+  }
+
+  .username {
+    font-size: 0.55rem;
+  }
+
+  .admin-badge {
+    font-size: 0.5rem;
+    padding: 3px 6px;
+  }
+
+  .header-content {
+    flex-direction: column;
+    padding: 1rem;
+    gap: 1.5rem;
+  }
+  
+  .kakuna-logo {
+    width: 40px;
+    height: 40px;
+  }
+
+  .pixel-nav {
+    width: 100%;
+    justify-content: center;
+  }
+
+  .pixel-button {
+    min-width: 60px;
+    padding: 8px 10px;
+    font-size: 0.4rem;
+  }
+  
+  .pixel-button .icon {
+    font-size: 1rem;
+  }
+
+  .pixel-button span {
+    font-size: 0.4rem;
+  }
+
+  .pixel-title {
+    font-size: 0.9rem;
+    letter-spacing: 1px;
+  }
+}
