@@ -852,6 +852,16 @@
   transform: translateY(-2px);
 }
 
+.sync-btn {
+  background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);
+  border-color: #b45309;
+}
+
+.sync-btn:hover {
+  background: linear-gradient(135deg, #d97706 0%, #b45309 100%);
+  transform: translateY(-2px);
+}
+
 /* Starter Modal */
 .starter-modal {
   max-width: 900px;
@@ -1001,7 +1011,8 @@
   }
 
   .captured-btn,
-  .starter-btn {
+  .starter-btn,
+  .sync-btn {
     width: 100%;
     min-width: 0;
   }

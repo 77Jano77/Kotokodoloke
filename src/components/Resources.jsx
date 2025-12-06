@@ -184,17 +184,22 @@ const Resources = ({ audioControls, tournamentData, auth }) => {
       if (pokemonData) {
         const player = (tournamentData.players || []).find(p => p.name === record.playerName);
         if (player && player.team) {
+          let pokemonRemoved = false;
           const updatedTeam = player.team.map(pokemon => {
             if (!pokemon) return pokemon;
             const pokemonName = typeof pokemon === 'object' ? pokemon.name : pokemon;
-            // Eliminar si coincide el nombre del Pokémon
-            if (pokemonName === pokemonData.name) {
+            // Eliminar si coincide el nombre del Pokémon (case insensitive por seguridad)
+            if (pokemonName && pokemonName.toLowerCase() === pokemonData.name.toLowerCase()) {
+              pokemonRemoved = true;
               return null;
             }
             return pokemon;
           });
           
-          tournamentData.updatePlayer(player.id, { team: updatedTeam });
+          if (pokemonRemoved) {
+            tournamentData.updatePlayer(player.id, { team: updatedTeam });
+            console.log(`✓ ${pokemonData.name} eliminado del equipo de ${player.name}`);
+          }
         }
       }
     }

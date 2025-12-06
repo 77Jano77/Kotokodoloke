@@ -331,6 +331,36 @@ const Players = ({ tournamentData, audioControls, auth }) => {
     tournamentData.removeReward(playerId, rewardIndex);
   };
 
+  const handleSyncTeam = (playerId) => {
+    const player = (tournamentData.players || []).find(p => p.id === playerId);
+    if (!player) return;
+
+    if (!confirm('¿Sincronizar equipo con Pokémon capturados? Esto eliminará del equipo cualquier Pokémon que no esté en tus zonas capturadas.')) {
+      return;
+    }
+
+    // Obtener todos los Pokémon capturados del jugador
+    const capturedPokemon = tournamentData.getCapturedPokemonByPlayer(player.name);
+    const capturedPokemonNames = capturedPokemon.map(p => {
+      const pokemonData = POKEDEX_DATA.find(pd => pd.number === parseInt(p.pokemon));
+      return pokemonData ? pokemonData.name : null;
+    }).filter(name => name !== null);
+
+    // Filtrar el equipo para solo mantener Pokémon capturados
+    const syncedTeam = (player.team || []).map(pokemon => {
+      if (!pokemon) return null;
+      const pokemonName = typeof pokemon === 'object' ? pokemon.name : pokemon;
+      // Mantener solo si está en los capturados
+      if (capturedPokemonNames.includes(pokemonName)) {
+        return pokemon;
+      }
+      return null;
+    });
+
+    tournamentData.updatePlayer(playerId, { team: syncedTeam });
+    alert('✅ Equipo sincronizado correctamente');
+  };
+
   return (
     <div className="players-container">
       <audio ref={audioRef} loop>
@@ -518,12 +548,21 @@ const Players = ({ tournamentData, audioControls, auth }) => {
                     📦 CAPTURADOS
                   </button>
                   {canEdit && (
-                    <button 
-                      className="pixel-btn starter-btn"
-                      onClick={() => setShowStarterModal(player.id)}
-                    >
-                      🎓 STARTER OAK
-                    </button>
+                    <>
+                      <button 
+                        className="pixel-btn starter-btn"
+                        onClick={() => setShowStarterModal(player.id)}
+                      >
+                        🎓 STARTER OAK
+                      </button>
+                      <button 
+                        className="pixel-btn sync-btn"
+                        onClick={() => handleSyncTeam(player.id)}
+                        title="Limpiar Pokémon no capturados del equipo"
+                      >
+                        🔄 SINCRONIZAR
+                      </button>
+                    </>
                   )}
                 </div>
               </div>
@@ -791,9 +830,13 @@ const Players = ({ tournamentData, audioControls, auth }) => {
                               const player = (tournamentData.players || []).find(p => p.id === showCapturedModal.playerId);
                               if (!player) return;
                               
-                              const currentTeam = player.team || [];
-                              if (currentTeam.length >= 6) {
-                                alert('⚠️ El equipo ya tiene 6 Pokémon');
+                              const team = player.team || [];
+                              
+                              // Buscar primer slot vacío
+                              const emptySlotIndex = team.findIndex(slot => !slot);
+                              
+                              if (emptySlotIndex === -1 && team.length >= 6) {
+                                alert('❌ El equipo está completo (6 Pokémon)');
                                 return;
                               }
 
@@ -803,10 +846,19 @@ const Players = ({ tournamentData, audioControls, auth }) => {
                                 ability: pokemon.ability || ''
                               };
 
-                              tournamentData.updatePlayer(player.id, {
-                                team: [...currentTeam, pokemonToAdd]
-                              });
+                              const newTeam = [...team];
+                              if (emptySlotIndex !== -1) {
+                                newTeam[emptySlotIndex] = pokemonToAdd;
+                              } else {
+                                newTeam.push(pokemonToAdd);
+                              }
+                              
+                              // Rellenar con null hasta tener 6 slots
+                              while (newTeam.length < 6) {
+                                newTeam.push(null);
+                              }
 
+                              tournamentData.updatePlayer(player.id, { team: newTeam });
                               alert('✅ Pokémon añadido al equipo');
                             }}
                           >
