@@ -34,6 +34,41 @@ const POKEMON_LIST = POKEDEX_DATA
   .filter(pokemon => pokemon.generation >= 1 && pokemon.generation <= 3)
   .map(pokemon => pokemon.name);
 
+// Función para identificar Pokémon que son primera fase de línea evolutiva de 3
+const getThreeStageStarters = () => {
+  const starters = [];
+  
+  POKEDEX_DATA.forEach(pokemon => {
+    // Verificar si este Pokémon evoluciona
+    const evolutionMatch = pokemon.evolution.match(/Evoluciona a (\w+)/);
+    if (!evolutionMatch) return;
+    
+    const secondStageName = evolutionMatch[1];
+    const secondStage = POKEDEX_DATA.find(p => p.name === secondStageName);
+    
+    if (!secondStage) return;
+    
+    // Verificar si la segunda fase también evoluciona
+    const secondEvolutionMatch = secondStage.evolution.match(/Evoluciona a (\w+)/);
+    if (!secondEvolutionMatch) return;
+    
+    const thirdStageName = secondEvolutionMatch[1];
+    const thirdStage = POKEDEX_DATA.find(p => p.name === thirdStageName);
+    
+    // Verificar que la tercera fase no evoluciona más (línea completa de 3)
+    if (thirdStage && thirdStage.evolution === 'No evoluciona') {
+      // Verificar que sea Gen 1-3
+      if (pokemon.generation >= 1 && pokemon.generation <= 3) {
+        starters.push(pokemon);
+      }
+    }
+  });
+  
+  return starters;
+};
+
+const VALID_STARTERS = getThreeStageStarters();
+
 const Players = ({ tournamentData, audioControls, auth }) => {
   const audioRef = useRef(null);
   const [editingPlayer, setEditingPlayer] = useState(null);
@@ -41,6 +76,8 @@ const Players = ({ tournamentData, audioControls, auth }) => {
   const [pokemonSearchValues, setPokemonSearchValues] = useState({});
   const [abilitySearchValues, setAbilitySearchValues] = useState({});
   const [showCapturedModal, setShowCapturedModal] = useState(null); // {playerId, playerName}
+  const [showStarterModal, setShowStarterModal] = useState(null); // playerId
+  const [starterSearchTerm, setStarterSearchTerm] = useState('');
 
   // Verificar si el usuario ya tiene un jugador creado
   const userPlayer = auth.currentUser?.hasPlayer 
@@ -250,6 +287,37 @@ const Players = ({ tournamentData, audioControls, auth }) => {
     alert(`🔙 ${pokemonName} ha devuelto a ${previousPokemon.name}!`);
   };
 
+  const handleAddStarter = (playerId, starterName) => {
+    const player = (tournamentData.players || []).find(p => p.id === playerId);
+    if (!player) return;
+
+    const team = player.team || [];
+    
+    // Buscar primer slot vacío
+    const emptySlotIndex = team.findIndex(slot => !slot);
+    
+    if (emptySlotIndex === -1 && team.length >= 6) {
+      alert('❌ El equipo está completo (6 Pokémon)');
+      return;
+    }
+
+    const newTeam = [...team];
+    if (emptySlotIndex !== -1) {
+      newTeam[emptySlotIndex] = starterName;
+    } else {
+      newTeam.push(starterName);
+    }
+    
+    // Rellenar con null hasta tener 6 slots
+    while (newTeam.length < 6) {
+      newTeam.push(null);
+    }
+
+    tournamentData.updatePlayer(playerId, { team: newTeam });
+    setShowStarterModal(null);
+    alert(`🎉 ¡${starterName} ha sido añadido al equipo!`);
+  };
+
   const handleBadgeToggle = (playerId, badgeIndex) => {
     const player = (tournamentData.players || []).find(p => p.id === playerId);
     if (!player) return;
@@ -440,14 +508,24 @@ const Players = ({ tournamentData, audioControls, auth }) => {
 
             {/* Team Section */}
             <div className="team-section">
-              <div className="team-header">
+              <div className="team-section-header">
                 <h3>EQUIPO POKÉMON</h3>
-                <button 
-                  className="pixel-button captured-pokemon-btn"
-                  onClick={() => setShowCapturedModal({ playerId: player.id, playerName: player.name })}
-                >
-                  📦 CAPTURADOS
-                </button>
+                <div className="team-buttons">
+                  <button 
+                    className="pixel-btn captured-btn"
+                    onClick={() => setShowCapturedModal({ playerId: player.id, playerName: player.name })}
+                  >
+                    📦 CAPTURADOS
+                  </button>
+                  {canEdit && (
+                    <button 
+                      className="pixel-btn starter-btn"
+                      onClick={() => setShowStarterModal(player.id)}
+                    >
+                      🎓 STARTER OAK
+                    </button>
+                  )}
+                </div>
               </div>
               <div className="pokemon-slots">
                 {(player.team || []).map((pokemon, index) => {
@@ -745,6 +823,67 @@ const Players = ({ tournamentData, audioControls, auth }) => {
             <button 
               className="close-modal-btn pixel-button"
               onClick={() => setShowCapturedModal(null)}
+            >
+              ✕ CERRAR
+            </button>
+          </div>
+        </div>
+      )}
+
+      {/* Starter Selection Modal */}
+      {showStarterModal && (
+        <div className="modal-overlay" onClick={() => { setShowStarterModal(null); setStarterSearchTerm(''); }}>
+          <div className="modal-content pixel-card starter-modal" onClick={(e) => e.stopPropagation()}>
+            <h2>🎓 SELECCIONA TU STARTER DEL LABORATORIO OAK</h2>
+            <p className="modal-subtitle">Primera fase de líneas evolutivas de 3 etapas (Gen 1-3)</p>
+
+            <div className="starter-search">
+              <input 
+                type="text"
+                className="pixel-input"
+                placeholder="🔍 Buscar por nombre..."
+                value={starterSearchTerm}
+                onChange={(e) => setStarterSearchTerm(e.target.value)}
+              />
+            </div>
+
+            <div className="starter-pokemon-grid">
+              {VALID_STARTERS
+                .filter(pokemon => {
+                  if (!starterSearchTerm) return true;
+                  return pokemon.name.toLowerCase().includes(starterSearchTerm.toLowerCase());
+                })
+                .sort((a, b) => a.number - b.number)
+                .map(pokemon => (
+                  <div 
+                    key={pokemon.number} 
+                    className="starter-pokemon-card pixel-card"
+                    onClick={() => handleAddStarter(showStarterModal, pokemon.name)}
+                  >
+                    <div className="starter-sprite">
+                      <img 
+                        src={`https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/${pokemon.number}.png`}
+                        alt={pokemon.name}
+                      />
+                    </div>
+                    <div className="starter-info">
+                      <span className="pokemon-number">#{pokemon.number.toString().padStart(3, '0')}</span>
+                      <h4>{pokemon.name}</h4>
+                      <div className="pokemon-types">
+                        {pokemon.types.map(type => (
+                          <span key={type} className={`type-badge type-${type.toLowerCase()}`}>
+                            {type}
+                          </span>
+                        ))}
+                      </div>
+                    </div>
+                  </div>
+                ))}
+            </div>
+
+            <button 
+              className="close-modal-btn pixel-button"
+              onClick={() => { setShowStarterModal(null); setStarterSearchTerm(''); }}
             >
               ✕ CERRAR
             </button>
