@@ -3,31 +3,7 @@ import { database, ref, onValue, set, get, update } from '../config/firebase';
 
 export const useAuth = () => {
   const [currentUser, setCurrentUser] = useState(null);
-  const [index-DSqsUUwh.js:2682 Audio play prevented: NotAllowedError: play() failed because the user didn't interact with the document first. https://goo.gl/xX8pDD
-index-DSqsUUwh.js:40 TypeError: t.getSortedPlayers is not a function
-    at d (index-DSqsUUwh.js:2682:166814)
-    at y (index-DSqsUUwh.js:2682:166976)
-    at index-DSqsUUwh.js:2682:169952
-    at Array.map (<anonymous>)
-    at EC (index-DSqsUUwh.js:2682:169936)
-    at wu (index-DSqsUUwh.js:38:16981)
-    at dg (index-DSqsUUwh.js:40:43905)
-    at lg (index-DSqsUUwh.js:40:39686)
-    at F_ (index-DSqsUUwh.js:40:39614)
-    at La (index-DSqsUUwh.js:40:39468)
-lc @ index-DSqsUUwh.js:40
-index-DSqsUUwh.js:38 Uncaught TypeError: t.getSortedPlayers is not a function
-    at d (index-DSqsUUwh.js:2682:166814)
-    at y (index-DSqsUUwh.js:2682:166976)
-    at index-DSqsUUwh.js:2682:169952
-    at Array.map (<anonymous>)
-    at EC (index-DSqsUUwh.js:2682:169936)
-    at wu (index-DSqsUUwh.js:38:16981)
-    at dg (index-DSqsUUwh.js:40:43905)
-    at lg (index-DSqsUUwh.js:40:39686)
-    at F_ (index-DSqsUUwh.js:40:39614)
-    at La (index-DSqsUUwh.js:40:39468)
-users, setUsers] = useState([]);
+  const [users, setUsers] = useState([]);
   const [loading, setLoading] = useState(true);
 
   // Escuchar cambios en usuarios de Firebase
