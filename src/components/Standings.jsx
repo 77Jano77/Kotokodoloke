@@ -348,12 +348,22 @@ const Standings = ({ tournamentData, audioControls, auth }) => {
                       min="0" 
                       max="6"
                       value={tournamentData.getMatchScore(player1.id, player2.id, selectedPhase).player1 || ''}
-                      disabled={
-                        !auth?.currentUser?.isAdmin && 
-                        (tournamentData.getMatchScore(player1.id, player2.id, selectedPhase).locked ||
-                         (auth?.currentUser?.playerId !== player1.id && 
-                          auth?.currentUser?.playerId !== player2.id))
-                      }
+                      disabled={(() => {
+                        const matchData = tournamentData.getMatchScore(player1.id, player2.id, selectedPhase);
+                        const isAdmin = auth?.currentUser?.isAdmin;
+                        const isPlayer1 = auth?.currentUser?.playerId === player1.id;
+                        const isPlayer2 = auth?.currentUser?.playerId === player2.id;
+                        const isInvolved = isPlayer1 || isPlayer2;
+                        
+                        // Admin puede editar siempre
+                        if (isAdmin) return false;
+                        
+                        // Si está locked, solo admin puede editar
+                        if (matchData.locked) return true;
+                        
+                        // Si no está locked, solo los jugadores involucrados pueden editar
+                        return !isInvolved;
+                      })()}
                       onChange={(e) => {
                         const score1 = parseInt(e.target.value) || 0;
                         const score2 = tournamentData.getMatchScore(player1.id, player2.id, selectedPhase).player2 || 0;
@@ -375,12 +385,22 @@ const Standings = ({ tournamentData, audioControls, auth }) => {
                       min="0" 
                       max="6"
                       value={tournamentData.getMatchScore(player1.id, player2.id, selectedPhase).player2 || ''}
-                      disabled={
-                        !auth?.currentUser?.isAdmin && 
-                        (tournamentData.getMatchScore(player1.id, player2.id, selectedPhase).locked ||
-                         (auth?.currentUser?.playerId !== player1.id && 
-                          auth?.currentUser?.playerId !== player2.id))
-                      }
+                      disabled={(() => {
+                        const matchData = tournamentData.getMatchScore(player1.id, player2.id, selectedPhase);
+                        const isAdmin = auth?.currentUser?.isAdmin;
+                        const isPlayer1 = auth?.currentUser?.playerId === player1.id;
+                        const isPlayer2 = auth?.currentUser?.playerId === player2.id;
+                        const isInvolved = isPlayer1 || isPlayer2;
+                        
+                        // Admin puede editar siempre
+                        if (isAdmin) return false;
+                        
+                        // Si está locked, solo admin puede editar
+                        if (matchData.locked) return true;
+                        
+                        // Si no está locked, solo los jugadores involucrados pueden editar
+                        return !isInvolved;
+                      })()}
                       onChange={(e) => {
                         const score1 = tournamentData.getMatchScore(player1.id, player2.id, selectedPhase).player1 || 0;
                         const score2 = parseInt(e.target.value) || 0;
