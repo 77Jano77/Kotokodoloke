@@ -360,7 +360,7 @@ const Standings = ({ tournamentData, audioControls, auth }) => {
                                 onClick={() => {
                                   const currentScore = matchData.player1 || 0;
                                   if (currentScore > 0) {
-                                    tournamentData.updateMatchScore(player1.id, player2.id, selectedPhase, currentScore - 1, matchData.player2 || 0);
+                                    tournamentData.updateMatchScore(selectedPhase, player1.id, player2.id, currentScore - 1, matchData.player2 || 0);
                                   }
                                 }}
                                 title="Restar punto"
@@ -383,7 +383,7 @@ const Standings = ({ tournamentData, audioControls, auth }) => {
                                 onClick={() => {
                                   const currentScore = matchData.player1 || 0;
                                   if (currentScore < 6) {
-                                    tournamentData.updateMatchScore(player1.id, player2.id, selectedPhase, currentScore + 1, matchData.player2 || 0);
+                                    tournamentData.updateMatchScore(selectedPhase, player1.id, player2.id, currentScore + 1, matchData.player2 || 0);
                                   }
                                 }}
                                 title="Sumar punto"
@@ -400,7 +400,7 @@ const Standings = ({ tournamentData, audioControls, auth }) => {
                                 onClick={() => {
                                   const currentScore = matchData.player2 || 0;
                                   if (currentScore > 0) {
-                                    tournamentData.updateMatchScore(player1.id, player2.id, selectedPhase, matchData.player1 || 0, currentScore - 1);
+                                    tournamentData.updateMatchScore(selectedPhase, player1.id, player2.id, matchData.player1 || 0, currentScore - 1);
                                   }
                                 }}
                                 title="Restar punto"
@@ -423,7 +423,7 @@ const Standings = ({ tournamentData, audioControls, auth }) => {
                                 onClick={() => {
                                   const currentScore = matchData.player2 || 0;
                                   if (currentScore < 6) {
-                                    tournamentData.updateMatchScore(player1.id, player2.id, selectedPhase, matchData.player1 || 0, currentScore + 1);
+                                    tournamentData.updateMatchScore(selectedPhase, player1.id, player2.id, matchData.player1 || 0, currentScore + 1);
                                   }
                                 }}
                                 title="Sumar punto"
