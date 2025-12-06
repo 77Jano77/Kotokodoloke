@@ -264,6 +264,17 @@ const Players = ({ tournamentData, audioControls, auth }) => {
     }
   };
 
+  const handleChangeAvatarBorder = (playerId, borderId) => {
+    const border = CARD_BORDERS.find(b => b.id === borderId);
+    if (border) {
+      tournamentData.updatePlayer(playerId, { 
+        avatarBorder: borderId,
+        avatarBorderStyle: border.style,
+        avatarBorderShadow: border.shadow || null
+      });
+    }
+  };
+
   const handleEvolvePokemon = (playerId, slotIndex) => {
     const player = (tournamentData.players || []).find(p => p.id === playerId);
     if (!player) return;
@@ -575,7 +586,13 @@ const Players = ({ tournamentData, audioControls, auth }) => {
             <div className="player-avatar-section">
               <label>AVATAR / SPRITE</label>
               {player.avatarImage ? (
-                <div className="avatar-preview">
+                <div 
+                  className="avatar-preview"
+                  style={{
+                    border: player.avatarBorderStyle || CARD_BORDERS[0].style,
+                    boxShadow: player.avatarBorderShadow || 'none'
+                  }}
+                >
                   <img src={player.avatarImage} alt="Avatar" />
                   {canEdit && (
                     <button 
@@ -1061,6 +1078,37 @@ const Players = ({ tournamentData, audioControls, auth }) => {
                         }}
                       >
                         {player.cardBorder === border.id && <span className="check-icon">✓</span>}
+                      </div>
+                      <span className="border-name">{border.name}</span>
+                    </div>
+                  ))}
+                </div>
+              </div>
+
+              <div className="customize-section">
+                <h3>📷 MARCO DEL AVATAR</h3>
+                <div className="border-options">
+                  {CARD_BORDERS.map(border => (
+                    <div 
+                      key={border.id}
+                      className={`border-option ${player.avatarBorder === border.id ? 'selected' : ''}`}
+                      onClick={() => handleChangeAvatarBorder(showCustomizeModal, border.id)}
+                    >
+                      <div 
+                        className="border-preview avatar-border-preview"
+                        style={{ 
+                          border: border.style,
+                          boxShadow: border.shadow || 'none'
+                        }}
+                      >
+                        {player.avatarBorder === border.id && <span className="check-icon">✓</span>}
+                        {player.avatarImage && (
+                          <img 
+                            src={player.avatarImage} 
+                            alt="Avatar preview"
+                            className="avatar-mini-preview"
+                          />
+                        )}
                       </div>
                       <span className="border-name">{border.name}</span>
                     </div>
