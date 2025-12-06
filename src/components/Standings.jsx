@@ -132,7 +132,7 @@ const Standings = ({ tournamentData, audioControls }) => {
             <tbody>
               {sortedPlayers.map((player, index) => {
                 const badgeCount = getBadgeCount(player);
-                const teamSize = player.team.filter(Boolean).length;
+                const teamSize = (player.team || []).filter(Boolean).length;
                 const position = index + 1;
                 
                 return (

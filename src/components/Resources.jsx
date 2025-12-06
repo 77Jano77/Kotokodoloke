@@ -479,10 +479,10 @@ const Resources = ({ audioControls, tournamentData }) => {
               {!expandedRecord && (
                 <div className="records-sprite-grid">
                   {captureRecords.map(record => {
-                    const kantoCompleted = record.kantoZones.filter(z => z.captured).length;
-                    const seviCompleted = record.seviZones.filter(z => z.captured).length;
+                    const kantoCompleted = (record.kantoZones || []).filter(z => z.captured).length;
+                    const seviCompleted = (record.seviZones || []).filter(z => z.captured).length;
                     const totalCompleted = kantoCompleted + seviCompleted;
-                    const totalZones = record.kantoZones.length + record.seviZones.length;
+                    const totalZones = (record.kantoZones || []).length + (record.seviZones || []).length;
 
                     return (
                       <div 
@@ -504,10 +504,10 @@ const Resources = ({ audioControls, tournamentData }) => {
               {/* Expanded Record View */}
               {expandedRecord && captureRecords.find(r => r.id === expandedRecord) && (() => {
                 const record = captureRecords.find(r => r.id === expandedRecord);
-                const kantoCompleted = record.kantoZones.filter(z => z.captured).length;
-                const seviCompleted = record.seviZones.filter(z => z.captured).length;
+                const kantoCompleted = (record.kantoZones || []).filter(z => z.captured).length;
+                const seviCompleted = (record.seviZones || []).filter(z => z.captured).length;
                 const totalCompleted = kantoCompleted + seviCompleted;
-                const totalZones = record.kantoZones.length + record.seviZones.length;
+                const totalZones = (record.kantoZones || []).length + (record.seviZones || []).length;
 
                 return (
                   <div className="capture-record-expanded pixel-card">
@@ -534,10 +534,10 @@ const Resources = ({ audioControls, tournamentData }) => {
                     {/* Kanto Zones */}
                     <div className="zones-region">
                       <h4 className="region-title">
-                        🗾 KANTO ({kantoCompleted}/{record.kantoZones.length})
+                        🗾 KANTO ({kantoCompleted}/{(record.kantoZones || []).length})
                       </h4>
                       <div className="zones-grid">
-                        {record.kantoZones.map(zone => (
+                        {(record.kantoZones || []).map(zone => (
                           <div 
                             key={zone.id} 
                             className={`zone-item ${zone.captured ? 'captured' : ''}`}
@@ -558,10 +558,10 @@ const Resources = ({ audioControls, tournamentData }) => {
                     {/* Islas Sevi */}
                     <div className="zones-region">
                       <h4 className="region-title">
-                        🏝️ ISLAS SEVI ({seviCompleted}/{record.seviZones.length})
+                        🏝️ ISLAS SEVI ({seviCompleted}/{(record.seviZones || []).length})
                       </h4>
                       <div className="zones-grid">
-                        {record.seviZones.map(zone => (
+                        {(record.seviZones || []).map(zone => (
                           <div 
                             key={zone.id} 
                             className={`zone-item ${zone.captured ? 'captured' : ''}`}
