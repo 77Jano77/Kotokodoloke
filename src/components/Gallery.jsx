@@ -1,13 +1,15 @@
 import { useState, useEffect, useRef } from 'react';
 import './Gallery.css';
 
-const Gallery = ({ audioControls, auth }) => {
+const Gallery = ({ audioControls, auth, tournamentData }) => {
   const audioRef = useRef(null);
-  const [images, setImages] = useState(() => {
-    const saved = localStorage.getItem('gallery-images');
-    return saved ? JSON.parse(saved) : [];
-  });
+  const images = tournamentData?.gallery || [];
   const [showUploadModal, setShowUploadModal] = useState(false);
+
+  // Limpiar localStorage antiguo
+  useEffect(() => {
+    localStorage.removeItem('gallery-images');
+  }, []);
 
   useEffect(() => {
     if (audioRef.current) {
@@ -29,10 +31,6 @@ const Gallery = ({ audioControls, auth }) => {
       audioRef.current.muted = audioControls.isMuted;
     }
   }, [audioControls.volume, audioControls.isMuted]);
-
-  useEffect(() => {
-    localStorage.setItem('gallery-images', JSON.stringify(images));
-  }, [images]);
 
   const [newImage, setNewImage] = useState({
     url: '',
@@ -72,7 +70,7 @@ const Gallery = ({ audioControls, auth }) => {
       date: new Date().toLocaleDateString()
     };
 
-    setImages([imageToAdd, ...images]);
+    tournamentData.addGalleryImage(imageToAdd);
     
     // Reset form
     setNewImage({
@@ -94,7 +92,7 @@ const Gallery = ({ audioControls, auth }) => {
     }
 
     if (confirm('¿Eliminar esta imagen?')) {
-      setImages(images.filter(img => img.id !== imageId));
+      tournamentData.deleteGalleryImage(imageId);
       setSelectedImage(null);
     }
   };

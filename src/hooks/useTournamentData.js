@@ -132,6 +132,14 @@ export const useTournamentData = () => {
     updateFirebase(newData);
   };
 
+  const deleteGalleryImage = (imageId) => {
+    const newData = {
+      ...data,
+      gallery: data.gallery.filter(img => img.id !== imageId),
+    };
+    updateFirebase(newData);
+  };
+
   const addComment = (imageId, comment) => {
     const newData = {
       ...data,
@@ -318,6 +326,7 @@ export const useTournamentData = () => {
     addReward,
     removeReward,
     addGalleryImage,
+    deleteGalleryImage,
     addComment,
     calculatePlayerPoints,
     calculatePlayerWins,
