@@ -50,7 +50,7 @@ const Standings = ({ tournamentData, audioControls }) => {
   };
 
   const getBadgeCount = (player) => {
-    return player.badges.filter(Boolean).length;
+    return (player.badges || []).filter(Boolean).length;
   };
 
   const getPhaseFromBadges = (badgeCount) => {
