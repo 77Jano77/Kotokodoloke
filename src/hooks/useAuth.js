@@ -65,6 +65,7 @@ export const useAuth = () => {
 
       // Crear nuevo usuario
       const userId = `user_${Date.now()}`;
+      const normalizedUsername = username.toLowerCase().replace(/\s+/g, '');
       const newUser = {
         id: userId,
         username,
@@ -73,7 +74,7 @@ export const useAuth = () => {
         createdAt: new Date().toISOString(),
         hasPlayer: false,
         playerId: null,
-        isAdmin: username.toLowerCase() === 'pescador_jano'
+        isAdmin: normalizedUsername === 'pescadorjano'
       };
 
       // Guardar en Firebase
@@ -94,8 +95,9 @@ export const useAuth = () => {
       );
 
       if (user) {
-        // Asegurar que Pescador_Jano tenga permisos de admin
-        if (user.username.toLowerCase() === 'pescador_jano' && !user.isAdmin) {
+        // Asegurar que Pescador Jano tenga permisos de admin
+        const normalizedUsername = user.username.toLowerCase().replace(/\s+/g, '');
+        if (normalizedUsername === 'pescadorjano' && !user.isAdmin) {
           const userRef = ref(database, `users/${user.firebaseKey}`);
           await update(userRef, { isAdmin: true });
           user = { ...user, isAdmin: true };
