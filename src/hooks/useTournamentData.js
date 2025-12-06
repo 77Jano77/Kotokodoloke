@@ -5,6 +5,7 @@ const initialData = {
   players: [],
   gallery: [],
   currentPhase: 0,
+  captureRecords: [],
 };
 
 export const useTournamentData = () => {
@@ -267,12 +268,50 @@ export const useTournamentData = () => {
     updateFirebase(newData);
   };
 
+  const addCaptureRecord = (recordData) => {
+    const newRecord = {
+      id: Date.now(),
+      playerName: recordData.playerName,
+      kantoZones: recordData.kantoZones,
+      seviZones: recordData.seviZones,
+    };
+
+    const newData = {
+      ...data,
+      captureRecords: [...(data.captureRecords || []), newRecord],
+    };
+
+    updateFirebase(newData);
+    return newRecord.id;
+  };
+
+  const updateCaptureRecord = (recordId, updates) => {
+    const newData = {
+      ...data,
+      captureRecords: (data.captureRecords || []).map(record =>
+        record.id === recordId ? { ...record, ...updates } : record
+      ),
+    };
+
+    updateFirebase(newData);
+  };
+
+  const deleteCaptureRecord = (recordId) => {
+    const newData = {
+      ...data,
+      captureRecords: (data.captureRecords || []).filter(record => record.id !== recordId),
+    };
+
+    updateFirebase(newData);
+  };
+
   return {
     ...data,
     loading,
     players: data.players,
     gallery: data.gallery,
     currentPhase: data.currentPhase,
+    captureRecords: data.captureRecords || [],
     addPlayer,
     updatePlayer,
     deletePlayer,
@@ -287,5 +326,8 @@ export const useTournamentData = () => {
     setCurrentPhase,
     incrementManualRolls,
     decrementManualRolls,
+    addCaptureRecord,
+    updateCaptureRecord,
+    deleteCaptureRecord,
   };
 };

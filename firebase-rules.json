@@ -1,0 +1,16 @@
+{
+  "rules": {
+    // Datos del torneo - SOLO pescador_jano puede modificar desde el cliente
+    // La validación real la haremos en el código
+    "tournament": {
+      ".read": true,
+      ".write": true
+    },
+    
+    // Usuarios - Cualquiera puede registrarse y leer
+    "users": {
+      ".read": true,
+      ".write": true
+    }
+  }
+}

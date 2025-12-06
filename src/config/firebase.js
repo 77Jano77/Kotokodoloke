@@ -1,5 +1,5 @@
 import { initializeApp } from 'firebase/app';
-import { getDatabase, ref, onValue, set, update, push, remove } from 'firebase/database';
+import { getDatabase, ref, onValue, set, update, push, remove, get } from 'firebase/database';
 import { getAuth } from 'firebase/auth';
 
 // Configuración de Firebase para Kotokodos Cup
@@ -18,4 +18,4 @@ const app = initializeApp(firebaseConfig);
 const database = getDatabase(app);
 const auth = getAuth(app);
 
-export { database, auth, ref, onValue, set, update, push, remove };
+export { database, auth, ref, onValue, set, update, push, remove, get };

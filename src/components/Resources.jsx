@@ -5,7 +5,7 @@ import { POKEDEX_DATA } from '../data/pokedex';
 import { ABILITIES_DATA } from '../data/abilities';
 import { CAPTURE_ZONES } from '../data/captureZones';
 
-const Resources = ({ audioControls }) => {
+const Resources = ({ audioControls, tournamentData }) => {
   const audioRef = useRef(null);
   const [activeTab, setActiveTab] = useState('types');
   const [searchTerm, setSearchTerm] = useState('');
@@ -13,18 +13,16 @@ const Resources = ({ audioControls }) => {
   const [selectedGen, setSelectedGen] = useState('all');
   const [showConnectionGuide, setShowConnectionGuide] = useState(false);
   
-  // Capture zones state
-  const [captureRecords, setCaptureRecords] = useState(() => {
-    const saved = localStorage.getItem('capture-records');
-    return saved ? JSON.parse(saved) : [];
-  });
+  // Usar captureRecords de Firebase
+  const captureRecords = tournamentData.captureRecords || [];
   const [showNewRecordForm, setShowNewRecordForm] = useState(false);
   const [newPlayerName, setNewPlayerName] = useState('');
   const [expandedRecord, setExpandedRecord] = useState(null);
 
+  // Limpiar LocalStorage antiguo
   useEffect(() => {
-    localStorage.setItem('capture-records', JSON.stringify(captureRecords));
-  }, [captureRecords]);
+    localStorage.removeItem('capture-records');
+  }, []);
 
   useEffect(() => {
     if (audioRef.current && audioControls) {
@@ -53,36 +51,34 @@ const Resources = ({ audioControls }) => {
       return;
     }
 
-    const newRecord = {
-      id: Date.now(),
+    const recordData = {
       playerName: newPlayerName.trim(),
       kantoZones: CAPTURE_ZONES.kanto.map(zone => ({ ...zone, captured: false })),
       seviZones: CAPTURE_ZONES.seviIslands.map(zone => ({ ...zone, captured: false }))
     };
 
-    setCaptureRecords([...captureRecords, newRecord]);
+    tournamentData.addCaptureRecord(recordData);
     setNewPlayerName('');
     setShowNewRecordForm(false);
   };
 
   const toggleZone = (recordId, region, zoneId) => {
-    setCaptureRecords(captureRecords.map(record => {
-      if (record.id === recordId) {
-        const zones = region === 'kanto' ? 'kantoZones' : 'seviZones';
-        return {
-          ...record,
-          [zones]: record[zones].map(zone =>
-            zone.id === zoneId ? { ...zone, captured: !zone.captured } : zone
-          )
-        };
-      }
-      return record;
-    }));
+    const record = captureRecords.find(r => r.id === recordId);
+    if (!record) return;
+
+    const zones = region === 'kanto' ? 'kantoZones' : 'seviZones';
+    const updatedZones = record[zones].map(zone =>
+      zone.id === zoneId ? { ...zone, captured: !zone.captured } : zone
+    );
+
+    tournamentData.updateCaptureRecord(recordId, {
+      [zones]: updatedZones
+    });
   };
 
   const deleteRecord = (recordId) => {
     if (confirm('¿Eliminar este registro?')) {
-      setCaptureRecords(captureRecords.filter(r => r.id !== recordId));
+      tournamentData.deleteCaptureRecord(recordId);
     }
   };
 
