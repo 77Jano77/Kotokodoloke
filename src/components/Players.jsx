@@ -30,6 +30,30 @@ const KANTO_BADGES = [
   { id: 'earth', name: 'Tierra', image: '/recursos/Tierra.png' }
 ];
 
+const CARD_BACKGROUNDS = [
+  { id: 'default', name: 'Predeterminado', gradient: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)' },
+  { id: 'fire', name: 'Fuego', gradient: 'linear-gradient(135deg, #f093fb 0%, #f5576c 100%)' },
+  { id: 'water', name: 'Agua', gradient: 'linear-gradient(135deg, #4facfe 0%, #00f2fe 100%)' },
+  { id: 'grass', name: 'Planta', gradient: 'linear-gradient(135deg, #43e97b 0%, #38f9d7 100%)' },
+  { id: 'electric', name: 'Eléctrico', gradient: 'linear-gradient(135deg, #fa709a 0%, #fee140 100%)' },
+  { id: 'psychic', name: 'Psíquico', gradient: 'linear-gradient(135deg, #a8edea 0%, #fed6e3 100%)' },
+  { id: 'dark', name: 'Oscuro', gradient: 'linear-gradient(135deg, #2c3e50 0%, #4ca1af 100%)' },
+  { id: 'dragon', name: 'Dragón', gradient: 'linear-gradient(135deg, #ff9a56 0%, #ff4e50 100%)' },
+  { id: 'fairy', name: 'Hada', gradient: 'linear-gradient(135deg, #ffecd2 0%, #fcb69f 100%)' },
+  { id: 'steel', name: 'Acero', gradient: 'linear-gradient(135deg, #d7d2cc 0%, #304352 100%)' },
+];
+
+const CARD_BORDERS = [
+  { id: 'default', name: 'Normal', style: '4px solid var(--shadow-dark)' },
+  { id: 'double', name: 'Doble', style: '6px double #fbbf24' },
+  { id: 'dashed', name: 'Punteado', style: '4px dashed #10b981' },
+  { id: 'thick', name: 'Grueso', style: '8px solid #ef4444' },
+  { id: 'glow', name: 'Brillante', style: '4px solid #8b5cf6', shadow: '0 0 20px rgba(139, 92, 246, 0.6)' },
+  { id: 'gold', name: 'Oro', style: '5px solid #fbbf24', shadow: '0 0 15px rgba(251, 191, 36, 0.5)' },
+  { id: 'silver', name: 'Plata', style: '5px solid #e5e7eb', shadow: '0 0 15px rgba(229, 231, 235, 0.5)' },
+  { id: 'neon', name: 'Neón', style: '3px solid #06b6d4', shadow: '0 0 25px rgba(6, 182, 212, 0.8)' },
+];
+
 // Extraer todos los nombres de Pokémon de Gen 1-3 desde la Pokédex
 const POKEMON_LIST = POKEDEX_DATA
   .filter(pokemon => pokemon.generation >= 1 && pokemon.generation <= 3)
@@ -79,6 +103,7 @@ const Players = ({ tournamentData, audioControls, auth }) => {
   const [showCapturedModal, setShowCapturedModal] = useState(null); // {playerId, playerName}
   const [showStarterModal, setShowStarterModal] = useState(null); // playerId
   const [starterSearchTerm, setStarterSearchTerm] = useState('');
+  const [showCustomizeModal, setShowCustomizeModal] = useState(null); // playerId
 
   // Verificar si el usuario ya tiene un jugador creado
   const userPlayer = auth.currentUser?.hasPlayer 
@@ -216,6 +241,27 @@ const Players = ({ tournamentData, audioControls, auth }) => {
 
   const handleRemoveFromTeam = (playerId, slotIndex) => {
     handleTeamChange(playerId, slotIndex, null);
+  };
+
+  const handleChangeBackground = (playerId, backgroundId) => {
+    const background = CARD_BACKGROUNDS.find(bg => bg.id === backgroundId);
+    if (background) {
+      tournamentData.updatePlayer(playerId, { 
+        cardBackground: backgroundId,
+        cardBackgroundGradient: background.gradient
+      });
+    }
+  };
+
+  const handleChangeBorder = (playerId, borderId) => {
+    const border = CARD_BORDERS.find(b => b.id === borderId);
+    if (border) {
+      tournamentData.updatePlayer(playerId, { 
+        cardBorder: borderId,
+        cardBorderStyle: border.style,
+        cardBorderShadow: border.shadow || null
+      });
+    }
   };
 
   const handleEvolvePokemon = (playerId, slotIndex) => {
@@ -469,7 +515,15 @@ const Players = ({ tournamentData, audioControls, auth }) => {
           const canEdit = isAdmin || player.id === auth.currentUser?.playerId;
           
           return (
-          <div key={player.id} className={`player-card pixel-card ${!canEdit ? 'read-only' : ''} ${isAdmin && canEdit ? 'admin-editable' : ''}`}>
+          <div 
+            key={player.id} 
+            className={`player-card pixel-card ${!canEdit ? 'read-only' : ''} ${isAdmin && canEdit ? 'admin-editable' : ''}`}
+            style={{
+              background: player.cardBackgroundGradient || CARD_BACKGROUNDS[0].gradient,
+              border: player.cardBorderStyle || CARD_BORDERS[0].style,
+              boxShadow: player.cardBorderShadow || 'none'
+            }}
+          >
             {/* Card Header */}
             <div className="player-card-header">
               <div className="player-info-top">
@@ -489,22 +543,31 @@ const Players = ({ tournamentData, audioControls, auth }) => {
               </div>
 
               {canEdit && (
-                <button 
-                  className="delete-btn pixel-button-danger"
-                  onClick={async () => {
-                    if (confirm(`¿Eliminar a ${player.name}?`)) {
-                      tournamentData.deletePlayer(player.id);
-                      if (player.id === auth.currentUser?.playerId) {
-                        await auth.deleteUserPlayer();
-                        alert('✅ Jugador eliminado correctamente. Ahora puedes crear uno nuevo.');
-                        // Forzar recarga de la página para actualizar el estado
-                        window.location.reload();
+                <div className="card-actions">
+                  <button 
+                    className="customize-btn pixel-button"
+                    onClick={() => setShowCustomizeModal(player.id)}
+                    title="Personalizar ficha"
+                  >
+                    🎨
+                  </button>
+                  <button 
+                    className="delete-btn pixel-button-danger"
+                    onClick={async () => {
+                      if (confirm(`¿Eliminar a ${player.name}?`)) {
+                        tournamentData.deletePlayer(player.id);
+                        if (player.id === auth.currentUser?.playerId) {
+                          await auth.deleteUserPlayer();
+                          alert('✅ Jugador eliminado correctamente. Ahora puedes crear uno nuevo.');
+                          // Forzar recarga de la página para actualizar el estado
+                          window.location.reload();
+                        }
                       }
-                    }
-                  }}
-                >
-                  🗑️
-                </button>
+                    }}
+                  >
+                    🗑️
+                  </button>
+                </div>
               )}
             </div>
 
@@ -951,6 +1014,70 @@ const Players = ({ tournamentData, audioControls, auth }) => {
           </div>
         </div>
       )}
+
+      {/* Customize Card Modal */}
+      {showCustomizeModal && (() => {
+        const player = (tournamentData.players || []).find(p => p.id === showCustomizeModal);
+        if (!player) return null;
+
+        return (
+          <div className="modal-overlay" onClick={() => setShowCustomizeModal(null)}>
+            <div className="modal-content pixel-card customize-modal" onClick={(e) => e.stopPropagation()}>
+              <h2>🎨 PERSONALIZAR FICHA</h2>
+              <p className="modal-subtitle">Personaliza el fondo y el marco de tu ficha de personaje</p>
+
+              <div className="customize-section">
+                <h3>🌈 FONDO DE LA FICHA</h3>
+                <div className="background-options">
+                  {CARD_BACKGROUNDS.map(bg => (
+                    <div 
+                      key={bg.id}
+                      className={`background-option ${player.cardBackground === bg.id ? 'selected' : ''}`}
+                      style={{ background: bg.gradient }}
+                      onClick={() => handleChangeBackground(showCustomizeModal, bg.id)}
+                      title={bg.name}
+                    >
+                      {player.cardBackground === bg.id && <span className="check-icon">✓</span>}
+                      <span className="bg-name">{bg.name}</span>
+                    </div>
+                  ))}
+                </div>
+              </div>
+
+              <div className="customize-section">
+                <h3>🖼️ MARCO DE LA FICHA</h3>
+                <div className="border-options">
+                  {CARD_BORDERS.map(border => (
+                    <div 
+                      key={border.id}
+                      className={`border-option ${player.cardBorder === border.id ? 'selected' : ''}`}
+                      onClick={() => handleChangeBorder(showCustomizeModal, border.id)}
+                    >
+                      <div 
+                        className="border-preview"
+                        style={{ 
+                          border: border.style,
+                          boxShadow: border.shadow || 'none'
+                        }}
+                      >
+                        {player.cardBorder === border.id && <span className="check-icon">✓</span>}
+                      </div>
+                      <span className="border-name">{border.name}</span>
+                    </div>
+                  ))}
+                </div>
+              </div>
+
+              <button 
+                className="close-modal-btn pixel-button"
+                onClick={() => setShowCustomizeModal(null)}
+              >
+                ✓ GUARDAR Y CERRAR
+              </button>
+            </div>
+          </div>
+        );
+      })()}
     </div>
   );
 };
