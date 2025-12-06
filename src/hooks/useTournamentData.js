@@ -154,8 +154,9 @@ export const useTournamentData = () => {
 
   const calculatePlayerPoints = (playerId, filterPhase = null) => {
     let totalPoints = 0;
+    const players = data.players || [];
     
-    data.players.forEach(player => {
+    players.forEach(player => {
       if (!player.matchScores) return;
       
       Object.entries(player.matchScores).forEach(([key, scores]) => {
@@ -178,8 +179,9 @@ export const useTournamentData = () => {
 
   const calculatePlayerWins = (playerId, filterPhase = null) => {
     let totalWins = 0;
+    const players = data.players || [];
     
-    data.players.forEach(player => {
+    players.forEach(player => {
       if (!player.matchScores) return;
       
       Object.entries(player.matchScores).forEach(([key, scores]) => {
@@ -201,7 +203,8 @@ export const useTournamentData = () => {
   };
 
   const getTopPlayers = (limit = 3) => {
-    return [...data.players]
+    const players = data.players || [];
+    return [...players]
       .sort((a, b) => {
         const pointsA = calculatePlayerPoints(a.id);
         const pointsB = calculatePlayerPoints(b.id);
