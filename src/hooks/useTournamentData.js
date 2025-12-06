@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { database, ref, onValue, set, update } from '../config/firebase';
+import { database, ref, onValue, set } from '../config/firebase';
 
 const initialData = {
   players: [],
