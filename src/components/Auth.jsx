@@ -12,7 +12,7 @@ const Auth = ({ onLogin, onRegister, onRecover }) => {
   const [error, setError] = useState('');
   const [recoveredPassword, setRecoveredPassword] = useState(null);
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     setError('');
 
@@ -21,7 +21,7 @@ const Auth = ({ onLogin, onRegister, onRecover }) => {
         setError('⚠️ Completa todos los campos');
         return;
       }
-      const result = onLogin(formData.username, formData.password);
+      const result = await onLogin(formData.username, formData.password);
       if (!result.success) {
         setError(result.error);
       }
@@ -42,7 +42,7 @@ const Auth = ({ onLogin, onRegister, onRecover }) => {
         setError('⚠️ Introduce un correo electrónico válido');
         return;
       }
-      const result = onRegister(formData.username, formData.password, formData.email);
+      const result = await onRegister(formData.username, formData.password, formData.email);
       if (!result.success) {
         setError(result.error);
       } else {
@@ -55,7 +55,7 @@ const Auth = ({ onLogin, onRegister, onRecover }) => {
         setError('⚠️ Introduce tu correo electrónico');
         return;
       }
-      const result = onRecover(formData.email);
+      const result = await onRecover(formData.email);
       if (!result.success) {
         setError(result.error);
         setRecoveredPassword(null);
