@@ -1,0 +1,65 @@
+============================================
+  PASOS PARA DESPLEGAR EN VERCEL
+============================================
+
+✅ Tu código YA está en GitHub:
+   https://github.com/77Jano77/Kotokodoloke
+
+📋 AHORA EN VERCEL (la página ya se abrió):
+
+1. Click en "Continue with GitHub"
+   
+2. Autoriza a Vercel (si te lo pide)
+
+3. En "Import Git Repository":
+   - Busca: Kotokodoloke
+   - Click en "Import"
+
+4. En la configuración:
+   ✅ Framework Preset: Vite (se detecta automático)
+   ✅ Root Directory: ./
+   ✅ Build Command: npm run build
+   ✅ Output Directory: dist
+   
+   ⚠️ NO cambies NADA, está perfecto por defecto
+
+5. Click en "Deploy"
+
+6. Espera 1-2 minutos...
+
+7. ¡LISTO! Tendrás tu URL:
+   https://kotokodoloke.vercel.app
+   (o similar)
+
+============================================
+  DESPUÉS DEL DESPLIEGUE
+============================================
+
+🔄 Para actualizar tu app en el futuro:
+
+$env:Path += ";C:\Program Files\Git\cmd"
+git add .
+git commit -m "descripción de cambios"
+git push
+
+Vercel detectará el cambio y actualizará 
+automáticamente en 1-2 minutos!
+
+============================================
+  COMPARTIR CON JUGADORES
+============================================
+
+Una vez desplegado, comparte:
+
+🎮 KOTOKODOS CUP - TORNEO POKÉMON NUZLOCKE
+
+🌐 Accede: [TU_URL_DE_VERCEL]
+
+👤 Admin: pescador_jano
+🔑 Pass: admin123
+
+📝 Crea tu cuenta y personaje
+🎮 Red Radmin: Kotokodos Cup
+🔐 Password: Somalia
+
+============================================
