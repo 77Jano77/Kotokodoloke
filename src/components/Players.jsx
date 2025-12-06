@@ -40,6 +40,7 @@ const Players = ({ tournamentData, audioControls, auth }) => {
   const [showAddForm, setShowAddForm] = useState(false);
   const [pokemonSearchValues, setPokemonSearchValues] = useState({});
   const [abilitySearchValues, setAbilitySearchValues] = useState({});
+  const [showCapturedModal, setShowCapturedModal] = useState(null); // {playerId, playerName}
 
   // Verificar si el usuario ya tiene un jugador creado
   const userPlayer = auth.currentUser?.hasPlayer 
@@ -369,7 +370,15 @@ const Players = ({ tournamentData, audioControls, auth }) => {
 
             {/* Team Section */}
             <div className="team-section">
-              <h3>EQUIPO POKÉMON</h3>
+              <div className="team-header">
+                <h3>EQUIPO POKÉMON</h3>
+                <button 
+                  className="pixel-button captured-pokemon-btn"
+                  onClick={() => setShowCapturedModal({ playerId: player.id, playerName: player.name })}
+                >
+                  📦 CAPTURADOS
+                </button>
+              </div>
               <div className="pokemon-slots">
                 {(player.team || []).map((pokemon, index) => {
                   const pokemonData = pokemon ? POKEDEX_DATA.find(p => p.name === (typeof pokemon === 'object' ? pokemon.name : pokemon)) : null;
@@ -557,6 +566,97 @@ const Players = ({ tournamentData, audioControls, auth }) => {
           <p className="empty-icon">👤</p>
           <h3>NO HAY JUGADORES</h3>
           <p>Haz clic en "NUEVO JUGADOR" para comenzar</p>
+        </div>
+      )}
+
+      {/* Captured Pokemon Modal */}
+      {showCapturedModal && (
+        <div className="modal-overlay" onClick={() => setShowCapturedModal(null)}>
+          <div className="modal-content pixel-card captured-modal" onClick={(e) => e.stopPropagation()}>
+            <h2>📦 POKÉMON CAPTURADOS</h2>
+            <p className="modal-subtitle">{showCapturedModal.playerName}</p>
+
+            {(() => {
+              const capturedPokemon = tournamentData.getCapturedPokemonByPlayer(showCapturedModal.playerName);
+              const canEdit = isAdmin || showCapturedModal.playerId === auth.currentUser?.playerId;
+              
+              if (capturedPokemon.length === 0) {
+                return (
+                  <div className="empty-captured">
+                    <p className="empty-icon">📭</p>
+                    <p>No hay Pokémon capturados registrados</p>
+                    <p className="hint">Ve a "RECURSOS" → "REGISTRO ZONAS" para registrar capturas</p>
+                  </div>
+                );
+              }
+
+              return (
+                <div className="captured-pokemon-grid">
+                  {capturedPokemon.map((pokemon, index) => {
+                    const pokemonData = POKEDEX_DATA.find(p => p.number === parseInt(pokemon.pokemon));
+                    return (
+                      <div key={index} className="captured-pokemon-card pixel-card">
+                        <div className="captured-sprite">
+                          <img 
+                            src={`https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/${pokemon.pokemon}.png`}
+                            alt={`#${pokemon.pokemon}`}
+                          />
+                        </div>
+                        <div className="captured-info">
+                          <h4>{pokemon.nickname || (pokemonData ? pokemonData.name : `#${pokemon.pokemon}`)}</h4>
+                          {pokemon.nickname && pokemonData && (
+                            <p className="pokemon-species">{pokemonData.name}</p>
+                          )}
+                          {pokemon.ability && (
+                            <span className="pokemon-ability">⚡ {pokemon.ability}</span>
+                          )}
+                          <span className="pokemon-location">📍 {pokemon.zone}</span>
+                          <span className="pokemon-region">{pokemon.region}</span>
+                        </div>
+                        {canEdit && (
+                          <button 
+                            className="add-to-team-btn pixel-button"
+                            onClick={() => {
+                              // Añadir al equipo
+                              const player = (tournamentData.players || []).find(p => p.id === showCapturedModal.playerId);
+                              if (!player) return;
+                              
+                              const currentTeam = player.team || [];
+                              if (currentTeam.length >= 6) {
+                                alert('⚠️ El equipo ya tiene 6 Pokémon');
+                                return;
+                              }
+
+                              const pokemonToAdd = {
+                                name: pokemonData ? pokemonData.name : `#${pokemon.pokemon}`,
+                                nickname: pokemon.nickname || '',
+                                ability: pokemon.ability || ''
+                              };
+
+                              tournamentData.updatePlayer(player.id, {
+                                team: [...currentTeam, pokemonToAdd]
+                              });
+
+                              alert('✅ Pokémon añadido al equipo');
+                            }}
+                          >
+                            ➕ AÑADIR
+                          </button>
+                        )}
+                      </div>
+                    );
+                  })}
+                </div>
+              );
+            })()}
+
+            <button 
+              className="close-modal-btn pixel-button"
+              onClick={() => setShowCapturedModal(null)}
+            >
+              ✕ CERRAR
+            </button>
+          </div>
         </div>
       )}
     </div>

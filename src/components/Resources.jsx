@@ -18,6 +18,8 @@ const Resources = ({ audioControls, tournamentData }) => {
   const [showNewRecordForm, setShowNewRecordForm] = useState(false);
   const [newPlayerName, setNewPlayerName] = useState('');
   const [expandedRecord, setExpandedRecord] = useState(null);
+  const [selectedZoneForCapture, setSelectedZoneForCapture] = useState(null);
+  const [captureData, setCaptureData] = useState({ pokemon: '', ability: '', nickname: '' });
 
   // Limpiar LocalStorage antiguo
   useEffect(() => {
@@ -62,18 +64,79 @@ const Resources = ({ audioControls, tournamentData }) => {
     setShowNewRecordForm(false);
   };
 
-  const toggleZone = (recordId, region, zoneId) => {
+  const openCaptureModal = (recordId, region, zone) => {
+    setSelectedZoneForCapture({ recordId, region, zone });
+    // Pre-cargar datos si ya existe captura
+    const existingCapture = zone.capturedPokemon || {};
+    setCaptureData({
+      pokemon: existingCapture.pokemon || '',
+      ability: existingCapture.ability || '',
+      nickname: existingCapture.nickname || ''
+    });
+  };
+
+  const saveCapturedPokemon = () => {
+    if (!selectedZoneForCapture) return;
+    if (!captureData.pokemon) {
+      alert('⚠️ Selecciona un Pokémon');
+      return;
+    }
+
+    const { recordId, region, zone } = selectedZoneForCapture;
     const record = captureRecords.find(r => r.id === recordId);
     if (!record) return;
 
     const zones = region === 'kanto' ? 'kantoZones' : 'seviZones';
-    const updatedZones = record[zones].map(zone =>
-      zone.id === zoneId ? { ...zone, captured: !zone.captured } : zone
-    );
+    const updatedZones = record[zones].map(z => {
+      if (z.id === zone.id) {
+        return {
+          ...z,
+          captured: true,
+          capturedPokemon: {
+            pokemon: captureData.pokemon,
+            ability: captureData.ability,
+            nickname: captureData.nickname
+          }
+        };
+      }
+      return z;
+    });
 
     tournamentData.updateCaptureRecord(recordId, {
       [zones]: updatedZones
     });
+
+    // Cerrar modal y resetear
+    setSelectedZoneForCapture(null);
+    setCaptureData({ pokemon: '', ability: '', nickname: '' });
+  };
+
+  const removeCapturedPokemon = () => {
+    if (!selectedZoneForCapture) return;
+    if (!confirm('¿Eliminar este Pokémon capturado?')) return;
+
+    const { recordId, region, zone } = selectedZoneForCapture;
+    const record = captureRecords.find(r => r.id === recordId);
+    if (!record) return;
+
+    const zones = region === 'kanto' ? 'kantoZones' : 'seviZones';
+    const updatedZones = record[zones].map(z => {
+      if (z.id === zone.id) {
+        return {
+          ...z,
+          captured: false,
+          capturedPokemon: null
+        };
+      }
+      return z;
+    });
+
+    tournamentData.updateCaptureRecord(recordId, {
+      [zones]: updatedZones
+    });
+
+    setSelectedZoneForCapture(null);
+    setCaptureData({ pokemon: '', ability: '', nickname: '' });
   };
 
   const deleteRecord = (recordId) => {
@@ -541,14 +604,27 @@ const Resources = ({ audioControls, tournamentData }) => {
                           <div 
                             key={zone.id} 
                             className={`zone-item ${zone.captured ? 'captured' : ''}`}
-                            onClick={() => toggleZone(record.id, 'kanto', zone.id)}
+                            onClick={() => openCaptureModal(record.id, 'kanto', zone)}
                           >
+                            {zone.captured && zone.capturedPokemon && (
+                              <div className="zone-pokemon-sprite">
+                                <img 
+                                  src={`https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/${zone.capturedPokemon.pokemon}.png`}
+                                  alt={`Pokémon #${zone.capturedPokemon.pokemon}`}
+                                />
+                              </div>
+                            )}
                             <div className="zone-checkbox">
                               {zone.captured && '✓'}
                             </div>
                             <div className="zone-info">
                               <span className="zone-name">{zone.name}</span>
                               <span className="zone-count">{zone.pokemonCount} Pokémon</span>
+                              {zone.captured && zone.capturedPokemon && (
+                                <span className="zone-captured-name">
+                                  {zone.capturedPokemon.nickname || `#${zone.capturedPokemon.pokemon}`}
+                                </span>
+                              )}
                             </div>
                           </div>
                         ))}
@@ -565,14 +641,27 @@ const Resources = ({ audioControls, tournamentData }) => {
                           <div 
                             key={zone.id} 
                             className={`zone-item ${zone.captured ? 'captured' : ''}`}
-                            onClick={() => toggleZone(record.id, 'sevi', zone.id)}
+                            onClick={() => openCaptureModal(record.id, 'sevi', zone)}
                           >
+                            {zone.captured && zone.capturedPokemon && (
+                              <div className="zone-pokemon-sprite">
+                                <img 
+                                  src={`https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/${zone.capturedPokemon.pokemon}.png`}
+                                  alt={`Pokémon #${zone.capturedPokemon.pokemon}`}
+                                />
+                              </div>
+                            )}
                             <div className="zone-checkbox">
                               {zone.captured && '✓'}
                             </div>
                             <div className="zone-info">
                               <span className="zone-name">{zone.name}</span>
                               <span className="zone-count">{zone.pokemonCount} Pokémon</span>
+                              {zone.captured && zone.capturedPokemon && (
+                                <span className="zone-captured-name">
+                                  {zone.capturedPokemon.nickname || `#${zone.capturedPokemon.pokemon}`}
+                                </span>
+                              )}
                             </div>
                           </div>
                         ))}
@@ -689,6 +778,96 @@ const Resources = ({ audioControls, tournamentData }) => {
                 <li>Usa la misma versión del ROM (Fire Red o Leaf Green)</li>
                 <li>Guarda antes de intentar conectar por si hay problemas</li>
               </ul>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Capture Pokemon Modal */}
+      {selectedZoneForCapture && (
+        <div className="modal-overlay" onClick={() => setSelectedZoneForCapture(null)}>
+          <div className="modal-content pixel-card capture-modal" onClick={(e) => e.stopPropagation()}>
+            <h2>📍 {selectedZoneForCapture.zone.name}</h2>
+            <p className="modal-subtitle">Registrar Pokémon capturado</p>
+
+            <div className="capture-form">
+              <div className="form-group">
+                <label>POKÉMON * (Introduce número de Pokédex)</label>
+                <div className="pokemon-input-group">
+                  <input
+                    type="number"
+                    className="pixel-input"
+                    placeholder="Ej: 25 (Pikachu)"
+                    min="1"
+                    max="386"
+                    value={captureData.pokemon}
+                    onChange={(e) => setCaptureData({...captureData, pokemon: e.target.value})}
+                  />
+                  {captureData.pokemon && (
+                    <div className="pokemon-preview">
+                      <img 
+                        src={`https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/${captureData.pokemon}.png`}
+                        alt={`Pokémon #${captureData.pokemon}`}
+                        onError={(e) => e.target.style.display = 'none'}
+                      />
+                      <span>#{captureData.pokemon}</span>
+                    </div>
+                  )}
+                </div>
+                <small>Gen 1-3: #001 (Bulbasaur) hasta #386 (Deoxys)</small>
+              </div>
+
+              <div className="form-group">
+                <label>APODO (opcional)</label>
+                <input
+                  type="text"
+                  className="pixel-input"
+                  placeholder="Nombre personalizado"
+                  maxLength="12"
+                  value={captureData.nickname}
+                  onChange={(e) => setCaptureData({...captureData, nickname: e.target.value})}
+                />
+              </div>
+
+              <div className="form-group">
+                <label>HABILIDAD</label>
+                <select
+                  className="pixel-input"
+                  value={captureData.ability}
+                  onChange={(e) => setCaptureData({...captureData, ability: e.target.value})}
+                >
+                  <option value="">Seleccionar habilidad...</option>
+                  {ABILITIES_DATA.map(ability => (
+                    <option key={ability.id} value={ability.name}>
+                      {ability.name}
+                    </option>
+                  ))}
+                </select>
+              </div>
+
+              <div className="modal-actions">
+                <button 
+                  className="pixel-button confirm-btn"
+                  onClick={saveCapturedPokemon}
+                  disabled={!captureData.pokemon}
+                >
+                  ✓ GUARDAR
+                </button>
+                {selectedZoneForCapture.zone.captured && (
+                  <button 
+                    className="pixel-button delete-btn"
+                    onClick={removeCapturedPokemon}
+                  >
+                    🗑️ ELIMINAR
+                  </button>
+                )}
+                <button 
+                  className="pixel-button cancel-btn"
+                  onClick={() => setSelectedZoneForCapture(null)}
+                >
+                  ✕ CANCELAR
+                </button>
+              </div>
             </div>
           </div>
         </div>

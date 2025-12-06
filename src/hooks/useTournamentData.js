@@ -336,6 +336,40 @@ export const useTournamentData = () => {
     updateFirebase(newData);
   };
 
+  const getCapturedPokemonByPlayer = (playerName) => {
+    const record = (data.captureRecords || []).find(r => 
+      r.playerName.toLowerCase() === playerName.toLowerCase()
+    );
+    
+    if (!record) return [];
+
+    const capturedPokemon = [];
+    
+    // Recopilar Pokémon de Kanto
+    (record.kantoZones || []).forEach(zone => {
+      if (zone.captured && zone.capturedPokemon) {
+        capturedPokemon.push({
+          ...zone.capturedPokemon,
+          zone: zone.name,
+          region: 'Kanto'
+        });
+      }
+    });
+
+    // Recopilar Pokémon de Sevi
+    (record.seviZones || []).forEach(zone => {
+      if (zone.captured && zone.capturedPokemon) {
+        capturedPokemon.push({
+          ...zone.capturedPokemon,
+          zone: zone.name,
+          region: 'Islas Sevi'
+        });
+      }
+    });
+
+    return capturedPokemon;
+  };
+
   return {
     ...data,
     loading,
@@ -363,5 +397,6 @@ export const useTournamentData = () => {
     addCaptureRecord,
     updateCaptureRecord,
     deleteCaptureRecord,
+    getCapturedPokemonByPlayer,
   };
 };
