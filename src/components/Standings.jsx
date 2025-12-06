@@ -425,7 +425,7 @@ const Standings = ({ tournamentData, audioControls }) => {
           </div>
           <div className="stat-box">
             <span className="stat-value">
-              {sortedPlayers.reduce((sum, p) => sum + p.rewards.length, 0)}
+              {sortedPlayers.reduce((sum, p) => sum + (p.rewards || []).length, 0)}
             </span>
             <span className="stat-label">RECOMPENSAS</span>
           </div>
