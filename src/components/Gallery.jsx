@@ -99,7 +99,7 @@ const Gallery = ({ audioControls, auth, tournamentData }) => {
     reader.readAsDataURL(file);
   };
 
-  const handleSubmitImage = (e) => {
+  const handleSubmitImage = async (e) => {
     e.preventDefault();
     
     if (!newImage.url || !newImage.title) {
@@ -137,7 +137,7 @@ const Gallery = ({ audioControls, auth, tournamentData }) => {
         sizeKB: Math.round(imageToAdd.url.length / 1024)
       });
       
-      await tournamentData.addGalleryImage(imageToAdd);
+      tournamentData.addGalleryImage(imageToAdd);
       
       console.log('✅ Imagen subida exitosamente');
       alert('✅ IMAGEN SUBIDA CORRECTAMENTE');
