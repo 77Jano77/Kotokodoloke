@@ -180,6 +180,76 @@ const Players = ({ tournamentData, audioControls, auth }) => {
     handleTeamChange(playerId, slotIndex, null);
   };
 
+  const handleEvolvePokemon = (playerId, slotIndex) => {
+    const player = (tournamentData.players || []).find(p => p.id === playerId);
+    if (!player) return;
+
+    const currentPokemon = player.team[slotIndex];
+    const pokemonName = typeof currentPokemon === 'object' ? currentPokemon.name : currentPokemon;
+    const currentPokemonData = POKEDEX_DATA.find(p => p.name === pokemonName);
+    
+    if (!currentPokemonData) return;
+
+    // Buscar la evolución en la descripción del campo evolution
+    const evolutionMatch = currentPokemonData.evolution.match(/Evoluciona a (\w+)/);
+    
+    if (!evolutionMatch) {
+      alert('🚫 Este Pokémon no puede evolucionar más');
+      return;
+    }
+
+    const evolvedPokemonName = evolutionMatch[1];
+    const evolvedPokemonData = POKEDEX_DATA.find(p => p.name === evolvedPokemonName);
+
+    if (!evolvedPokemonData) {
+      alert('❌ Error al encontrar la evolución');
+      return;
+    }
+
+    const newTeam = [...(player.team || [])];
+    newTeam[slotIndex] = typeof currentPokemon === 'object'
+      ? { ...currentPokemon, name: evolvedPokemonName }
+      : evolvedPokemonName;
+    
+    tournamentData.updatePlayer(playerId, { team: newTeam });
+    alert(`✨ ${pokemonName} ha evolucionado a ${evolvedPokemonName}!`);
+  };
+
+  const handleDevolvePokemon = (playerId, slotIndex) => {
+    const player = (tournamentData.players || []).find(p => p.id === playerId);
+    if (!player) return;
+
+    const currentPokemon = player.team[slotIndex];
+    const pokemonName = typeof currentPokemon === 'object' ? currentPokemon.name : currentPokemon;
+    const currentPokemonData = POKEDEX_DATA.find(p => p.name === pokemonName);
+    
+    if (!currentPokemonData) return;
+
+    // Buscar todas las evoluciones previas
+    let previousPokemon = null;
+    
+    for (const pokemon of POKEDEX_DATA) {
+      const evolutionMatch = pokemon.evolution.match(/Evoluciona a (\w+)/);
+      if (evolutionMatch && evolutionMatch[1] === pokemonName) {
+        previousPokemon = pokemon;
+        break;
+      }
+    }
+
+    if (!previousPokemon) {
+      alert('🚫 Este Pokémon no tiene forma previa');
+      return;
+    }
+
+    const newTeam = [...(player.team || [])];
+    newTeam[slotIndex] = typeof currentPokemon === 'object'
+      ? { ...currentPokemon, name: previousPokemon.name }
+      : previousPokemon.name;
+    
+    tournamentData.updatePlayer(playerId, { team: newTeam });
+    alert(`🔙 ${pokemonName} ha devuelto a ${previousPokemon.name}!`);
+  };
+
   const handleBadgeToggle = (playerId, badgeIndex) => {
     const player = (tournamentData.players || []).find(p => p.id === playerId);
     if (!player) return;
@@ -402,14 +472,36 @@ const Players = ({ tournamentData, audioControls, auth }) => {
                         <div className="pokemon-selected">
                           <span>{typeof pokemon === 'object' ? pokemon.name : pokemon}</span>
                           {canEdit && (
-                            <button 
-                              className="remove-pokemon-btn"
-                              onClick={() => handleRemoveFromTeam(player.id, index)}
-                            >
-                              ✕
-                            </button>
+                            <>
+                              <button 
+                                className="remove-pokemon-btn"
+                                onClick={() => handleRemoveFromTeam(player.id, index)}
+                              >
+                                ✕
+                              </button>
+                            </>
                           )}
                         </div>
+                        
+                        {/* Botones de evolución */}
+                        {canEdit && (
+                          <div className="evolution-buttons">
+                            <button 
+                              className="evolve-btn"
+                              onClick={() => handleEvolvePokemon(player.id, index)}
+                              title="Evolucionar"
+                            >
+                              ⬆️ Evolucionar
+                            </button>
+                            <button 
+                              className="devolve-btn"
+                              onClick={() => handleDevolvePokemon(player.id, index)}
+                              title="Devolver"
+                            >
+                              ⬇️ Devolver
+                            </button>
+                          </div>
+                        )}
                         
                         {/* Sprite del Pokémon */}
                         {pokemonData && (

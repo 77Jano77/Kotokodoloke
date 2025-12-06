@@ -495,6 +495,44 @@
   background: red;
 }
 
+/* Evolution buttons */
+.evolution-buttons {
+  display: flex;
+  gap: 0.5rem;
+  margin-top: 0.5rem;
+}
+
+.evolve-btn,
+.devolve-btn {
+  flex: 1;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+  border: 2px solid #4c51bf;
+  padding: 0.4rem 0.6rem;
+  cursor: pointer;
+  font-family: 'Press Start 2P', cursive;
+  font-size: 0.6rem;
+  transition: all 0.2s;
+  image-rendering: pixelated;
+}
+
+.evolve-btn:hover {
+  background: linear-gradient(135deg, #764ba2 0%, #667eea 100%);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 8px rgba(102, 126, 234, 0.4);
+}
+
+.devolve-btn {
+  background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+  border-color: #e53e3e;
+}
+
+.devolve-btn:hover {
+  background: linear-gradient(135deg, #f5576c 0%, #f093fb 100%);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 8px rgba(245, 87, 108, 0.4);
+}
+
 /* Badges Section */
 .badges-section h3 {
   font-size: 1rem;
