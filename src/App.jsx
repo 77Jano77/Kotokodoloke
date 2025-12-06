@@ -33,7 +33,7 @@ function App() {
   const audioControls = { isMuted, volume };
 
   const sections = {
-    home: <Home tournamentData={tournamentData} audioControls={audioControls} />,
+    home: <Home tournamentData={tournamentData} audioControls={audioControls} auth={auth} />,
     players: <Players tournamentData={tournamentData} audioControls={audioControls} auth={auth} />,
     roulette: <Roulette tournamentData={tournamentData} audioControls={audioControls} auth={auth} />,
     standings: <Standings tournamentData={tournamentData} audioControls={audioControls} />,

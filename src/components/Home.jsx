@@ -13,11 +13,17 @@ const KANTO_BADGES = [
   { id: 'earth', name: 'Tierra', image: '/recursos/Tierra.png' }
 ];
 
-const Home = ({ tournamentData, audioControls }) => {
+const Home = ({ tournamentData, audioControls, auth }) => {
   const audioRef = useRef(null);
   const topPlayers = tournamentData.getTopPlayers(3) || [];
   const [selectedRule, setSelectedRule] = useState(null);
   const [videoVersion, setVideoVersion] = useState(1); // 1, 2, or 3
+  const [newComment, setNewComment] = useState({});
+  
+  // Obtener últimas 3 imágenes de la galería
+  const latestImages = (tournamentData.gallery || [])
+    .sort((a, b) => b.timestamp - a.timestamp)
+    .slice(0, 3);
 
   useEffect(() => {
     if (audioRef.current) {
@@ -39,6 +45,23 @@ const Home = ({ tournamentData, audioControls }) => {
       audioRef.current.muted = audioControls.isMuted;
     }
   }, [audioControls.volume, audioControls.isMuted]);
+
+  const handleAddComment = (imageId) => {
+    const commentText = newComment[imageId];
+    if (!commentText || !commentText.trim()) return;
+    if (!auth.currentUser) {
+      alert('⚠️ Debes estar logueado para comentar');
+      return;
+    }
+
+    tournamentData.addComment(imageId, {
+      username: auth.currentUser.username,
+      text: commentText.trim(),
+      timestamp: Date.now()
+    });
+
+    setNewComment({ ...newComment, [imageId]: '' });
+  };
   
   // Asegurar que tenemos 3 slots (pueden estar vacíos)
   const podiumPlayers = [
@@ -202,6 +225,82 @@ const Home = ({ tournamentData, audioControls }) => {
           </video>
         </div>
       </section>
+
+      {/* Latest Gallery Posts */}
+      {latestImages.length > 0 && (
+        <section className="latest-posts-section">
+          <h2 className="section-title pixel-text">📸 ÚLTIMAS PUBLICACIONES</h2>
+          
+          <div className="latest-posts-grid">
+            {latestImages.map(image => (
+              <div key={image.id} className="post-card pixel-card">
+                <div className="post-header">
+                  <span className="post-author">👤 {image.author}</span>
+                  <span className="post-date">
+                    {new Date(image.timestamp).toLocaleDateString('es-ES')}
+                  </span>
+                </div>
+                
+                <div className="post-image-container">
+                  <img src={image.url} alt={image.description} className="post-image" />
+                </div>
+                
+                {image.description && (
+                  <p className="post-description">{image.description}</p>
+                )}
+                
+                <div className="post-comments">
+                  <h4 className="comments-title">💬 Comentarios ({(image.comments || []).length})</h4>
+                  
+                  <div className="comments-list">
+                    {(image.comments || []).map((comment, idx) => (
+                      <div key={idx} className="comment-item">
+                        <span className="comment-author">{comment.username}:</span>
+                        <span className="comment-text">{comment.text}</span>
+                        <span className="comment-date">
+                          {new Date(comment.timestamp).toLocaleString('es-ES', {
+                            day: '2-digit',
+                            month: '2-digit',
+                            hour: '2-digit',
+                            minute: '2-digit'
+                          })}
+                        </span>
+                      </div>
+                    ))}
+                    
+                    {(image.comments || []).length === 0 && (
+                      <p className="no-comments">Sin comentarios aún</p>
+                    )}
+                  </div>
+                  
+                  {auth.currentUser && (
+                    <div className="comment-input-group">
+                      <input
+                        type="text"
+                        className="comment-input pixel-input"
+                        placeholder="Escribe un comentario..."
+                        value={newComment[image.id] || ''}
+                        onChange={(e) => setNewComment({ ...newComment, [image.id]: e.target.value })}
+                        onKeyPress={(e) => e.key === 'Enter' && handleAddComment(image.id)}
+                      />
+                      <button
+                        className="comment-btn pixel-button"
+                        onClick={() => handleAddComment(image.id)}
+                      >
+                        ENVIAR
+                      </button>
+                    </div>
+                  )}
+                  
+                  {!auth.currentUser && (
+                    <p className="login-prompt">Inicia sesión para comentar</p>
+                  )}
+                </div>
+              </div>
+            ))}
+          </div>
+        </section>
+      )}
 
       {/* Top 3 Podium */}
       <section className="podium-section">
