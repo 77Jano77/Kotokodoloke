@@ -356,18 +356,22 @@ const Standings = ({ tournamentData, audioControls, auth }) => {
                         const isPlayer2 = currentPlayerId === player2.id;
                         const isInvolved = isPlayer1 || isPlayer2;
                         
-                        console.log('Match:', player1.name, 'vs', player2.name);
-                        console.log('Current player ID:', currentPlayerId, 'Player1 ID:', player1.id, 'Player2 ID:', player2.id);
-                        console.log('isAdmin:', isAdmin, 'isInvolved:', isInvolved, 'locked:', matchData.locked);
-                        
                         // Admin puede editar siempre
-                        if (isAdmin) return false;
+                        if (isAdmin) {
+                          console.log('✅ ADMIN - Input habilitado para:', player1.name, 'vs', player2.name);
+                          return false;
+                        }
                         
                         // Si está locked, solo admin puede editar
-                        if (matchData.locked) return true;
+                        if (matchData.locked) {
+                          console.log('🔒 Locked - Input deshabilitado para:', player1.name, 'vs', player2.name);
+                          return true;
+                        }
                         
                         // Si no está locked, solo los jugadores involucrados pueden editar
-                        return !isInvolved;
+                        const result = !isInvolved;
+                        console.log(result ? '❌' : '✅', 'Player', currentPlayerId, (result ? 'NO' : 'SÍ'), 'puede editar:', player1.name, 'vs', player2.name);
+                        return result;
                       })()}
                       onChange={(e) => {
                         const score1 = parseInt(e.target.value) || 0;
@@ -393,8 +397,9 @@ const Standings = ({ tournamentData, audioControls, auth }) => {
                       disabled={(() => {
                         const matchData = tournamentData.getMatchScore(player1.id, player2.id, selectedPhase);
                         const isAdmin = auth?.currentUser?.isAdmin;
-                        const isPlayer1 = auth?.currentUser?.playerId === player1.id;
-                        const isPlayer2 = auth?.currentUser?.playerId === player2.id;
+                        const currentPlayerId = auth?.currentUser?.playerId;
+                        const isPlayer1 = currentPlayerId === player1.id;
+                        const isPlayer2 = currentPlayerId === player2.id;
                         const isInvolved = isPlayer1 || isPlayer2;
                         
                         // Admin puede editar siempre
