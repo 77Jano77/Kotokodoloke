@@ -552,7 +552,7 @@ const Players = ({ tournamentData, audioControls, auth }) => {
         })}
       </div>
 
-      {tournamentData.players.length === 0 && !showAddForm && (
+      {(tournamentData.players || []).length === 0 && !showAddForm && (
         <div className="empty-state pixel-card">
           <p className="empty-icon">👤</p>
           <h3>NO HAY JUGADORES</h3>
