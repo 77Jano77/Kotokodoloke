@@ -228,6 +228,13 @@ export const useTournamentData = () => {
     return getSortedPlayers(filterPhase).slice(0, limit);
   };
 
+  const getMatchScore = (player1Id, player2Id, phase) => {
+    const player = (data.players || []).find(p => p.id === player1Id);
+    if (!player || !player.matchScores) return { player1: 0, player2: 0, locked: false };
+    const matchKey = `phase${phase}-${player1Id}-${player2Id}`;
+    return player.matchScores[matchKey] || { player1: 0, player2: 0, locked: false };
+  };
+
   const updateMatchScore = (phase, player1Id, player2Id, player1Score, player2Score) => {
     const matchKey = `phase${phase}-${player1Id}-${player2Id}`;
     
@@ -340,6 +347,7 @@ export const useTournamentData = () => {
     calculatePlayerWins,
     getSortedPlayers,
     getTopPlayers,
+    getMatchScore,
     updateMatchScore,
     setCurrentPhase,
     incrementManualRolls,
