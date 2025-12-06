@@ -59,11 +59,11 @@ const Roulette = ({ tournamentData, audioControls, auth }) => {
 
   // Obtener tiradas disponibles
   const getAvailableRolls = (playerId) => {
-    const player = tournamentData.players.find(p => p.id === playerId);
+    const player = (tournamentData.players || []).find(p => p.id === playerId);
     if (!player) return 0;
     
     const phaseWins = getPlayerExtraRolls(playerId); // Tiradas por ganar fases
-    const badgeCount = player.badges.filter(Boolean).length; // Tiradas por medallas
+    const badgeCount = (player.badges || []).filter(Boolean).length; // Tiradas por medallas
     const manualExtras = player.manualExtraRolls || 0; // Tiradas extras manuales
     const usedRolls = player.rewards ? player.rewards.length : 0;
     const totalAvailable = phaseWins + badgeCount + manualExtras;
@@ -88,7 +88,7 @@ const Roulette = ({ tournamentData, audioControls, auth }) => {
       return;
     }
 
-    const player = tournamentData.players.find(p => p.id === parseInt(selectedPlayer));
+    const player = (tournamentData.players || []).find(p => p.id === parseInt(selectedPlayer));
     if (!player) {
       alert('⚠️ JUGADOR NO ENCONTRADO');
       return;
@@ -178,7 +178,7 @@ const Roulette = ({ tournamentData, audioControls, auth }) => {
                 disabled={isRolling}
               >
                 <option value="">-- ELIGE TU JUGADOR --</option>
-                {tournamentData.players
+                {(tournamentData.players || [])
                   .filter(player => {
                     // Admin puede ver todos, usuarios normales solo su propio jugador
                     if (auth.currentUser?.isAdmin) return true;
@@ -196,10 +196,10 @@ const Roulette = ({ tournamentData, audioControls, auth }) => {
                   })}
               </select>
               {selectedPlayer && (() => {
-                const player = tournamentData.players.find(p => p.id === parseInt(selectedPlayer));
+                const player = (tournamentData.players || []).find(p => p.id === parseInt(selectedPlayer));
                 const phaseWins = getPlayerExtraRolls(parseInt(selectedPlayer));
-                const badges = player.badges.filter(Boolean).length;
-                const manualExtras = player.manualExtraRolls || 0;
+                const badges = (player?.badges || []).filter(Boolean).length;
+                const manualExtras = player?.manualExtraRolls || 0;
                 return (
                   <div className="rolls-info">
                     <p>🎲 Tiradas disponibles: <strong>{getAvailableRolls(parseInt(selectedPlayer))}</strong></p>
@@ -268,8 +268,8 @@ const Roulette = ({ tournamentData, audioControls, auth }) => {
       <div className="rewards-history pixel-card">
         <h2>📜 HISTORIAL DE RECOMPENSAS</h2>
         <div className="history-list">
-          {tournamentData.players
-            .filter(p => p.rewards.length > 0)
+          {(tournamentData.players || [])
+            .filter(p => (p.rewards || []).length > 0)
             .map(player => (
               <div key={player.id} className="history-player">
                 <div className="history-player-header">
@@ -281,10 +281,10 @@ const Roulette = ({ tournamentData, audioControls, auth }) => {
                     />
                   )}
                   <h3>{player.name}</h3>
-                  <span className="reward-count">{player.rewards.length}</span>
+                  <span className="reward-count">{(player.rewards || []).length}</span>
                 </div>
                 <ul className="history-rewards">
-                  {player.rewards.map((reward, index) => (
+                  {(player.rewards || []).map((reward, index) => (
                     <li key={index}>
                       <span className="reward-bullet">▸</span>
                       {reward}
@@ -294,7 +294,7 @@ const Roulette = ({ tournamentData, audioControls, auth }) => {
               </div>
             ))}
 
-          {tournamentData.players.every(p => p.rewards.length === 0) && (
+          {(tournamentData.players || []).every(p => (p.rewards || []).length === 0) && (
             <div className="no-history">
               <p className="empty-icon">📭</p>
               <p>AÚN NO HAY RECOMPENSAS</p>

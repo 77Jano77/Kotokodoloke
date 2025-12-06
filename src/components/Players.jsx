@@ -43,7 +43,7 @@ const Players = ({ tournamentData, audioControls, auth }) => {
 
   // Verificar si el usuario ya tiene un jugador creado
   const userPlayer = auth.currentUser?.hasPlayer 
-    ? tournamentData.players.find(p => p.id === auth.currentUser.playerId)
+    ? (tournamentData.players || []).find(p => p.id === auth.currentUser.playerId)
     : null;
   
   const isAdmin = auth.currentUser?.isAdmin;
@@ -119,7 +119,7 @@ const Players = ({ tournamentData, audioControls, auth }) => {
   };
 
   const handleTeamChange = (playerId, slotIndex, pokemonName) => {
-    const player = tournamentData.players.find(p => p.id === playerId);
+    const player = (tournamentData.players || []).find(p => p.id === playerId);
     if (!player) return;
 
     // Validar que el Pokémon sea válido
@@ -144,7 +144,7 @@ const Players = ({ tournamentData, audioControls, auth }) => {
   };
 
   const handleAbilityChange = (playerId, slotIndex, abilityName) => {
-    const player = tournamentData.players.find(p => p.id === playerId);
+    const player = (tournamentData.players || []).find(p => p.id === playerId);
     if (!player) return;
 
     // Validar que la habilidad sea válida (si no está vacía)
@@ -163,7 +163,7 @@ const Players = ({ tournamentData, audioControls, auth }) => {
   };
 
   const handleNicknameChange = (playerId, slotIndex, nickname) => {
-    const player = tournamentData.players.find(p => p.id === playerId);
+    const player = (tournamentData.players || []).find(p => p.id === playerId);
     if (!player) return;
 
     const newTeam = [...player.team];
@@ -180,7 +180,7 @@ const Players = ({ tournamentData, audioControls, auth }) => {
   };
 
   const handleBadgeToggle = (playerId, badgeIndex) => {
-    const player = tournamentData.players.find(p => p.id === playerId);
+    const player = (tournamentData.players || []).find(p => p.id === playerId);
     if (!player) return;
 
     const newBadges = [...player.badges];
