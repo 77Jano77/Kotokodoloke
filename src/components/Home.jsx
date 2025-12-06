@@ -115,7 +115,7 @@ const Home = ({ tournamentData, audioControls }) => {
           <div className="team-sprites-display">
             <span className="team-label">EQUIPO</span>
             <div className="team-sprites">
-              {player.team.slice(0, 6).map((pokemon, idx) => {
+              {(player.team || []).slice(0, 6).map((pokemon, idx) => {
                 if (!pokemon) return <div key={idx} className="team-sprite-empty">?</div>;
                 const pokemonName = typeof pokemon === 'object' ? pokemon.name : pokemon;
                 const pokemonData = POKEDEX_DATA.find(p => p.name === pokemonName);
