@@ -15,7 +15,7 @@ const KANTO_BADGES = [
 
 const Home = ({ tournamentData, audioControls }) => {
   const audioRef = useRef(null);
-  const topPlayers = tournamentData.getTopPlayers(3);
+  const topPlayers = tournamentData.getTopPlayers(3) || [];
   const [selectedRule, setSelectedRule] = useState(null);
   const [videoVersion, setVideoVersion] = useState(1); // 1, 2, or 3
 
