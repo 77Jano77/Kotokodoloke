@@ -228,6 +228,7 @@ const Home = ({ tournamentData, audioControls, auth }) => {
 
       {/* Rules Info */}
       <section className="rules-section-compact">
+        <h2 className="rules-compact-title pixel-text">NORMAS DEL TORNEO</h2>
         <div className="rules-grid-compact">
           <button 
             className="rule-button-compact pixel-button"

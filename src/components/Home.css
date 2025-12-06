@@ -483,9 +483,17 @@
 .rule-title-compact {
   font-size: 0.85rem;
   font-weight: bold;
-  color: var(--poke-red);
-  text-shadow: 1px 1px 0 var(--shadow-light);
+  color: white;
+  text-shadow: 2px 2px 0 var(--shadow-dark);
   letter-spacing: 0.5px;
+}
+
+.rules-compact-title {
+  text-align: center;
+  font-size: 1.5rem;
+  color: white;
+  margin-bottom: 1rem;
+  text-shadow: 3px 3px 0 var(--shadow-dark);
 }
 
 /* Old rules section styles (kept for modal compatibility) */
