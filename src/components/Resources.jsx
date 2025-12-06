@@ -84,8 +84,31 @@ const Resources = ({ audioControls, tournamentData }) => {
 
   const saveCapturedPokemon = () => {
     if (!selectedZoneForCapture) return;
-    if (!captureData.pokemon) {
+    
+    // Validar que tenemos un número de Pokémon
+    let pokemonNumber = captureData.pokemon;
+    if (!pokemonNumber) {
       alert('⚠️ Selecciona un Pokémon');
+      return;
+    }
+
+    // Si no es un número, intentar buscarlo por nombre
+    if (!/^\d+$/.test(pokemonNumber)) {
+      const pokemon = POKEDEX_DATA.find(p => 
+        p.name.toLowerCase() === pokemonNumber.toLowerCase()
+      );
+      if (pokemon) {
+        pokemonNumber = pokemon.number.toString();
+      } else {
+        alert('⚠️ Pokémon no encontrado. Usa el selector o escribe un número válido.');
+        return;
+      }
+    }
+
+    // Validar rango
+    const num = parseInt(pokemonNumber);
+    if (num < 1 || num > 386) {
+      alert('⚠️ El número debe estar entre 1 y 386 (Gen 1-3)');
       return;
     }
 
@@ -100,7 +123,7 @@ const Resources = ({ audioControls, tournamentData }) => {
           ...z,
           captured: true,
           capturedPokemon: {
-            pokemon: captureData.pokemon,
+            pokemon: pokemonNumber, // Usar el número validado
             ability: captureData.ability,
             nickname: captureData.nickname
           }
@@ -814,29 +837,55 @@ const Resources = ({ audioControls, tournamentData }) => {
 
             <div className="capture-form">
               <div className="form-group">
-                <label>POKÉMON * (Introduce número de Pokédex)</label>
+                <label>POKÉMON *</label>
                 <div className="pokemon-input-group">
                   <input
-                    type="number"
+                    type="text"
+                    list="pokemon-list"
                     className="pixel-input"
-                    placeholder="Ej: 25 (Pikachu)"
-                    min="1"
-                    max="386"
+                    placeholder="Buscar Pokémon..."
                     value={captureData.pokemon}
-                    onChange={(e) => setCaptureData({...captureData, pokemon: e.target.value})}
+                    onChange={(e) => {
+                      const value = e.target.value;
+                      // Si es un número directo, usarlo
+                      if (/^\d+$/.test(value)) {
+                        setCaptureData({...captureData, pokemon: value});
+                      } else {
+                        // Buscar por nombre
+                        const pokemon = POKEDEX_DATA.find(p => 
+                          p.name.toLowerCase() === value.toLowerCase()
+                        );
+                        if (pokemon) {
+                          setCaptureData({...captureData, pokemon: pokemon.number.toString()});
+                        } else {
+                          setCaptureData({...captureData, pokemon: value});
+                        }
+                      }
+                    }}
                   />
-                  {captureData.pokemon && (
+                  <datalist id="pokemon-list">
+                    {POKEDEX_DATA
+                      .filter(p => p.generation >= 1 && p.generation <= 3)
+                      .map(pokemon => (
+                        <option key={pokemon.number} value={pokemon.name}>
+                          #{pokemon.number.toString().padStart(3, '0')} - {pokemon.name}
+                        </option>
+                      ))}
+                  </datalist>
+                  {captureData.pokemon && /^\d+$/.test(captureData.pokemon) && (
                     <div className="pokemon-preview">
                       <img 
                         src={`https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/${captureData.pokemon}.png`}
                         alt={`Pokémon #${captureData.pokemon}`}
                         onError={(e) => e.target.style.display = 'none'}
                       />
-                      <span>#{captureData.pokemon}</span>
+                      <span>
+                        {POKEDEX_DATA.find(p => p.number === parseInt(captureData.pokemon))?.name || `#${captureData.pokemon}`}
+                      </span>
                     </div>
                   )}
                 </div>
-                <small>Gen 1-3: #001 (Bulbasaur) hasta #386 (Deoxys)</small>
+                <small>Busca por nombre o escribe el número (Gen 1-3)</small>
               </div>
 
               <div className="form-group">
