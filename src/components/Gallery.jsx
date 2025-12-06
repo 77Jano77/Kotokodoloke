@@ -5,6 +5,9 @@ const Gallery = ({ audioControls, auth, tournamentData }) => {
   const audioRef = useRef(null);
   const images = tournamentData?.gallery || [];
   const [showUploadModal, setShowUploadModal] = useState(false);
+  const [isUploading, setIsUploading] = useState(false);
+  const [uploadError, setUploadError] = useState(null);
+  const [showDebugInfo, setShowDebugInfo] = useState(false);
 
   // Limpiar localStorage antiguo
   useEffect(() => {
@@ -110,22 +113,33 @@ const Gallery = ({ audioControls, auth, tournamentData }) => {
       return;
     }
 
+    setIsUploading(true);
+    setUploadError(null);
+
     try {
       const imageToAdd = {
         id: Date.now(),
         url: newImage.url,
         title: newImage.title,
+        description: newImage.comment || '',
         comment: newImage.comment || '',
         author: newImage.author || auth.currentUser.username || 'Anónimo',
         userId: auth.currentUser.id || '',
         username: auth.currentUser.username || 'Anónimo',
         timestamp: Date.now(),
-        date: new Date().toLocaleDateString('es-ES')
+        date: new Date().toLocaleDateString('es-ES'),
+        comments: []
       };
 
-      console.log('Intentando subir imagen:', imageToAdd);
-      tournamentData.addGalleryImage(imageToAdd);
+      console.log('📤 Intentando subir imagen:', {
+        title: imageToAdd.title,
+        author: imageToAdd.author,
+        sizeKB: Math.round(imageToAdd.url.length / 1024)
+      });
       
+      await tournamentData.addGalleryImage(imageToAdd);
+      
+      console.log('✅ Imagen subida exitosamente');
       alert('✅ IMAGEN SUBIDA CORRECTAMENTE');
     
       
@@ -138,8 +152,12 @@ const Gallery = ({ audioControls, auth, tournamentData }) => {
       });
       setShowUploadModal(false);
     } catch (error) {
-      console.error('Error al subir imagen:', error);
-      alert('❌ ERROR AL SUBIR LA IMAGEN. Intenta de nuevo.');
+      console.error('❌ Error al subir imagen:', error);
+      const errorMsg = error.message || 'Error desconocido';
+      setUploadError(errorMsg);
+      alert(`❌ ERROR AL SUBIR LA IMAGEN\n\nDetalles: ${errorMsg}\n\nIntenta:\n- Reducir el tamaño de la imagen\n- Refrescar la página\n- Volver a iniciar sesión`);
+    } finally {
+      setIsUploading(false);
     }
   };
 
@@ -165,15 +183,41 @@ const Gallery = ({ audioControls, auth, tournamentData }) => {
       </audio>
       <div className="gallery-header">
         <h1 className="pixel-text">📸 GALERÍA</h1>
-        {auth.currentUser && (
+        <div className="gallery-header-actions">
+          {auth.currentUser && (
+            <button 
+              className="pixel-button upload-btn"
+              onClick={() => setShowUploadModal(true)}
+            >
+              ➕ SUBIR IMAGEN
+            </button>
+          )}
           <button 
-            className="pixel-button upload-btn"
-            onClick={() => setShowUploadModal(true)}
+            className="pixel-button debug-btn"
+            onClick={() => setShowDebugInfo(!showDebugInfo)}
+            title="Información de depuración"
           >
-            ➕ SUBIR IMAGEN
+            🔧
           </button>
-        )}
+        </div>
       </div>
+
+      {/* Debug Info */}
+      {showDebugInfo && (
+        <div className="debug-info pixel-card">
+          <h3>🔧 INFO DE DEBUG</h3>
+          <p><strong>Usuario:</strong> {auth.currentUser ? `✅ ${auth.currentUser.username}` : '❌ No autenticado'}</p>
+          <p><strong>Firebase:</strong> {tournamentData ? '✅ Conectado' : '❌ Desconectado'}</p>
+          <p><strong>Imágenes en galería:</strong> {images.length}</p>
+          <p><strong>ID Usuario:</strong> {auth.currentUser?.id || 'N/A'}</p>
+          <button 
+            className="pixel-button"
+            onClick={() => console.log('Auth:', auth, 'TournamentData:', tournamentData)}
+          >
+            Ver en Consola (F12)
+          </button>
+        </div>
+      )}
 
       {/* Gallery Grid */}
       {images.length > 0 ? (
@@ -284,18 +328,41 @@ const Gallery = ({ audioControls, auth, tournamentData }) => {
                 />
               </div>
 
+              {uploadError && (
+                <div className="upload-error-message">
+                  ❌ {uploadError}
+                </div>
+              )}
+
               <div className="modal-actions">
-                <button type="submit" className="pixel-button confirm-btn">
-                  ✓ SUBIR
+                <button 
+                  type="submit" 
+                  className="pixel-button confirm-btn"
+                  disabled={isUploading || !newImage.url || !newImage.title}
+                >
+                  {isUploading ? '⏳ SUBIENDO...' : '✓ SUBIR'}
                 </button>
                 <button 
                   type="button"
                   className="pixel-button cancel-btn"
-                  onClick={() => setShowUploadModal(false)}
+                  onClick={() => {
+                    setShowUploadModal(false);
+                    setUploadError(null);
+                  }}
+                  disabled={isUploading}
                 >
                   ✕ CANCELAR
                 </button>
               </div>
+              
+              {isUploading && (
+                <div className="upload-progress">
+                  <div className="progress-bar">
+                    <div className="progress-bar-fill"></div>
+                  </div>
+                  <p>Subiendo imagen a Firebase...</p>
+                </div>
+              )}
             </form>
           </div>
         </div>

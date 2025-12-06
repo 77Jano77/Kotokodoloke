@@ -21,8 +21,45 @@
   text-shadow: 3px 3px 0 var(--shadow-dark);
 }
 
+.gallery-header-actions {
+  display: flex;
+  gap: 0.5rem;
+  align-items: center;
+}
+
 .upload-btn {
   background: var(--type-grass);
+}
+
+.debug-btn {
+  min-width: 45px;
+  padding: 0.5rem;
+  font-size: 1rem;
+  background: var(--poke-blue);
+}
+
+.debug-info {
+  background: rgba(0, 100, 200, 0.1);
+  border: 3px solid var(--poke-blue);
+  padding: 1.5rem;
+  margin-bottom: 2rem;
+}
+
+.debug-info h3 {
+  margin-top: 0;
+  color: var(--poke-blue);
+  font-size: 0.9rem;
+}
+
+.debug-info p {
+  margin: 0.5rem 0;
+  font-size: 0.7rem;
+  line-height: 1.6;
+}
+
+.debug-info button {
+  margin-top: 1rem;
+  font-size: 0.6rem;
 }
 
 /* Gallery Grid */
@@ -208,6 +245,57 @@ textarea.pixel-input {
 
 .cancel-btn {
   background: var(--shadow-medium);
+}
+
+.modal-actions button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+/* Upload Progress */
+.upload-progress {
+  margin-top: 1rem;
+  text-align: center;
+  padding: 1rem;
+  background: rgba(255, 215, 0, 0.1);
+  border: 2px solid var(--poke-yellow);
+}
+
+.progress-bar {
+  width: 100%;
+  height: 20px;
+  background: var(--shadow-dark);
+  border: 3px solid var(--shadow-dark);
+  overflow: hidden;
+  margin-bottom: 0.5rem;
+}
+
+.progress-bar-fill {
+  height: 100%;
+  background: var(--poke-yellow);
+  animation: progress-animation 2s ease-in-out infinite;
+}
+
+@keyframes progress-animation {
+  0% { width: 0%; }
+  50% { width: 70%; }
+  100% { width: 100%; }
+}
+
+.upload-progress p {
+  font-size: 0.7rem;
+  color: var(--poke-yellow);
+  margin: 0;
+}
+
+.upload-error-message {
+  background: rgba(255, 0, 0, 0.1);
+  border: 2px solid var(--poke-red);
+  padding: 0.75rem;
+  margin-top: 1rem;
+  color: var(--poke-red);
+  font-size: 0.7rem;
+  text-align: center;
 }
 
 /* Image Detail Modal */
