@@ -198,7 +198,7 @@ const Standings = ({ tournamentData, audioControls }) => {
                     </td>
                     
                     <td className="rewards-cell">
-                      <span className="rewards-count">{player.rewards.length}</span>
+                      <span className="rewards-count">{(player.rewards || []).length}</span>
                     </td>
                   </tr>
                 );
