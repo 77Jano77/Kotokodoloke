@@ -8,6 +8,7 @@ const AVAILABLE_SPRITES = [
   { id: 'gonzalez', name: 'Gonzalez', image: '/sprites/Gonzalez.jpg' },
   { id: 'jano', name: 'Jano', image: '/sprites/Jano.jpg' },
   { id: 'josama', name: 'Josama', image: '/sprites/Josama.jpg' },
+  { id: 'koke', name: 'Koke', image: '/sprites/Koke.jpg' },
   { id: 'marionetty', name: 'Marionetty', image: '/sprites/Marionetty.jpg' },
   { id: 'palenx', name: 'Palenx', image: '/sprites/Palenx.jpg' },
   { id: 'patris', name: 'Patris', image: '/sprites/Patris.jpg' },
