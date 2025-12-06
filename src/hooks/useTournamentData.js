@@ -127,7 +127,7 @@ export const useTournamentData = () => {
       ...data,
       players: (data.players || []).map(p =>
         p.id === playerId
-          ? { ...p, rewards: [...p.rewards, reward] }
+          ? { ...p, rewards: [...(p.rewards || []), reward] }
           : p
       ),
     };
@@ -141,7 +141,7 @@ export const useTournamentData = () => {
         p.id === playerId
           ? {
               ...p,
-              rewards: p.rewards.filter((_, i) => i !== rewardIndex),
+              rewards: (p.rewards || []).filter((_, i) => i !== rewardIndex),
             }
           : p
       ),
