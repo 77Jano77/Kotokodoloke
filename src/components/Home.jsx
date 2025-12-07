@@ -144,7 +144,6 @@ const Home = ({ tournamentData, audioControls, auth }) => {
                 const pokemonName = typeof pokemon === 'object' ? pokemon.name : pokemon;
                 const pokemonData = POKEDEX_DATA.find(p => p.name === pokemonName);
                 if (!pokemonData) return <div key={idx} className="team-sprite-empty">?</div>;
-                
                 return (
                   <div key={idx} className="team-sprite-slot" title={pokemonData.name}>
                     <img 
@@ -154,7 +153,7 @@ const Home = ({ tournamentData, audioControls, auth }) => {
                     />
                   </div>
                 );
-          </button>
+              })}
           <button 
             className={`pixel-button toggle-btn ${videoVersion === 3 ? 'active' : ''}`}
             onClick={() => setVideoVersion(3)}
@@ -595,7 +594,10 @@ const Home = ({ tournamentData, audioControls, auth }) => {
 };
 
 export default Home;
-/ /   d u m m y   c h a n g e   f o r   V e r c e l   d e p l o y  
- / /   f o r z a r   d e p l o y   V e r c e l  
- / /   c o m m i t   p a r a   d e p l o y   c o r r e c t o  
+/ /   d u m m y   c h a n g e   f o r   V e r c e l   d e p l o y 
+ 
+ / /   f o r z a r   d e p l o y   V e r c e l 
+ 
+ / /   c o m m i t   p a r a   d e p l o y   c o r r e c t o 
+ 
  
