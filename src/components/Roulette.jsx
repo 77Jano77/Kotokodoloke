@@ -119,8 +119,8 @@ const Roulette = ({ tournamentData, audioControls, auth }) => {
         // Agregar recompensa al jugador
         tournamentData.addReward(parseInt(selectedPlayer), selectedReward);
 
-        // Si es captura extra, incrementar el contador en el registro
-        if (selectedReward === '➕ Captura Extra') {
+        // Si es captura extra o captura ruta anterior, incrementar el contador en el registro
+        if (selectedReward === '➕ Captura Extra' || selectedReward === '🔙 Captura Ruta Anterior') {
           tournamentData.incrementExtraCapture(player.name);
         }
 
