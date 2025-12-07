@@ -197,7 +197,6 @@ const Home = ({ tournamentData, audioControls, auth }) => {
             </p>
           </div>
         </div>
-      </section>
 
 
 
