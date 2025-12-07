@@ -76,6 +76,8 @@ const Downloads = ({ audioControls, auth, tournamentData }) => {
         alert('⚠️ Debes iniciar sesión para descargar ROMs');
         return;
       }
+      console.log('Usuario actual:', auth.currentUser);
+      console.log('Jugadores disponibles:', tournamentData.players);
       setShowRomModal(true);
     } else {
       window.open(item.link, '_blank');
@@ -96,6 +98,8 @@ const Downloads = ({ audioControls, auth, tournamentData }) => {
       return;
     }
 
+    console.log('Buscando jugador con playerId:', auth.currentUser?.playerId);
+    
     // Verificar si el jugador ya eligió un número
     const player = (tournamentData.players || []).find(p => p.id === auth.currentUser?.playerId);
     if (!player) {
@@ -231,6 +235,19 @@ const Downloads = ({ audioControls, auth, tournamentData }) => {
           <div className="modal-content rom-modal pixel-card" onClick={(e) => e.stopPropagation()}>
             <h2>🔥 SELECCIÓN DE ROM</h2>
             <p className="modal-subtitle">Elige un número del 1 al 20 para tu ROM</p>
+            
+            {/* Info del usuario actual */}
+            {auth.currentUser && (() => {
+              const currentPlayer = (tournamentData.players || []).find(p => p.id === auth.currentUser.playerId);
+              return (
+                <div style={{ background: '#e3f2fd', padding: '0.75rem', borderRadius: '8px', marginBottom: '1rem', textAlign: 'center' }}>
+                  <strong>Seleccionando para:</strong> {currentPlayer?.name || 'Usuario sin personaje'} 
+                  <span style={{ fontSize: '0.75rem', color: '#666', marginLeft: '0.5rem' }}>
+                    ({auth.currentUser.username})
+                  </span>
+                </div>
+              );
+            })()}
 
             {/* Números ocupados */}
             {romSelections.length > 0 && (
