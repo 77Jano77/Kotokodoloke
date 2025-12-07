@@ -589,7 +589,26 @@ const Home = ({ tournamentData, audioControls, auth }) => {
           </div>
         </div>
       )}
+    </div> {/* Cierre correcto del div de la sección de video */}
+    <div className="video-container">
+      <video 
+        autoPlay
+        loop
+        muted
+        playsInline
+        key={`video${videoVersion}`}
+      >
+        <source 
+          src={videoVersion === 1 ? "/recursos/video intro.mp4" : videoVersion === 2 ? "/recursos/Video intro 2.mp4" : "/recursos/Video Intro 3.mp4"} 
+          type="video/mp4" 
+        />
+        Tu navegador no soporta el elemento de video.
+      </video>
     </div>
+  </div>
+}
+
+export default Home;
   );
 };
 
