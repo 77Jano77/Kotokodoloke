@@ -154,84 +154,6 @@ const Home = ({ tournamentData, audioControls, auth }) => {
                     />
                   </div>
                 );
-              })}
-            </div>
-          </div>
-        </div>
-      </div>
-    );
-  };
-
-  return (
-    <div className="home-container">
-      <audio ref={audioRef} loop>
-        <source src="/music/Inicio.mp3" type="audio/mpeg" />
-      </audio>
-      {/* Hero Banner */}
-      <section className="hero-banner pixel-card">
-        <div className="hero-content">
-          <h1 className="hero-title pixel-text">
-            KOTOKODOS CUP
-          </h1>
-          <p className="hero-subtitle">4 SEMANAS · 8 MEDALLAS · 1 CAMPEÓN</p>
-          
-          <div className="hero-description">
-            <p>
-              SOBREVIVE AL DESAFÍO MÁS EXTREMO DE POKÉMON. CAPTURA SOLO EL
-              PRIMER POKÉMON DE CADA RUTA, ENFRENTA A TUS RIVALES Y GANA PUNTOS.
-            </p>
-            <p className="hero-highlight">
-              ¿TIENES LO NECESARIO PARA LLEGAR A LA LIGA?
-            </p>
-          </div>
-        </div>
-      </section>
-
-      {/* Mew Quick Access Banner */}
-      <a href="#resources-capture" className="mew-banner-link">
-        <section className="mew-banner">
-          <div className="mew-banner-content pixel-card">
-            <div className="mew-sprite-container">
-              <img 
-                src="https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/151.png" 
-                alt="Mew" 
-                className="mew-sprite"
-              />
-              <div className="mew-sparkles">✨</div>
-            </div>
-            <div className="mew-banner-text">
-              <h2 className="pixel-text">📋 REGISTRO DE ZONAS DE CAPTURA</h2>
-              <p>Accede rápidamente a tu registro para marcar las zonas que has usado</p>
-              <div className="mew-access-btn pixel-button">
-                🎯 IR AL REGISTRO
-              </div>
-            </div>
-            <div className="mew-sprite-container mirror">
-              <img 
-                src="https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/151.png" 
-                alt="Mew" 
-                className="mew-sprite"
-              />
-              <div className="mew-sparkles">✨</div>
-            </div>
-          </div>
-        </section>
-      </a>
-
-      {/* Video Intro Section */}
-      <section className="video-section">
-        <div className="video-toggle-buttons">
-          <button 
-            className={`pixel-button toggle-btn ${videoVersion === 1 ? 'active' : ''}`}
-            onClick={() => setVideoVersion(1)}
-          >
-            📹 Video Intro
-          </button>
-          <button 
-            className={`pixel-button toggle-btn ${videoVersion === 2 ? 'active' : ''}`}
-            onClick={() => setVideoVersion(2)}
-          >
-            🖼️ Video Intro 2
           </button>
           <button 
             className={`pixel-button toggle-btn ${videoVersion === 3 ? 'active' : ''}`}
@@ -257,6 +179,45 @@ const Home = ({ tournamentData, audioControls, auth }) => {
           </video>
         </div>
       </section>
+
+      {/* Hero Banner */}
+      <section className="hero-banner pixel-card">
+        <div className="hero-content">
+          <h1 className="hero-title pixel-text">
+            KOTOKODOS CUP
+          </h1>
+          <p className="hero-subtitle">4 SEMANAS · 8 MEDALLAS · 1 CAMPEÓN</p>
+          
+          <div className="hero-description">
+            <p>
+              SOBREVIVE AL DESAFÍO MÁS EXTREMO DE POKÉMON. CAPTURA SOLO EL
+              PRIMER POKÉMON DE CADA RUTA, ENFRENTA A TUS RIVALES Y GANA PUNTOS.
+            </p>
+            <p className="hero-highlight">
+              ¿TIENES LO NECESARIO PARA LLEGAR A LA LIGA?
+            </p>
+          </div>
+        </div>
+      </section>
+
+
+
+
+      {/* Mew Quick Access Banner - Sidebar (flotante, único) */}
+      <div className="mew-banner-sidebar-wrapper">
+        <a href="#resources-capture" className="mew-banner-sidebar pixel-card">
+          <img 
+            src="https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/151.png" 
+            alt="Mew" 
+            className="mew-sprite-sidebar"
+          />
+          <div className="mew-sidebar-text">
+            <span className="mew-sidebar-title">📋 Registro de Zonas</span>
+            <span className="mew-sidebar-subtitle">Acceso rápido</span>
+          </div>
+          <span className="mew-sidebar-arrow">→</span>
+        </a>
+      </div>
 
       {/* Rules Info */}
       <section className="rules-section-compact">
