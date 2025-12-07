@@ -38,7 +38,7 @@ function App() {
     roulette: <Roulette tournamentData={tournamentData} audioControls={audioControls} auth={auth} />,
     standings: <Standings tournamentData={tournamentData} audioControls={audioControls} auth={auth} />,
     resources: <Resources audioControls={audioControls} tournamentData={tournamentData} auth={auth} />,
-    downloads: <Downloads audioControls={audioControls} />,
+    downloads: <Downloads audioControls={audioControls} auth={auth} tournamentData={tournamentData} />,
     gallery: <Gallery tournamentData={tournamentData} audioControls={audioControls} auth={auth} />,
   };
 

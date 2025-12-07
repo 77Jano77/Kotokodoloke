@@ -1,8 +1,12 @@
-import { useEffect, useRef } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import './Downloads.css';
+import { database, ref, onValue, set } from '../config/firebase';
 
-const Downloads = ({ audioControls }) => {
+const Downloads = ({ audioControls, auth, tournamentData }) => {
   const audioRef = useRef(null);
+  const [romSelections, setRomSelections] = useState([]);
+  const [showRomModal, setShowRomModal] = useState(false);
+  const [selectedNumber, setSelectedNumber] = useState('');
 
   useEffect(() => {
     if (audioRef.current) {
@@ -16,6 +20,20 @@ const Downloads = ({ audioControls }) => {
         audioRef.current.currentTime = 0;
       }
     };
+  }, []);
+
+  // Escuchar las selecciones de ROMs en Firebase
+  useEffect(() => {
+    const romSelectionsRef = ref(database, 'romSelections');
+    const unsubscribe = onValue(romSelectionsRef, (snapshot) => {
+      const data = snapshot.val();
+      if (data) {
+        setRomSelections(Object.values(data));
+      } else {
+        setRomSelections([]);
+      }
+    });
+    return () => unsubscribe();
   }, []);
 
   useEffect(() => {
@@ -53,7 +71,62 @@ const Downloads = ({ audioControls }) => {
   ];
 
   const handleDownload = (item) => {
-    window.open(item.link, '_blank');
+    if (item.id === 2) { // ROMS POKÉMON
+      if (!auth.currentUser) {
+        alert('⚠️ Debes iniciar sesión para descargar ROMs');
+        return;
+      }
+      setShowRomModal(true);
+    } else {
+      window.open(item.link, '_blank');
+    }
+  };
+
+  const handleRomSelection = () => {
+    const num = parseInt(selectedNumber);
+    if (!num || num < 1 || num > 20) {
+      alert('⚠️ Debes elegir un número entre 1 y 20');
+      return;
+    }
+
+    // Verificar si el número ya está ocupado
+    const alreadyTaken = romSelections.find(s => s.number === num);
+    if (alreadyTaken) {
+      alert(`⚠️ El número ${num} ya ha sido elegido por ${alreadyTaken.playerName}`);
+      return;
+    }
+
+    // Verificar si el jugador ya eligió un número
+    const player = (tournamentData.players || []).find(p => p.id === auth.currentUser?.playerId);
+    if (!player) {
+      alert('⚠️ No se encontró tu personaje en el torneo');
+      return;
+    }
+
+    const alreadySelected = romSelections.find(s => s.playerId === player.id);
+    if (alreadySelected) {
+      alert(`⚠️ Ya elegiste el número ${alreadySelected.number}`);
+      return;
+    }
+
+    // Guardar la selección en Firebase
+    const selectionId = Date.now();
+    const romSelectionsRef = ref(database, `romSelections/${selectionId}`);
+    set(romSelectionsRef, {
+      id: selectionId,
+      playerId: player.id,
+      playerName: player.name,
+      number: num,
+      timestamp: new Date().toISOString()
+    }).then(() => {
+      alert(`✅ ¡Número ${num} registrado correctamente!`);
+      setShowRomModal(false);
+      setSelectedNumber('');
+      window.open(downloadLinks[1].link, '_blank');
+    }).catch(error => {
+      console.error('Error al guardar selección:', error);
+      alert('❌ Error al registrar el número. Inténtalo de nuevo.');
+    });
   };
 
   return (
@@ -151,6 +224,88 @@ const Downloads = ({ audioControls }) => {
           </a>
         </div>
       </div>
+
+      {/* ROM Selection Modal */}
+      {showRomModal && (
+        <div className="modal-overlay" onClick={() => setShowRomModal(false)}>
+          <div className="modal-content rom-modal pixel-card" onClick={(e) => e.stopPropagation()}>
+            <h2>🔥 SELECCIÓN DE ROM</h2>
+            <p className="modal-subtitle">Elige un número del 1 al 20 para tu ROM</p>
+
+            {/* Números ocupados */}
+            {romSelections.length > 0 && (
+              <div className="occupied-numbers">
+                <h3>❌ Números ya ocupados:</h3>
+                <div className="occupied-list">
+                  {romSelections
+                    .sort((a, b) => a.number - b.number)
+                    .map(selection => (
+                      <div key={selection.id} className="occupied-item">
+                        <span className="occupied-number">#{selection.number}</span>
+                        <span className="occupied-player">{selection.playerName}</span>
+                      </div>
+                    ))}
+                </div>
+              </div>
+            )}
+
+            {/* Selector de número */}
+            <div className="number-selector">
+              <label htmlFor="rom-number">Tu número (1-20):</label>
+              <input
+                id="rom-number"
+                type="number"
+                min="1"
+                max="20"
+                value={selectedNumber}
+                onChange={(e) => setSelectedNumber(e.target.value)}
+                className="pixel-input"
+                placeholder="Ej: 5"
+              />
+            </div>
+
+            {/* Grid de números disponibles */}
+            <div className="numbers-grid">
+              {Array.from({ length: 20 }, (_, i) => i + 1).map(num => {
+                const isTaken = romSelections.some(s => s.number === num);
+                const takenBy = romSelections.find(s => s.number === num);
+                return (
+                  <button
+                    key={num}
+                    className={`number-btn ${isTaken ? 'taken' : ''} ${parseInt(selectedNumber) === num ? 'selected' : ''}`}
+                    onClick={() => !isTaken && setSelectedNumber(num.toString())}
+                    disabled={isTaken}
+                    title={isTaken ? `Ocupado por ${takenBy.playerName}` : `Seleccionar número ${num}`}
+                  >
+                    {num}
+                    {isTaken && <span className="taken-mark">✕</span>}
+                  </button>
+                );
+              })}
+            </div>
+
+            {/* Botones de acción */}
+            <div className="modal-buttons">
+              <button
+                className="pixel-button"
+                onClick={handleRomSelection}
+                disabled={!selectedNumber}
+              >
+                ✓ CONFIRMAR Y DESCARGAR
+              </button>
+              <button
+                className="pixel-button-secondary"
+                onClick={() => {
+                  setShowRomModal(false);
+                  setSelectedNumber('');
+                }}
+              >
+                ✕ CANCELAR
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 };
