@@ -360,26 +360,49 @@ export const useTournamentData = () => {
     updateFirebase(newData);
   };
 
-  const incrementExtraCapture = (playerName) => {
+  const addExtraCaptureSlot = (playerName, rewardType) => {
     const newData = {
       ...data,
-      captureRecords: (data.captureRecords || []).map(record =>
-        record.playerName === playerName
-          ? { ...record, extraCaptures: (record.extraCaptures || 0) + 1 }
-          : record
-      ),
+      captureRecords: (data.captureRecords || []).map(record => {
+        if (record.playerName === playerName) {
+          const newSlot = {
+            id: `extra_${Date.now()}`,
+            captured: false,
+            name: rewardType === '➕ Captura Extra' ? 'Captura Extra' : 'Captura Ruta Anterior',
+            isExtra: true,
+            rewardType: rewardType // Guardar el tipo de recompensa
+          };
+          return {
+            ...record,
+            extraCaptureSlots: [...(record.extraCaptureSlots || []), newSlot]
+          };
+        }
+        return record;
+      }),
     };
 
     updateFirebase(newData);
   };
 
-  const decrementExtraCapture = (playerName) => {
+  const consumeReward = (playerName, rewardType) => {
+    // Buscar el jugador por nombre
+    const player = (data.players || []).find(p => p.name === playerName);
+    if (!player) return;
+
+    // Encontrar el índice de la primera recompensa de este tipo
+    const rewardIndex = (player.rewards || []).findIndex(r => r === rewardType);
+    if (rewardIndex === -1) return;
+
+    // Eliminar esa recompensa específica
     const newData = {
       ...data,
-      captureRecords: (data.captureRecords || []).map(record =>
-        record.playerName === playerName && (record.extraCaptures || 0) > 0
-          ? { ...record, extraCaptures: record.extraCaptures - 1 }
-          : record
+      players: (data.players || []).map(p =>
+        p.id === player.id
+          ? {
+              ...p,
+              rewards: (p.rewards || []).filter((_, i) => i !== rewardIndex),
+            }
+          : p
       ),
     };
 
@@ -448,7 +471,7 @@ export const useTournamentData = () => {
     updateCaptureRecord,
     deleteCaptureRecord,
     getCapturedPokemonByPlayer,
-    incrementExtraCapture,
-    decrementExtraCapture,
+    addExtraCaptureSlot,
+    consumeReward,
   };
 };

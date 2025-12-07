@@ -145,6 +145,11 @@ const Resources = ({ audioControls, tournamentData, auth }) => {
       tournamentData.updateCaptureRecord(recordId, {
         extraCaptureSlots: updatedSlots
       });
+
+      // Consumir recompensa del jugador si la casilla tiene rewardType
+      if (zone.rewardType) {
+        tournamentData.consumeReward(record.playerName, zone.rewardType);
+      }
     } else {
       // Manejar zonas normales (Kanto/Sevi)
       const zones = region === 'kanto' ? 'kantoZones' : 'seviZones';
@@ -717,16 +722,17 @@ const Resources = ({ audioControls, tournamentData, auth }) => {
                               const newSlot = {
                                 id: `extra_${Date.now()}`,
                                 captured: false,
-                                name: `Captura Extra #${(record.extraCaptureSlots || []).length + 1}`,
-                                isExtra: true
+                                name: `Captura Extra Manual #${(record.extraCaptureSlots || []).length + 1}`,
+                                isExtra: true,
+                                rewardType: null
                               };
                               const updatedSlots = [...(record.extraCaptureSlots || []), newSlot];
                               tournamentData.updateCaptureRecord(record.id, { extraCaptureSlots: updatedSlots });
                             }}
-                            title="Añadir casilla de captura extra (Admin)"
+                            title="Añadir casilla extra manualmente (Admin)"
                             style={{ marginLeft: '0.5rem', padding: '0.4rem 0.8rem', fontSize: '0.8rem' }}
                           >
-                            ➕ AÑADIR EXTRA
+                            ➕ AÑADIR MANUAL
                           </button>
                         )}
                         {canEdit && (
