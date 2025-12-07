@@ -187,6 +187,37 @@ const Home = ({ tournamentData, audioControls, auth }) => {
         </div>
       </section>
 
+      {/* Mew Quick Access Banner */}
+      <a href="#resources-capture" className="mew-banner-link">
+        <section className="mew-banner">
+          <div className="mew-banner-content pixel-card">
+            <div className="mew-sprite-container">
+              <img 
+                src="https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/151.png" 
+                alt="Mew" 
+                className="mew-sprite"
+              />
+              <div className="mew-sparkles">✨</div>
+            </div>
+            <div className="mew-banner-text">
+              <h2 className="pixel-text">📋 REGISTRO DE ZONAS DE CAPTURA</h2>
+              <p>Accede rápidamente a tu registro para marcar las zonas que has usado</p>
+              <div className="mew-access-btn pixel-button">
+                🎯 IR AL REGISTRO
+              </div>
+            </div>
+            <div className="mew-sprite-container mirror">
+              <img 
+                src="https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/151.png" 
+                alt="Mew" 
+                className="mew-sprite"
+              />
+              <div className="mew-sparkles">✨</div>
+            </div>
+          </div>
+        </section>
+      </a>
+
       {/* Video Intro Section */}
       <section className="video-section">
         <div className="video-toggle-buttons">

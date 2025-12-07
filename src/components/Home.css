@@ -123,6 +123,126 @@
   animation: pixelShake 3s ease-in-out infinite;
 }
 
+/* Mew Quick Access Banner */
+.mew-banner-link {
+  text-decoration: none;
+  display: block;
+  margin-bottom: 3rem;
+}
+
+.mew-banner {
+  transition: transform 0.3s;
+}
+
+.mew-banner:hover {
+  transform: translateY(-8px);
+}
+
+.mew-banner-content {
+  background: linear-gradient(135deg, #ff69b4 0%, #ff1493 50%, #c71585 100%);
+  padding: 2rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-around;
+  gap: 2rem;
+  border: 4px solid #ffd700;
+  box-shadow: 0 8px 24px rgba(255, 20, 147, 0.4);
+  position: relative;
+  overflow: hidden;
+}
+
+.mew-banner-content::before {
+  content: '';
+  position: absolute;
+  top: -50%;
+  left: -50%;
+  width: 200%;
+  height: 200%;
+  background: radial-gradient(circle, rgba(255,255,255,0.15) 0%, transparent 70%);
+  animation: pixelRotate 15s linear infinite;
+}
+
+.mew-sprite-container {
+  position: relative;
+  animation: mewFloat 3s ease-in-out infinite;
+}
+
+.mew-sprite-container.mirror {
+  transform: scaleX(-1);
+}
+
+.mew-sprite {
+  width: 120px;
+  height: 120px;
+  image-rendering: pixelated;
+  filter: drop-shadow(0 4px 12px rgba(255, 255, 255, 0.5));
+}
+
+.mew-sparkles {
+  position: absolute;
+  font-size: 2rem;
+  animation: sparkle 2s ease-in-out infinite;
+  top: -10px;
+  right: -10px;
+}
+
+.mew-banner-text {
+  flex: 1;
+  text-align: center;
+  position: relative;
+  z-index: 1;
+}
+
+.mew-banner-text h2 {
+  color: white;
+  font-size: 1.8rem;
+  margin-bottom: 0.75rem;
+  text-shadow: 3px 3px 0 rgba(0,0,0,0.3);
+}
+
+.mew-banner-text p {
+  color: rgba(255, 255, 255, 0.95);
+  font-size: 0.95rem;
+  margin-bottom: 1.5rem;
+  text-shadow: 1px 1px 2px rgba(0,0,0,0.2);
+}
+
+.mew-access-btn {
+  display: inline-block;
+  padding: 1rem 2rem;
+  font-size: 1.1rem;
+  background: linear-gradient(135deg, #ffd700 0%, #ffed4e 100%);
+  color: #c71585;
+  font-weight: bold;
+  box-shadow: 0 6px 16px rgba(0,0,0,0.3);
+  transition: all 0.3s;
+}
+
+.mew-access-btn:hover {
+  transform: scale(1.1);
+  box-shadow: 0 8px 24px rgba(255, 215, 0, 0.6);
+}
+
+@keyframes mewFloat {
+  0%, 100% {
+    transform: translateY(0px);
+  }
+  50% {
+    transform: translateY(-15px);
+  }
+}
+
+@keyframes sparkle {
+  0%, 100% {
+    opacity: 1;
+    transform: scale(1) rotate(0deg);
+  }
+  50% {
+    opacity: 0.4;
+    transform: scale(1.3) rotate(180deg);
+  }
+}
+
 /* Podium Section */
 .podium-section {
   margin-bottom: 3rem;
@@ -872,6 +992,38 @@
   .hero-subtitle {
     font-size: 0.7rem;
     margin-bottom: 1.5rem;
+  }
+
+  .mew-banner-content {
+    flex-direction: column;
+    padding: 1.5rem 1rem;
+    gap: 1rem;
+  }
+
+  .mew-sprite-container {
+    display: none;
+  }
+
+  .mew-sprite-container:first-child {
+    display: block;
+  }
+
+  .mew-sprite {
+    width: 80px;
+    height: 80px;
+  }
+
+  .mew-banner-text h2 {
+    font-size: 1.3rem;
+  }
+
+  .mew-banner-text p {
+    font-size: 0.85rem;
+  }
+
+  .mew-access-btn {
+    padding: 0.75rem 1.5rem;
+    font-size: 0.95rem;
   }
 
   .video-section {
