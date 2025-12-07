@@ -597,4 +597,5 @@ const Home = ({ tournamentData, audioControls, auth }) => {
 export default Home;
 / /   d u m m y   c h a n g e   f o r   V e r c e l   d e p l o y  
  / /   f o r z a r   d e p l o y   V e r c e l  
+ / /   c o m m i t   p a r a   d e p l o y   c o r r e c t o  
  
