@@ -177,7 +177,7 @@ const Home = ({ tournamentData, audioControls, auth }) => {
             Tu navegador no soporta el elemento de video.
           </video>
         </div>
-      </section>
+      </div>
 
       {/* Hero Banner */}
       <section className="hero-banner pixel-card">
@@ -606,8 +606,6 @@ const Home = ({ tournamentData, audioControls, auth }) => {
       </video>
     </div>
   </div>
-}
-
 export default Home;
   );
 };
