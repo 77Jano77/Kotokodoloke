@@ -98,12 +98,22 @@ const Downloads = ({ audioControls, auth, tournamentData }) => {
       return;
     }
 
+    console.log('Buscando jugador con userId:', auth.currentUser?.id);
     console.log('Buscando jugador con playerId:', auth.currentUser?.playerId);
     
-    // Verificar si el jugador ya eligió un número
-    const player = (tournamentData.players || []).find(p => p.id === auth.currentUser?.playerId);
+    // Buscar por playerId si existe, si no buscar por userId
+    let player = null;
+    if (auth.currentUser?.playerId) {
+      player = (tournamentData.players || []).find(p => p.id === auth.currentUser.playerId);
+    } else {
+      // Buscar por userId
+      player = (tournamentData.players || []).find(p => p.userId === auth.currentUser?.id);
+    }
+    
+    console.log('Jugador encontrado:', player);
+    
     if (!player) {
-      alert('⚠️ No se encontró tu personaje en el torneo');
+      alert('⚠️ No se encontró tu personaje en el torneo. Debes crear un personaje primero en la sección JUGADORES.');
       return;
     }
 
@@ -238,13 +248,24 @@ const Downloads = ({ audioControls, auth, tournamentData }) => {
             
             {/* Info del usuario actual */}
             {auth.currentUser && (() => {
-              const currentPlayer = (tournamentData.players || []).find(p => p.id === auth.currentUser.playerId);
+              // Buscar por playerId si existe, si no buscar por userId
+              let currentPlayer = null;
+              if (auth.currentUser.playerId) {
+                currentPlayer = (tournamentData.players || []).find(p => p.id === auth.currentUser.playerId);
+              } else {
+                currentPlayer = (tournamentData.players || []).find(p => p.userId === auth.currentUser.id);
+              }
               return (
-                <div style={{ background: '#e3f2fd', padding: '0.75rem', borderRadius: '8px', marginBottom: '1rem', textAlign: 'center' }}>
-                  <strong>Seleccionando para:</strong> {currentPlayer?.name || 'Usuario sin personaje'} 
+                <div style={{ background: currentPlayer ? '#e3f2fd' : '#fff3cd', padding: '0.75rem', borderRadius: '8px', marginBottom: '1rem', textAlign: 'center' }}>
+                  <strong>Seleccionando para:</strong> {currentPlayer?.name || '⚠️ Sin personaje'} 
                   <span style={{ fontSize: '0.75rem', color: '#666', marginLeft: '0.5rem' }}>
                     ({auth.currentUser.username})
                   </span>
+                  {!currentPlayer && (
+                    <div style={{ fontSize: '0.7rem', color: '#856404', marginTop: '0.5rem' }}>
+                      Debes crear un personaje primero en la sección JUGADORES
+                    </div>
+                  )}
                 </div>
               );
             })()}
