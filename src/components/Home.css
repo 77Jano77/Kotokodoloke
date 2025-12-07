@@ -2,11 +2,11 @@
 .mew-banner-sidebar-wrapper {
   position: fixed;
   top: 120px;
-  right: 32px;
-  z-index: 100;
+  left: 32px;
+  z-index: 1000;
   display: flex;
   flex-direction: column;
-  align-items: flex-end;
+  align-items: flex-start;
 }
 
 .mew-banner-sidebar {
@@ -18,15 +18,15 @@
   padding: 0.7rem 1.1rem;
   min-width: 180px;
   max-width: 260px;
-  border-radius: 12px 0 0 12px;
+  border-radius: 0 12px 12px 0;
   box-shadow: 0 2px 12px rgba(236, 64, 122, 0.13);
   text-decoration: none;
   cursor: pointer;
-  transition: box-shadow 0.2s, right 0.2s;
+  transition: box-shadow 0.2s, left 0.2s;
 }
 .mew-banner-sidebar:hover {
   box-shadow: 0 6px 24px rgba(236, 64, 122, 0.25);
-  right: 0;
+  left: 0;
 }
 .mew-sprite-sidebar {
   width: 38px;
