@@ -931,6 +931,51 @@
   border-color: #d32f2f;
 }
 
+.zone-item.extra-capture {
+  background: linear-gradient(135deg, #059669 0%, #047857 100%);
+  border-color: #10b981;
+}
+
+.zone-item.extra-capture:hover {
+  border-color: #34d399;
+}
+
+.zone-item.extra-capture .zone-checkbox {
+  background: #10b981;
+  border-color: #059669;
+}
+
+.extra-capture-btn {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  width: 32px;
+  height: 32px;
+  border: 2px solid white;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+  color: white;
+  font-size: 1.2rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.2s;
+  z-index: 3;
+  padding: 0;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.3);
+}
+
+.extra-capture-btn:hover {
+  transform: scale(1.15);
+  box-shadow: 0 4px 12px rgba(16, 185, 129, 0.6);
+  background: linear-gradient(135deg, #34d399 0%, #10b981 100%);
+}
+
+.extra-capture-btn:active {
+  transform: scale(1.05);
+}
+
 .zone-info {
   flex: 1;
   display: flex;

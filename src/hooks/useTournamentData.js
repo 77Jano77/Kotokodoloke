@@ -328,6 +328,7 @@ export const useTournamentData = () => {
       playerName: recordData.playerName,
       kantoZones: recordData.kantoZones,
       seviZones: recordData.seviZones,
+      extraCaptures: 0,
     };
 
     const newData = {
@@ -354,6 +355,32 @@ export const useTournamentData = () => {
     const newData = {
       ...data,
       captureRecords: (data.captureRecords || []).filter(record => record.id !== recordId),
+    };
+
+    updateFirebase(newData);
+  };
+
+  const incrementExtraCapture = (playerName) => {
+    const newData = {
+      ...data,
+      captureRecords: (data.captureRecords || []).map(record =>
+        record.playerName === playerName
+          ? { ...record, extraCaptures: (record.extraCaptures || 0) + 1 }
+          : record
+      ),
+    };
+
+    updateFirebase(newData);
+  };
+
+  const decrementExtraCapture = (playerName) => {
+    const newData = {
+      ...data,
+      captureRecords: (data.captureRecords || []).map(record =>
+        record.playerName === playerName && (record.extraCaptures || 0) > 0
+          ? { ...record, extraCaptures: record.extraCaptures - 1 }
+          : record
+      ),
     };
 
     updateFirebase(newData);
@@ -421,5 +448,7 @@ export const useTournamentData = () => {
     updateCaptureRecord,
     deleteCaptureRecord,
     getCapturedPokemonByPlayer,
+    incrementExtraCapture,
+    decrementExtraCapture,
   };
 };

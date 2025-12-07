@@ -636,22 +636,20 @@ const Players = ({ tournamentData, audioControls, auth }) => {
                   >
                     📦 CAPTURADOS
                   </button>
+                  <button 
+                    className="pixel-btn starter-btn"
+                    onClick={() => setShowStarterModal(player.id)}
+                  >
+                    🎓 STARTER OAK
+                  </button>
                   {canEdit && (
-                    <>
-                      <button 
-                        className="pixel-btn starter-btn"
-                        onClick={() => setShowStarterModal(player.id)}
-                      >
-                        🎓 STARTER OAK
-                      </button>
-                      <button 
-                        className="pixel-btn sync-btn"
-                        onClick={() => handleSyncTeam(player.id)}
-                        title="Limpiar Pokémon no capturados del equipo"
-                      >
-                        🔄 SINCRONIZAR
-                      </button>
-                    </>
+                    <button 
+                      className="pixel-btn sync-btn"
+                      onClick={() => handleSyncTeam(player.id)}
+                      title="Limpiar Pokémon no capturados del equipo"
+                    >
+                      🔄 SINCRONIZAR
+                    </button>
                   )}
                 </div>
               </div>

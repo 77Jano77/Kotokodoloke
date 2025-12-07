@@ -678,6 +678,9 @@ const Resources = ({ audioControls, tournamentData, auth }) => {
                         <span className="progress-badge">
                           {totalCompleted}/{totalZones} zonas
                         </span>
+                        <span className="progress-badge" style={{ background: '#059669', marginLeft: '0.5rem' }}>
+                          ➕ {record.extraCaptures || 0} captura{(record.extraCaptures || 0) !== 1 ? 's' : ''} extra{(record.extraCaptures || 0) !== 1 ? 's' : ''}
+                        </span>
                         {!canEdit && (
                           <span className="view-only-badge" style={{ fontSize: '0.65rem', padding: '0.3rem 0.5rem' }}>
                             👁️ SOLO LECTURA
@@ -708,9 +711,9 @@ const Resources = ({ audioControls, tournamentData, auth }) => {
                         {(record.kantoZones || []).map(zone => (
                           <div 
                             key={zone.id} 
-                            className={`zone-item ${zone.captured ? 'captured' : ''} ${!canEdit ? 'read-only' : ''}`}
-                            onClick={() => canEdit && openCaptureModal(record.id, 'kanto', zone)}
-                            style={{ cursor: canEdit ? 'pointer' : 'not-allowed', opacity: canEdit ? 1 : 0.7 }}
+                            className={`zone-item ${zone.captured ? 'captured' : ''} ${zone.extraCapture ? 'extra-capture' : ''} ${!canEdit ? 'read-only' : ''}`}
+                            onClick={() => canEdit && !zone.extraCapture && openCaptureModal(record.id, 'kanto', zone)}
+                            style={{ cursor: canEdit && !zone.extraCapture ? 'pointer' : 'not-allowed', opacity: canEdit ? 1 : 0.7 }}
                           >
                             {zone.captured && zone.capturedPokemon && (
                               <div className="zone-pokemon-sprite">
@@ -722,6 +725,7 @@ const Resources = ({ audioControls, tournamentData, auth }) => {
                             )}
                             <div className="zone-checkbox">
                               {zone.captured && '✓'}
+                              {zone.extraCapture && '➕'}
                             </div>
                             <div className="zone-info">
                               <span className="zone-name">{zone.name}</span>
@@ -732,6 +736,24 @@ const Resources = ({ audioControls, tournamentData, auth }) => {
                                 </span>
                               )}
                             </div>
+                            {canEdit && !zone.captured && !zone.extraCapture && (record.extraCaptures || 0) > 0 && (
+                              <button
+                                className="extra-capture-btn"
+                                onClick={(e) => {
+                                  e.stopPropagation();
+                                  if (confirm(`¿Usar una captura extra en ${zone.name}?`)) {
+                                    const updatedZones = (record.kantoZones || []).map(z =>
+                                      z.id === zone.id ? { ...z, extraCapture: true } : z
+                                    );
+                                    tournamentData.updateCaptureRecord(record.id, { kantoZones: updatedZones });
+                                    tournamentData.decrementExtraCapture(record.playerName);
+                                  }
+                                }}
+                                title="Usar captura extra"
+                              >
+                                ➕
+                              </button>
+                            )}
                           </div>
                         ))}
                       </div>
@@ -746,9 +768,9 @@ const Resources = ({ audioControls, tournamentData, auth }) => {
                         {(record.seviZones || []).map(zone => (
                           <div 
                             key={zone.id} 
-                            className={`zone-item ${zone.captured ? 'captured' : ''} ${!canEdit ? 'read-only' : ''}`}
-                            onClick={() => canEdit && openCaptureModal(record.id, 'sevi', zone)}
-                            style={{ cursor: canEdit ? 'pointer' : 'not-allowed', opacity: canEdit ? 1 : 0.7 }}
+                            className={`zone-item ${zone.captured ? 'captured' : ''} ${zone.extraCapture ? 'extra-capture' : ''} ${!canEdit ? 'read-only' : ''}`}
+                            onClick={() => canEdit && !zone.extraCapture && openCaptureModal(record.id, 'sevi', zone)}
+                            style={{ cursor: canEdit && !zone.extraCapture ? 'pointer' : 'not-allowed', opacity: canEdit ? 1 : 0.7 }}
                           >
                             {zone.captured && zone.capturedPokemon && (
                               <div className="zone-pokemon-sprite">
@@ -760,6 +782,7 @@ const Resources = ({ audioControls, tournamentData, auth }) => {
                             )}
                             <div className="zone-checkbox">
                               {zone.captured && '✓'}
+                              {zone.extraCapture && '➕'}
                             </div>
                             <div className="zone-info">
                               <span className="zone-name">{zone.name}</span>
@@ -770,6 +793,24 @@ const Resources = ({ audioControls, tournamentData, auth }) => {
                                 </span>
                               )}
                             </div>
+                            {canEdit && !zone.captured && !zone.extraCapture && (record.extraCaptures || 0) > 0 && (
+                              <button
+                                className="extra-capture-btn"
+                                onClick={(e) => {
+                                  e.stopPropagation();
+                                  if (confirm(`¿Usar una captura extra en ${zone.name}?`)) {
+                                    const updatedZones = (record.seviZones || []).map(z =>
+                                      z.id === zone.id ? { ...z, extraCapture: true } : z
+                                    );
+                                    tournamentData.updateCaptureRecord(record.id, { seviZones: updatedZones });
+                                    tournamentData.decrementExtraCapture(record.playerName);
+                                  }
+                                }}
+                                title="Usar captura extra"
+                              >
+                                ➕
+                              </button>
+                            )}
                           </div>
                         ))}
                       </div>
