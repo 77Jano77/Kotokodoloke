@@ -11,6 +11,12 @@
     "users": {
       ".read": true,
       ".write": true
+    },
+    
+    // Selecciones de ROMs - Usuarios autenticados pueden leer y escribir
+    "romSelections": {
+      ".read": true,
+      ".write": true
     }
   }
 }
