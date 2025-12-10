@@ -201,21 +201,6 @@ const Home = ({ tournamentData, audioControls, auth }) => {
 
 
 
-      {/* Mew Quick Access Banner - Sidebar (flotante, único) */}
-      <div className="mew-banner-sidebar-wrapper">
-        <a href="#resources-capture" className="mew-banner-sidebar pixel-card">
-          <img 
-            src="https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/151.png" 
-            alt="Mew" 
-            className="mew-sprite-sidebar"
-          />
-          <div className="mew-sidebar-text">
-            <span className="mew-sidebar-title">📋 Registro de Zonas</span>
-            <span className="mew-sidebar-subtitle">Acceso rápido</span>
-          </div>
-          <span className="mew-sidebar-arrow">→</span>
-        </a>
-      </div>
 
       {/* Rules Info */}
       <section className="rules-section-compact">
