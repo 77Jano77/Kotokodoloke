@@ -17,6 +17,7 @@ const AVAILABLE_SPRITES = [
   { id: 'smoke', name: 'Smoke', image: '/sprites/Smoke.jpg' },
   { id: 'yas', name: 'Yas', image: '/sprites/Yas.jpg' },
   { id: 'zainys', name: 'Zainys', image: '/sprites/Zainys.jpg' },
+  { id: 'dano', name: 'Dano', image: '/sprites/Dano.jpg' },
 ];
 
 const KANTO_BADGES = [
