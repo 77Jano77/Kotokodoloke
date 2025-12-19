@@ -67,12 +67,18 @@
   max-width: 1400px;
   margin: 0 auto;
   padding: 1.5rem 2rem;
-  /* Increased padding */
   display: flex;
   justify-content: space-between;
   align-items: center;
-  gap: 3rem;
-  /* Increased gap */
+  gap: 2rem;
+  /* Reduced gap since brand is grouped */
+}
+
+.header-brand {
+  display: flex;
+  align-items: center;
+  gap: 1.5rem;
+  flex-shrink: 0;
 }
 
 .kakuna-logo {

@@ -54,12 +54,12 @@ function Header({ currentSection, setCurrentSection, currentUser, onLogout, audi
       )}
 
       <div className="header-content">
-        <div className="header-left-group">
+        <div className="header-brand">
           <div className="kakuna-logo">
             <img src="/recursos/kakuna.gif" alt="Kakuna" className="logo-gif" />
           </div>
+          <h1 className="pixel-title">KOTOKODOS CUP</h1>
         </div>
-        <h1 className="pixel-title">KOTOKODOS CUP</h1>
 
         <nav className="pixel-nav">
           {menuItems.map((item) => {

@@ -1914,12 +1914,18 @@
   transform: scale(1.1);
 }
 
+.section-title.pixel-text {
+  font-size: 1.4rem !important;
+  /* Smaller than header title (1.8rem) */
+  margin-bottom: 2rem;
+}
+
 .oak-toggle-btn {
   position: fixed;
   bottom: 20px;
   right: 20px;
-  z-index: 2000;
-  /* Ensure it's above everything to be clickable */
+  z-index: 5000;
+  /* Extremely high to be above everything */
   font-size: 1rem;
   padding: 0.8rem 1.2rem;
   box-shadow: 0 4px 0 var(--shadow-dark);
