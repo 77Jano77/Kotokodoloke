@@ -58,8 +58,6 @@ function App() {
 
       {/* Banners System */}
       <Banners
-        tournamentData={tournamentData}
-        auth={auth}
         setCurrentSection={setCurrentSection}
       />
 

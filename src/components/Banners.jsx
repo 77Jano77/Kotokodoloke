@@ -1,44 +1,31 @@
 import { useState, useEffect } from 'react';
 import './Banners.css';
 
-const Banners = ({ tournamentData, auth, setCurrentSection }) => {
+const Banners = ({ setCurrentSection }) => {
     const [showBanners, setShowBanners] = useState(true);
-    const [showAdSelector, setShowAdSelector] = useState(false);
-    const [availableAds, setAvailableAds] = useState([]);
-    const [selectedAds, setSelectedAds] = useState([]);
+    const [currentAdIndex, setCurrentAdIndex] = useState(0);
 
-    // Cargar imágenes publicitarias disponibles
+    // Lista de banners publicitarios disponibles en /publi/
+    const availableAds = [
+        'banner1.png',
+        'banner2.png',
+        'banner3.png',
+        'banner4.png',
+        'banner5.png'
+    ];
+
+    // Rotación automática de banners cada 5 segundos
     useEffect(() => {
-        // Lista de banners publicitarios disponibles en /publi/
-        // El admin los puede agregar manualmente a esta carpeta
-        const adFiles = [
-            'banner1.png',
-            'banner2.png',
-            'banner3.png',
-            'banner4.png',
-            'banner5.png'
-        ];
-        setAvailableAds(adFiles);
+        if (availableAds.length === 0) return;
 
-        // Cargar banners seleccionados desde el estado global (si existe)
-        if (tournamentData.selectedAdBanners) {
-            setSelectedAds(tournamentData.selectedAdBanners);
-        }
-    }, [tournamentData.selectedAdBanners]);
+        const interval = setInterval(() => {
+            setCurrentAdIndex((prevIndex) => (prevIndex + 1) % availableAds.length);
+        }, 5000); // Cambiar cada 5 segundos
 
-    const isAdmin = auth?.currentUser?.isAdmin;
+        return () => clearInterval(interval);
+    }, [availableAds.length]);
 
-    const toggleAdBanner = (adFile) => {
-        const newSelected = selectedAds.includes(adFile)
-            ? selectedAds.filter(ad => ad !== adFile)
-            : [...selectedAds, adFile];
-
-        setSelectedAds(newSelected);
-        // Guardar en el estado global
-        if (tournamentData.updateAdBanners) {
-            tournamentData.updateAdBanners(newSelected);
-        }
-    };
+    const currentAd = availableAds[currentAdIndex];
 
     return (
         <>
@@ -80,7 +67,7 @@ const Banners = ({ tournamentData, auth, setCurrentSection }) => {
                             </div>
                         </div>
 
-                        {/* Banner de Registro de Zonas - NUEVO */}
+                        {/* Banner de Registro de Zonas */}
                         <div className="info-banner zones-banner pixel-card">
                             <div className="banner-header">
                                 <span className="banner-icon">🗺️</span>
@@ -104,68 +91,20 @@ const Banners = ({ tournamentData, auth, setCurrentSection }) => {
                         </div>
                     </div>
 
-                    {/* Left Banners - Publicitarios */}
+                    {/* Left Banners - Publicitarios (Rotación Automática) */}
                     <div className="left-banners">
-                        {isAdmin && (
-                            <button
-                                className="manage-ads-btn pixel-button"
-                                onClick={() => setShowAdSelector(!showAdSelector)}
-                            >
-                                ⚙️ Gestionar Banners
-                            </button>
-                        )}
-
-                        {selectedAds.map((adFile, index) => (
-                            <div key={index} className="ad-banner pixel-card">
+                        {currentAd && (
+                            <div className="ad-banner pixel-card ad-rotating" key={currentAdIndex}>
                                 <img
-                                    src={`/publi/${adFile}`}
-                                    alt={`Publicidad ${index + 1}`}
+                                    src={`/publi/${currentAd}`}
+                                    alt={`Publicidad ${currentAdIndex + 1}`}
                                     onError={(e) => {
                                         e.target.style.display = 'none';
-                                        console.log(`Banner ${adFile} no encontrado`);
                                     }}
                                 />
                             </div>
-                        ))}
+                        )}
                     </div>
-
-                    {/* Ad Selector Modal (solo para admin) */}
-                    {isAdmin && showAdSelector && (
-                        <div className="modal-overlay" onClick={() => setShowAdSelector(false)}>
-                            <div className="modal-content pixel-card ad-selector-modal" onClick={(e) => e.stopPropagation()}>
-                                <h2>📢 GESTIONAR BANNERS PUBLICITARIOS</h2>
-                                <p className="modal-subtitle">Selecciona qué banners mostrar en el lateral izquierdo</p>
-
-                                <div className="ad-selection-grid">
-                                    {availableAds.map((adFile) => (
-                                        <div
-                                            key={adFile}
-                                            className={`ad-option ${selectedAds.includes(adFile) ? 'selected' : ''}`}
-                                            onClick={() => toggleAdBanner(adFile)}
-                                        >
-                                            <img
-                                                src={`/publi/${adFile}`}
-                                                alt={adFile}
-                                                onError={(e) => {
-                                                    e.target.parentElement.style.opacity = '0.3';
-                                                    e.target.alt = 'No encontrado';
-                                                }}
-                                            />
-                                            {selectedAds.includes(adFile) && <span className="check-icon">✓</span>}
-                                            <span className="ad-filename">{adFile}</span>
-                                        </div>
-                                    ))}
-                                </div>
-
-                                <button
-                                    className="close-modal-btn pixel-button"
-                                    onClick={() => setShowAdSelector(false)}
-                                >
-                                    ✓ GUARDAR Y CERRAR
-                                </button>
-                            </div>
-                        </div>
-                    )}
                 </>
             )}
         </>
