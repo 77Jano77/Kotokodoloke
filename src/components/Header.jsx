@@ -1,5 +1,6 @@
 import './Header.css';
 import { FaHome, FaUsers, FaDice, FaTrophy, FaDownload, FaImages, FaSignOutAlt, FaUser } from 'react-icons/fa';
+import OakTips from './OakTips';
 
 function Header({ currentSection, setCurrentSection, currentUser, onLogout, audioState }) {
   const menuItems = [
@@ -76,6 +77,9 @@ function Header({ currentSection, setCurrentSection, currentUser, onLogout, audi
             );
           })}
         </nav>
+
+        {/* Oak in Header */}
+        <OakTips />
       </div>
     </header>
   );
