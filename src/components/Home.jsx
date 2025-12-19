@@ -276,7 +276,7 @@ const Home = ({ tournamentData, audioControls, auth }) => {
 
       {/* Top 3 Podium */}
       <section className="podium-section">
-        <h2 className="section-title pixel-text">🏆 CLASIFICACIÓN 🏆</h2>
+        <h2 className="rules-compact-title pixel-text">CLASIFICACIÓN</h2>
 
         <div className="podium-container">
           {/* 2nd Place */}

@@ -907,11 +907,13 @@
 }
 
 .rules-grid-compact {
-  display: flex;
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  /* 2x2 layout */
   justify-content: center;
   gap: 1.5rem;
-  /* Increased gap */
-  flex-wrap: wrap;
+  max-width: 800px;
+  margin: 0 auto;
 }
 
 .rule-button-compact {
@@ -926,10 +928,11 @@
   display: flex;
   flex-direction: row;
   align-items: center;
+  justify-content: center;
+  /* Center content horizontally */
   gap: 1.2rem;
-  min-width: 260px;
-  /* Slightly wider */
-  flex: 0 1 auto;
+  width: 100%;
+  /* Take full grid width */
   box-shadow: 4px 4px 0 rgba(0, 0, 0, 0.3);
   color: white;
 }
@@ -1431,68 +1434,73 @@
 
   /* Compact Rules Responsive */
   .rules-grid-compact {
-    flex-direction: column;
-    align-items: stretch;
-  }
-
-  .rule-button-compact {
-    min-width: auto;
-    width: 100%;
-  }
-
-  .rules-grid {
     grid-template-columns: 1fr;
+    /* Stack on mobile if needed */
+    max-width: 100%;
   }
 
-  .rule-modal {
-    padding: 1.5rem;
-    max-height: 90vh;
-  }
+  flex-direction: column;
+  align-items: stretch;
+}
 
-  .rule-modal h2 {
-    font-size: 1.5rem;
-    margin-bottom: 1.5rem;
-  }
+.rule-button-compact {
+  min-width: auto;
+  width: 100%;
+}
 
-  .rule-detail-section {
-    padding: 1rem;
-  }
+.rules-grid {
+  grid-template-columns: 1fr;
+}
 
-  .rule-detail-section h3 {
-    font-size: 1.1rem;
-  }
+.rule-modal {
+  padding: 1.5rem;
+  max-height: 90vh;
+}
 
-  .rule-detail-section ol.detailed-steps li {
-    padding-left: 2.5rem;
-  }
+.rule-modal h2 {
+  font-size: 1.5rem;
+  margin-bottom: 1.5rem;
+}
 
-  .close-modal-btn {
-    width: 35px;
-    height: 35px;
-    font-size: 1.2rem;
-  }
+.rule-detail-section {
+  padding: 1rem;
+}
 
-  .gym-levels-grid {
-    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
-    gap: 0.75rem;
-  }
+.rule-detail-section h3 {
+  font-size: 1.1rem;
+}
 
-  .gym-level-card {
-    padding: 1rem;
-  }
+.rule-detail-section ol.detailed-steps li {
+  padding-left: 2.5rem;
+}
 
-  .gym-badge-icon {
-    font-size: 2rem;
-  }
+.close-modal-btn {
+  width: 35px;
+  height: 35px;
+  font-size: 1.2rem;
+}
 
-  .gym-leader-avatar {
-    width: 60px;
-    height: 60px;
-  }
+.gym-levels-grid {
+  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+  gap: 0.75rem;
+}
 
-  .level-display strong {
-    font-size: 1.3rem;
-  }
+.gym-level-card {
+  padding: 1rem;
+}
+
+.gym-badge-icon {
+  font-size: 2rem;
+}
+
+.gym-leader-avatar {
+  width: 60px;
+  height: 60px;
+}
+
+.level-display strong {
+  font-size: 1.3rem;
+}
 }
 
 /* Latest Posts Section */
