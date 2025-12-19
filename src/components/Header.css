@@ -1,26 +1,110 @@
+/* ============================================
+   HEADER - THREE-TIER LAYOUT
+   ============================================ */
+
 .pixel-header {
-  background: var(--bg-secondary);
-  border-bottom: 6px solid var(--poke-red);
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
   position: sticky;
   top: 0;
   z-index: 1000;
+  background: var(--bg-secondary);
+  border-bottom: 6px solid var(--poke-red);
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
 }
 
-.user-info-bar {
+/* Admin Mode */
+.pixel-header.admin-mode {
+  border-bottom: 6px solid #fbbf24;
+  box-shadow: 0 4px 20px rgba(251, 191, 36, 0.3), 0 0 40px rgba(251, 191, 36, 0.2);
+}
+
+/* ============================================
+   TOP CONTROL BAR (Audio + User Info)
+   ============================================ */
+
+.top-control-bar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 8px 20px;
   background: var(--bg-primary);
   border-bottom: 2px solid var(--poke-blue);
-  padding: 8px 0;
 }
 
-.user-info-content {
-  max-width: 1400px;
-  margin: 0 auto;
-  padding: 0 2rem;
+.top-control-bar.admin-bar {
+  background: linear-gradient(90deg, var(--bg-primary) 0%, rgba(251, 191, 36, 0.1) 50%, var(--bg-primary) 100%);
+  border-bottom: 2px solid #fbbf24;
+  box-shadow: 0 2px 10px rgba(251, 191, 36, 0.2);
+}
+
+/* Audio Controls - Left Side */
+.audio-controls-left {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  background: rgba(0, 0, 0, 0.15);
+  padding: 6px 12px;
+  border-radius: 10px;
+  border: 1.5px solid rgba(255, 255, 255, 0.25);
+  box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.2);
+}
+
+.audio-toggle-btn {
+  background: none;
+  border: none;
+  font-size: 1.1rem;
+  cursor: pointer;
+  padding: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: transform 0.2s;
+  filter: drop-shadow(0 2px 2px rgba(0, 0, 0, 0.3));
+}
+
+.audio-toggle-btn:hover {
+  transform: scale(1.2);
+}
+
+.audio-volume-slider {
+  width: 80px;
+  height: 6px;
+  -webkit-appearance: none;
+  appearance: none;
+  background: rgba(255, 255, 255, 0.2);
+  border-radius: 3px;
+  outline: none;
+  cursor: pointer;
+}
+
+.audio-volume-slider::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 14px;
+  height: 14px;
+  background: var(--poke-yellow);
+  border: 2px solid #b45309;
+  cursor: pointer;
+  border-radius: 50%;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.4);
+}
+
+/* User Info - Right Side */
+.user-info-right {
   display: flex;
   align-items: center;
   gap: 12px;
-  justify-content: flex-end;
+}
+
+.user-icon {
+  color: var(--poke-blue);
+  font-size: 1rem;
+}
+
+.username {
+  font-family: 'Press Start 2P', cursive;
+  font-size: 0.65rem;
+  color: var(--poke-yellow);
+  white-space: nowrap;
 }
 
 .admin-badge {
@@ -51,99 +135,13 @@
   }
 }
 
-/* Estilos para modo admin */
-.pixel-header.admin-mode {
-  border-bottom: 6px solid #fbbf24;
-  box-shadow: 0 4px 20px rgba(251, 191, 36, 0.3), 0 0 40px rgba(251, 191, 36, 0.2);
-}
-
-.user-info-bar.admin-bar {
-  background: linear-gradient(90deg, var(--bg-primary) 0%, rgba(251, 191, 36, 0.1) 50%, var(--bg-primary) 100%);
-  border-bottom: 2px solid #fbbf24;
-  box-shadow: 0 2px 10px rgba(251, 191, 36, 0.2);
-}
-
-.header-content {
-  max-width: 1400px;
-  margin: 0 auto;
-  padding: 1rem 2rem;
-  display: flex;
-  flex-direction: column;
-  /* Vertical layout to center groups */
-  align-items: center;
-  gap: 1.5rem;
-  position: relative;
-}
-
-.header-main-group {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 1.5rem;
-  flex: 1;
-  /* Take available center space */
-}
-
-
-.header-brand {
-  display: flex;
-  flex-direction: row;
-  /* HORIZONTAL BRANDING */
-  align-items: center;
-  gap: 1.5rem;
-  flex-shrink: 0;
-}
-
-.logo-emoji {
-  font-size: 3.5rem;
-  filter: drop-shadow(4px 4px 0px rgba(0, 0, 0, 0.4));
-  animation: float 3s ease-in-out infinite;
-  display: inline-block;
-}
-
-.logo-right {
-  animation-delay: 1.5s;
-  /* Staggered animation */
-}
-
-.logo-gif {
-  width: 100%;
-  height: 100%;
-  object-fit: contain;
-  image-rendering: pixelated;
-  image-rendering: -moz-crisp-edges;
-  image-rendering: crisp-edges;
-}
-
-.pixel-title {
-  font-size: 3rem;
-  /* Larger title */
-  color: var(--poke-yellow);
-  letter-spacing: 4px;
-  text-shadow: 4px 4px 0px rgba(0, 0, 0, 0.4);
-  white-space: nowrap;
-  flex-shrink: 0;
-  margin: 0;
-}
-
-.user-icon {
-  color: var(--poke-blue);
-  font-size: 1rem;
-}
-
-.username {
-  font-family: 'Press Start 2P', cursive;
-  font-size: 0.65rem;
-  color: var(--poke-yellow);
-  white-space: nowrap;
-}
-
 .logout-btn {
   min-width: auto !important;
   padding: 8px !important;
   background: var(--poke-red) !important;
   border-color: var(--text-primary) !important;
   color: var(--text-primary) !important;
+  font-size: 0.9rem;
 }
 
 .logout-btn:hover {
@@ -151,49 +149,63 @@
   transform: scale(1.1) !important;
 }
 
-@keyframes float {
+/* ============================================
+   TITLE BAR (Centered Large Title)
+   ============================================ */
 
-  0%,
-  100% {
-    transform: translateY(0px);
-  }
-
-  50% {
-    transform: translateY(-10px);
-  }
+.title-bar {
+  padding: 1.5rem 20px;
+  text-align: center;
+  background: var(--bg-secondary);
 }
 
-.pixel-nav {
+.main-title {
+  font-family: 'Press Start 2P', cursive;
+  font-size: 4rem;
+  color: var(--poke-yellow);
+  letter-spacing: 6px;
+  margin: 0;
+  text-shadow:
+    4px 4px 0px rgba(0, 0, 0, 0.4),
+    -2px -2px 0 var(--poke-black),
+    2px -2px 0 var(--poke-black),
+    -2px 2px 0 var(--poke-black),
+    2px 2px 0 var(--poke-black);
+}
+
+/* ============================================
+   NAVIGATION BAR (Single Row Buttons)
+   ============================================ */
+
+.navigation-bar {
   display: flex;
-  gap: 12px;
-  flex-wrap: nowrap;
   justify-content: center;
-  /* Center buttons */
-  width: 100%;
+  align-items: center;
+  gap: 12px;
+  padding: 15px 20px;
+  background: var(--bg-secondary);
   overflow-x: auto;
-  padding: 10px 5px;
   scrollbar-width: thin;
   scrollbar-color: var(--poke-red) transparent;
+  flex-wrap: nowrap;
 }
 
-/* Custom Scrollbar for Nav */
-.pixel-nav::-webkit-scrollbar {
+.navigation-bar::-webkit-scrollbar {
   height: 4px;
 }
 
-.pixel-nav::-webkit-scrollbar-track {
+.navigation-bar::-webkit-scrollbar-track {
   background: transparent;
 }
 
-.pixel-nav::-webkit-scrollbar-thumb {
+.navigation-bar::-webkit-scrollbar-thumb {
   background: var(--poke-red);
   border-radius: 10px;
 }
 
-.pixel-button {
+.nav-button {
   font-family: 'Press Start 2P', cursive;
   font-size: 0.55rem;
-  /* Slightly larger */
   padding: 10px 16px;
   background: var(--bg-primary);
   color: var(--text-secondary);
@@ -205,13 +217,11 @@
   align-items: center;
   gap: 5px;
   min-width: 90px;
-  /* Slightly wider */
   flex-shrink: 0;
-  /* Prevent shrinking */
   position: relative;
 }
 
-.pixel-button::before {
+.nav-button::before {
   content: '';
   position: absolute;
   top: 0;
@@ -223,17 +233,17 @@
   z-index: -1;
 }
 
-.pixel-button:hover::before {
+.nav-button:hover::before {
   width: 100%;
 }
 
-.pixel-button:hover {
+.nav-button:hover {
   color: var(--poke-white);
   border-color: var(--poke-yellow);
   transform: translateY(-2px);
 }
 
-.pixel-button.active {
+.nav-button.active {
   background: var(--poke-red);
   color: var(--poke-white);
   border-color: var(--poke-yellow);
@@ -242,39 +252,43 @@
     inset 0 0 0 2px var(--poke-yellow);
 }
 
-.pixel-button .icon {
+.nav-button .icon {
   font-size: 1.3rem;
 }
 
-.pixel-button span {
+.nav-button span {
   font-size: 0.55rem;
   white-space: nowrap;
 }
 
+/* ============================================
+   RESPONSIVE DESIGN
+   ============================================ */
+
 @media (max-width: 1024px) {
-  .header-content {
-    gap: 1.5rem;
-    padding: 1rem 1.5rem;
-  }
-
-  .pixel-title {
-    font-size: 1.8rem;
-  }
-
-  .logo-emoji {
+  .main-title {
     font-size: 2.5rem;
+    letter-spacing: 3px;
   }
 
-  .pixel-nav {
+  .navigation-bar {
     justify-content: flex-start;
-    /* Better for horizontal scroll */
   }
 }
 
 @media (max-width: 768px) {
-  .user-info-content {
-    padding: 0 1rem;
+  .top-control-bar {
+    padding: 8px 10px;
     gap: 8px;
+  }
+
+  .audio-controls-left {
+    padding: 4px 8px;
+    gap: 0.5rem;
+  }
+
+  .audio-volume-slider {
+    width: 60px;
   }
 
   .username {
@@ -286,94 +300,38 @@
     padding: 3px 6px;
   }
 
-  .header-content {
-    flex-direction: row;
-    /* KEEP ROW */
-    flex-wrap: wrap;
-    /* Allow title/logo to be one group and nav another if needed, but nav stays row */
-    padding: 0.5rem;
-    gap: 1rem;
-    justify-content: center;
+  .title-bar {
+    padding: 1rem 10px;
   }
 
-  .pixel-nav {
-    width: 100%;
-    justify-content: flex-start;
-    padding-bottom: 5px;
+  .main-title {
+    font-size: 1.8rem;
+    letter-spacing: 2px;
   }
 
-  .pixel-title {
-    font-size: 1.35rem;
+  .navigation-bar {
+    padding: 10px;
+    gap: 8px;
+  }
+
+  .nav-button {
+    min-width: 80px;
+    padding: 8px 12px;
+  }
+}
+
+@media (max-width: 480px) {
+  .main-title {
+    font-size: 1.3rem;
     letter-spacing: 1px;
   }
 
-  .logo-emoji {
-    font-size: 1.8rem;
+  .nav-button {
+    min-width: 70px;
+    font-size: 0.5rem;
   }
-}
 
-/* TOP AUDIO CONTROLS (USER BAR) */
-.user-info-content {
-  gap: 1.5rem;
-  /* Increase gap to separate audio and user info */
-}
-
-.top-audio-controls {
-  margin-right: auto;
-  /* Push audio controls to the left side of the right-aligned container */
-  display: flex;
-  align-items: center;
-  gap: 1rem;
-  background: rgba(0, 0, 0, 0.15);
-  padding: 6px 12px;
-  border-radius: 10px;
-  border: 1.5px solid rgba(255, 255, 255, 0.25);
-  box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.2);
-}
-
-.top-mute-btn {
-  background: none;
-  border: none;
-  font-size: 1.1rem;
-  cursor: pointer;
-  padding: 0;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  transition: transform 0.2s;
-  filter: drop-shadow(0 2px 2px rgba(0, 0, 0, 0.3));
-}
-
-.top-mute-btn:hover {
-  transform: scale(1.2);
-}
-
-.top-volume-slider {
-  width: 80px;
-  height: 6px;
-  -webkit-appearance: none;
-  appearance: none;
-  background: rgba(255, 255, 255, 0.2);
-  border-radius: 3px;
-  outline: none;
-  cursor: pointer;
-}
-
-.top-volume-slider::-webkit-slider-thumb {
-  -webkit-appearance: none;
-  appearance: none;
-  width: 14px;
-  height: 14px;
-  background: var(--poke-yellow);
-  border: 2px solid #b45309;
-  cursor: pointer;
-  border-radius: 50%;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.4);
-}
-
-@media (max-width: 768px) {
-  .header-left-group {
-    flex-direction: row;
-    gap: 1rem;
+  .nav-button .icon {
+    font-size: 1.1rem;
   }
 }

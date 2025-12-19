@@ -72,7 +72,8 @@
 }
 
 .oak-v10-bubble {
-    width: 300px;
+    width: 400px;
+    max-height: 500px;
     position: absolute;
     top: 75px;
     /* Below face */
@@ -80,11 +81,12 @@
     /* Slightly offset to the right if in sidebar */
     z-index: 100;
     box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4);
+    overflow: visible;
 }
 
 .oak-bubble-header {
     background: var(--poke-red);
-    padding: 6px 12px;
+    padding: 8px 14px;
     border-radius: 8px 8px 0 0;
     display: flex;
     justify-content: space-between;
@@ -96,7 +98,7 @@
 .oak-name-tag {
     color: white;
     font-family: 'Press Start 2P', cursive;
-    font-size: 0.5rem;
+    font-size: 0.6rem;
 }
 
 .oak-close-mini {
@@ -104,20 +106,22 @@
     border: none;
     color: white;
     cursor: pointer;
-    font-size: 0.8rem;
+    font-size: 1rem;
 }
 
 .oak-bubble-content .oak-text-bubble {
     border-radius: 0 0 8px 8px;
-    padding: 1.2rem;
+    padding: 1.5rem;
     background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
     border: 2px solid #000;
     color: white;
+    max-height: 400px;
+    overflow-y: auto;
 }
 
 .oak-tip-text {
-    font-size: 0.85rem;
-    line-height: 1.4;
+    font-size: 0.9rem;
+    line-height: 1.6;
     margin: 0;
 }
 
