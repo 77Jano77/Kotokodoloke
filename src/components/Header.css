@@ -154,11 +154,10 @@
   display: flex;
   gap: 12px;
   flex-wrap: nowrap;
-  /* DISABLED wrapping */
-  justify-content: flex-end;
-  flex: 1;
+  justify-content: center;
+  /* Center buttons */
+  width: 100%;
   overflow-x: auto;
-  /* Enable horizontal scroll */
   padding: 10px 5px;
   scrollbar-width: thin;
   scrollbar-color: var(--poke-red) transparent;
