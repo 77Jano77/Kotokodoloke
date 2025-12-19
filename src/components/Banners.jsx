@@ -112,7 +112,7 @@ const Banners = ({ setCurrentSection, setResourceAction }) => {
                         </div>
                     </div>
 
-                    {/* Left Banners - Publicitarios (Rotación Automática - 2 simultáneos) */}
+                    {/* Left Banners - Publicitarios (Rotación Automática - 1 solo) */}
                     <div className="left-banners">
                         {currentAd1 && (
                             <div
@@ -124,22 +124,6 @@ const Banners = ({ setCurrentSection, setResourceAction }) => {
                                 <img
                                     src={`/publi/${currentAd1}`}
                                     alt={`Publicidad ${currentAdIndex + 1}`}
-                                    onError={(e) => {
-                                        e.target.style.display = 'none';
-                                    }}
-                                />
-                            </div>
-                        )}
-                        {currentAd2 && (
-                            <div
-                                className="ad-banner pixel-card ad-rotating"
-                                key={`ad2-${currentAdIndex}`}
-                                onClick={handleRandomRedirect}
-                                style={{ cursor: 'pointer' }}
-                            >
-                                <img
-                                    src={`/publi/${currentAd2}`}
-                                    alt={`Publicidad ${((currentAdIndex + 1) % availableAds.length) + 1}`}
                                     onError={(e) => {
                                         e.target.style.display = 'none';
                                     }}

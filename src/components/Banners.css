@@ -26,14 +26,13 @@
 /* Right Banners Container */
 .right-banners {
   position: fixed;
-  right: 25px;
-  top: 350px;
-  /* Increased to avoid overlap with larger header */
+  right: 15px;
+  top: 320px;
   z-index: 997;
   display: flex;
   flex-direction: column;
-  gap: 20px;
-  max-width: 300px;
+  gap: 12px;
+  max-width: 240px;
   animation: floatBanners 6s ease-in-out infinite;
 }
 
@@ -45,97 +44,86 @@
   }
 
   50% {
-    transform: translateY(-12px) scale(1.01);
+    transform: translateY(-8px) scale(1.01);
   }
 }
 
 /* Info Banners */
 .info-banner {
   background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-  padding: 18px;
-  border-radius: 16px;
-  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.35);
+  padding: 12px;
+  border-radius: 12px;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
   animation: slideInRight 0.6s ease;
-  border: 3px solid rgba(255, 255, 255, 0.2);
-  backdrop-filter: blur(10px);
+  border: 2px solid rgba(255, 255, 255, 0.2);
+  backdrop-filter: blur(8px);
   transition: all 0.3s ease;
 }
-
-.info-banner:hover {
-  transform: scale(1.03);
-  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.45);
-}
-
-
 
 .banner-header {
   display: flex;
   align-items: center;
-  gap: 10px;
-  margin-bottom: 12px;
-  padding-bottom: 10px;
-  border-bottom: 2px solid rgba(255, 255, 255, 0.3);
+  gap: 8px;
+  margin-bottom: 8px;
+  padding-bottom: 6px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.3);
 }
 
 .banner-icon {
-  font-size: 22px;
-  filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.3));
+  font-size: 18px;
 }
 
 .banner-title {
   font-weight: bold;
   color: white;
-  font-size: 17px;
-  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.4);
-  letter-spacing: 1px;
+  font-size: 14px;
+  text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.4);
+  letter-spacing: 0.5px;
 }
 
 .banner-content {
   display: flex;
   flex-direction: column;
-  gap: 10px;
+  gap: 6px;
 }
 
 .banner-item {
   display: flex;
   flex-direction: column;
-  gap: 4px;
-  background: rgba(255, 255, 255, 0.15);
-  padding: 8px;
-  border-radius: 8px;
+  gap: 2px;
+  background: rgba(255, 255, 255, 0.1);
+  padding: 6px;
+  border-radius: 6px;
 }
 
 .item-label {
-  font-size: 11px;
+  font-size: 9px;
   color: rgba(255, 255, 255, 0.9);
   font-weight: bold;
-  text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.3);
 }
 
 .item-value {
-  font-size: 15px;
+  font-size: 12px;
   color: white;
   font-weight: bold;
-  text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.4);
-  background: rgba(0, 0, 0, 0.2);
-  padding: 6px 10px;
-  border-radius: 6px;
+  background: rgba(0, 0, 0, 0.15);
+  padding: 4px 8px;
+  border-radius: 4px;
   text-align: center;
 }
 
 .banner-link-btn {
-  margin-top: 8px;
+  margin-top: 4px;
   width: 100%;
-  padding: 10px;
-  background: rgba(255, 255, 255, 0.25);
-  border: 2px solid white;
+  padding: 8px;
+  background: rgba(255, 255, 255, 0.2);
+  border: 1.5px solid white;
   color: white;
   font-weight: bold;
   cursor: pointer;
   transition: all 0.3s ease;
-  border-radius: 8px;
-  box-shadow: 0 3px 8px rgba(0, 0, 0, 0.2);
-  font-size: 13px;
+  border-radius: 6px;
+  font-size: 11px;
 }
 
 .banner-link-btn:hover {
@@ -151,17 +139,17 @@
 .mew-sprite {
   display: flex;
   justify-content: center;
-  margin: 8px 0;
-  background: rgba(255, 255, 255, 0.2);
-  border-radius: 12px;
-  padding: 10px;
+  margin: 4px 0;
+  background: rgba(255, 255, 255, 0.15);
+  border-radius: 10px;
+  padding: 6px;
 }
 
 .mew-sprite img {
-  width: 90px;
-  height: 90px;
+  width: 60px;
+  height: 60px;
   image-rendering: pixelated;
-  filter: drop-shadow(0 0 15px rgba(255, 255, 255, 0.6));
+  filter: drop-shadow(0 0 10px rgba(255, 255, 255, 0.5));
   animation: float 3s ease-in-out infinite;
 }
 
@@ -180,14 +168,13 @@
 /* Left Banners Container */
 .left-banners {
   position: fixed;
-  left: 25px;
-  top: 350px;
-  /* Increased to avoid overlap with larger header */
+  left: 15px;
+  top: 320px;
   z-index: 997;
   display: flex;
   flex-direction: column;
   gap: 20px;
-  max-width: 320px;
+  max-width: 260px;
   animation: floatBanners 6s ease-in-out infinite;
 }
 
