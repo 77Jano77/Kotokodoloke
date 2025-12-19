@@ -1435,17 +1435,13 @@
   /* Compact Rules Responsive */
   .rules-grid-compact {
     grid-template-columns: 1fr;
-    /* Stack on mobile if needed */
     max-width: 100%;
   }
 
-  flex-direction: column;
-  align-items: stretch;
-}
-
-.rule-button-compact {
-  min-width: auto;
-  width: 100%;
+  .rule-button-compact {
+    min-width: auto;
+    width: 100%;
+  }
 }
 
 .rules-grid {
