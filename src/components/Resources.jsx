@@ -5,14 +5,14 @@ import { POKEDEX_DATA } from '../data/pokedex';
 import { ABILITIES_DATA } from '../data/abilities';
 import { CAPTURE_ZONES } from '../data/captureZones';
 
-const Resources = ({ audioControls, tournamentData, auth }) => {
+const Resources = ({ audioControls, tournamentData, auth, resourceAction, setResourceAction }) => {
   const audioRef = useRef(null);
   const [activeTab, setActiveTab] = useState('types');
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedType, setSelectedType] = useState('');
   const [selectedGen, setSelectedGen] = useState('all');
   const [showConnectionGuide, setShowConnectionGuide] = useState(false);
-  
+
   // Usar captureRecords de Firebase
   const captureRecords = tournamentData.captureRecords || [];
   const [showNewRecordForm, setShowNewRecordForm] = useState(false);
@@ -20,6 +20,33 @@ const Resources = ({ audioControls, tournamentData, auth }) => {
   const [expandedRecord, setExpandedRecord] = useState(null);
   const [selectedZoneForCapture, setSelectedZoneForCapture] = useState(null);
   const [captureData, setCaptureData] = useState({ pokemon: '', ability: '', nickname: '' });
+
+  // Manejar acciones externas (desde Banners)
+  useEffect(() => {
+    if (resourceAction === 'open_my_zones' && auth.currentUser) {
+      // 1. Cambiar a pestaña de captura
+      setActiveTab('capture');
+
+      // 2. Buscar registro del usuario actual
+      const userPlayerId = auth.currentUser.playerId;
+      const userPlayer = (tournamentData.players || []).find(p => p.id === userPlayerId);
+
+      if (userPlayer) {
+        const userRecord = captureRecords.find(r => r.playerName === userPlayer.name);
+        if (userRecord) {
+          // 3. Expandir registro si existe
+          setExpandedRecord(userRecord.id);
+        } else {
+          // Si no tiene registro, mostrar formulario para crearlo
+          setShowNewRecordForm(true);
+          setNewPlayerName(userPlayer.name);
+        }
+      }
+
+      // 4. Limpiar acción
+      if (setResourceAction) setResourceAction(null);
+    }
+  }, [resourceAction, auth.currentUser, tournamentData.players, captureRecords, setResourceAction]);
 
   // Limpiar LocalStorage antiguo
   useEffect(() => {
@@ -93,7 +120,7 @@ const Resources = ({ audioControls, tournamentData, auth }) => {
 
   const saveCapturedPokemon = () => {
     if (!selectedZoneForCapture) return;
-    
+
     // Validar que tenemos un número de Pokémon
     let pokemonNumber = captureData.pokemon;
     if (!pokemonNumber) {
@@ -103,7 +130,7 @@ const Resources = ({ audioControls, tournamentData, auth }) => {
 
     // Si no es un número, intentar buscarlo por nombre
     if (!/^\d+$/.test(pokemonNumber)) {
-      const pokemon = POKEDEX_DATA.find(p => 
+      const pokemon = POKEDEX_DATA.find(p =>
         p.name.toLowerCase() === pokemonNumber.toLowerCase()
       );
       if (pokemon) {
@@ -223,7 +250,7 @@ const Resources = ({ audioControls, tournamentData, auth }) => {
             }
             return pokemon;
           });
-          
+
           if (pokemonRemoved) {
             tournamentData.updatePlayer(player.id, { team: updatedTeam });
             console.log(`✓ ${pokemonData.name} eliminado del equipo de ${player.name}`);
@@ -245,10 +272,10 @@ const Resources = ({ audioControls, tournamentData, auth }) => {
   // Filtrar Pokémon
   const filteredPokedex = POKEDEX_DATA.filter(pokemon => {
     const matchesSearch = pokemon.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-                         pokemon.number.toString().includes(searchTerm);
+      pokemon.number.toString().includes(searchTerm);
     const matchesGen = selectedGen === 'all' || pokemon.generation === parseInt(selectedGen);
-    const matchesType = !selectedType || 
-                       pokemon.types.includes(selectedType);
+    const matchesType = !selectedType ||
+      pokemon.types.includes(selectedType);
     return matchesSearch && matchesGen && matchesType;
   });
 
@@ -265,7 +292,7 @@ const Resources = ({ audioControls, tournamentData, auth }) => {
       <h1 className="pixel-text">📚 RECURSOS DEL TORNEO</h1>
 
       <div className="connection-guide-section">
-        <button 
+        <button
           className="pixel-button connection-guide-btn-main"
           onClick={() => setShowConnectionGuide(true)}
         >
@@ -314,12 +341,12 @@ const Resources = ({ audioControls, tournamentData, auth }) => {
           <p className="section-description">
             Muestra las fortalezas y debilidades de cada tipo Pokémon actualizada a 6ª generación (con Hada)
           </p>
-          
+
           <div className="type-chart-container">
             <table className="type-chart">
               <thead>
                 <tr>
-                  <th className="corner-cell">ATK ➜<br/>DEF ⬇</th>
+                  <th className="corner-cell">ATK ➜<br />DEF ⬇</th>
                   {TYPE_CHART.types.map(type => (
                     <th key={type} className={`type-header type-${type.toLowerCase()}`}>
                       {type}
@@ -336,17 +363,17 @@ const Resources = ({ audioControls, tournamentData, auth }) => {
                     {TYPE_CHART.types.map(attackingType => {
                       const effectiveness = TYPE_CHART.chart[attackingType]?.[defendingType] || 1;
                       return (
-                        <td 
+                        <td
                           key={`${attackingType}-${defendingType}`}
                           className={`effectiveness eff-${effectiveness}`}
                           title={`${attackingType} → ${defendingType}: ${effectiveness}x`}
                         >
                           {effectiveness === 0 ? '×0' :
-                           effectiveness === 0.25 ? '¼' :
-                           effectiveness === 0.5 ? '½' :
-                           effectiveness === 1 ? '-' :
-                           effectiveness === 2 ? '2×' :
-                           effectiveness === 4 ? '4×' : effectiveness}
+                            effectiveness === 0.25 ? '¼' :
+                              effectiveness === 0.5 ? '½' :
+                                effectiveness === 1 ? '-' :
+                                  effectiveness === 2 ? '2×' :
+                                    effectiveness === 4 ? '4×' : effectiveness}
                         </td>
                       );
                     })}
@@ -378,7 +405,7 @@ const Resources = ({ audioControls, tournamentData, auth }) => {
             <p className="section-description">
               {POKEDEX_DATA.length} Pokémon con stats base de 6ª gen y evoluciones adaptadas a "Easier Evolutions"
             </p>
-            
+
             <div className="pokedex-filters">
               <input
                 type="text"
@@ -387,7 +414,7 @@ const Resources = ({ audioControls, tournamentData, auth }) => {
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
               />
-              
+
               <select
                 className="pixel-input"
                 value={selectedGen}
@@ -427,7 +454,7 @@ const Resources = ({ audioControls, tournamentData, auth }) => {
                 </div>
 
                 <div className="pokemon-image">
-                  <img 
+                  <img
                     src={`https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/${pokemon.number}.png`}
                     alt={pokemon.name}
                     onError={(e) => e.target.style.display = 'none'}
@@ -441,42 +468,42 @@ const Resources = ({ audioControls, tournamentData, auth }) => {
                   <div className="stat-row">
                     <span className="stat-name">HP</span>
                     <div className="stat-bar">
-                      <div className="stat-fill stat-hp" style={{width: `${(pokemon.stats.hp/255)*100}%`}}></div>
+                      <div className="stat-fill stat-hp" style={{ width: `${(pokemon.stats.hp / 255) * 100}%` }}></div>
                     </div>
                     <span className="stat-value">{pokemon.stats.hp}</span>
                   </div>
                   <div className="stat-row">
                     <span className="stat-name">ATK</span>
                     <div className="stat-bar">
-                      <div className="stat-fill stat-atk" style={{width: `${(pokemon.stats.attack/255)*100}%`}}></div>
+                      <div className="stat-fill stat-atk" style={{ width: `${(pokemon.stats.attack / 255) * 100}%` }}></div>
                     </div>
                     <span className="stat-value">{pokemon.stats.attack}</span>
                   </div>
                   <div className="stat-row">
                     <span className="stat-name">DEF</span>
                     <div className="stat-bar">
-                      <div className="stat-fill stat-def" style={{width: `${(pokemon.stats.defense/255)*100}%`}}></div>
+                      <div className="stat-fill stat-def" style={{ width: `${(pokemon.stats.defense / 255) * 100}%` }}></div>
                     </div>
                     <span className="stat-value">{pokemon.stats.defense}</span>
                   </div>
                   <div className="stat-row">
                     <span className="stat-name">SpA</span>
                     <div className="stat-bar">
-                      <div className="stat-fill stat-spa" style={{width: `${(pokemon.stats.spAttack/255)*100}%`}}></div>
+                      <div className="stat-fill stat-spa" style={{ width: `${(pokemon.stats.spAttack / 255) * 100}%` }}></div>
                     </div>
                     <span className="stat-value">{pokemon.stats.spAttack}</span>
                   </div>
                   <div className="stat-row">
                     <span className="stat-name">SpD</span>
                     <div className="stat-bar">
-                      <div className="stat-fill stat-spd" style={{width: `${(pokemon.stats.spDefense/255)*100}%`}}></div>
+                      <div className="stat-fill stat-spd" style={{ width: `${(pokemon.stats.spDefense / 255) * 100}%` }}></div>
                     </div>
                     <span className="stat-value">{pokemon.stats.spDefense}</span>
                   </div>
                   <div className="stat-row">
                     <span className="stat-name">SPE</span>
                     <div className="stat-bar">
-                      <div className="stat-fill stat-spe" style={{width: `${(pokemon.stats.speed/255)*100}%`}}></div>
+                      <div className="stat-fill stat-spe" style={{ width: `${(pokemon.stats.speed / 255) * 100}%` }}></div>
                     </div>
                     <span className="stat-value">{pokemon.stats.speed}</span>
                   </div>
@@ -510,7 +537,7 @@ const Resources = ({ audioControls, tournamentData, auth }) => {
             <p className="section-description">
               Listado completo de todas las habilidades disponibles en el juego
             </p>
-            
+
             <input
               type="text"
               className="pixel-input search-input"
@@ -549,17 +576,17 @@ const Resources = ({ audioControls, tournamentData, auth }) => {
           <p className="section-description">
             Explora Kanto con este mapa interactivo completo. Encuentra ubicaciones, rutas, ciudades y puntos de interés.
           </p>
-          
+
           <div className="map-embed-container">
-            <a 
-              href="https://pkmnmap.com/FireRedLeafGreen/" 
-              target="_blank" 
+            <a
+              href="https://pkmnmap.com/FireRedLeafGreen/"
+              target="_blank"
               rel="noopener noreferrer"
               className="map-link pixel-button"
             >
               🌍 ABRIR MAPA INTERACTIVO DE KANTO
             </a>
-            
+
             <div className="map-info">
               <p>📍 <strong>Características del mapa:</strong></p>
               <ul>
@@ -588,8 +615,8 @@ const Resources = ({ audioControls, tournamentData, auth }) => {
             <p className="section-description">
               Lleva un control de las zonas que ya has usado para capturar Pokémon
             </p>
-            
-            <button 
+
+            <button
               className="pixel-button"
               onClick={() => setShowNewRecordForm(!showNewRecordForm)}
             >
@@ -613,12 +640,12 @@ const Resources = ({ audioControls, tournamentData, auth }) => {
                     .filter(player => {
                       // Filtrar jugadores que ya tienen registro
                       if (captureRecords.find(r => r.playerName === player.name)) return false;
-                      
+
                       // Si no es admin, solo mostrar el jugador propio
                       if (!auth.currentUser?.isAdmin) {
                         return player.id === auth.currentUser?.playerId;
                       }
-                      
+
                       return true;
                     })
                     .map(player => (
@@ -628,21 +655,21 @@ const Resources = ({ audioControls, tournamentData, auth }) => {
                     ))}
                 </select>
                 {(tournamentData.players || []).length === 0 && (
-                  <small style={{color: '#888', fontSize: '0.7rem'}}>
+                  <small style={{ color: '#888', fontSize: '0.7rem' }}>
                     No hay jugadores creados. Ve a la sección JUGADORES primero.
                   </small>
                 )}
               </div>
               <div className="form-buttons">
-                <button 
-                  className="pixel-button" 
+                <button
+                  className="pixel-button"
                   onClick={createNewRecord}
                   disabled={!newPlayerName}
                 >
                   ✓ CREAR
                 </button>
-                <button 
-                  className="pixel-button-secondary" 
+                <button
+                  className="pixel-button-secondary"
                   onClick={() => {
                     setShowNewRecordForm(false);
                     setNewPlayerName('');
@@ -670,8 +697,8 @@ const Resources = ({ audioControls, tournamentData, auth }) => {
                     const totalZones = (record.kantoZones || []).length + (record.seviZones || []).length;
 
                     return (
-                      <div 
-                        key={record.id} 
+                      <div
+                        key={record.id}
                         className="record-sprite-card"
                         onClick={() => setExpandedRecord(record.id)}
                       >
@@ -715,7 +742,7 @@ const Resources = ({ audioControls, tournamentData, auth }) => {
                           </span>
                         )}
                         {auth.currentUser?.isAdmin && (
-                          <button 
+                          <button
                             className="pixel-btn add-extra-slot-btn"
                             onClick={(e) => {
                               e.stopPropagation();
@@ -736,7 +763,7 @@ const Resources = ({ audioControls, tournamentData, auth }) => {
                           </button>
                         )}
                         {canEdit && (
-                          <button 
+                          <button
                             className="delete-record-btn"
                             onClick={(e) => {
                               e.stopPropagation();
@@ -758,15 +785,15 @@ const Resources = ({ audioControls, tournamentData, auth }) => {
                       </h4>
                       <div className="zones-grid">
                         {(record.kantoZones || []).map(zone => (
-                          <div 
-                            key={zone.id} 
+                          <div
+                            key={zone.id}
                             className={`zone-item ${zone.captured ? 'captured' : ''} ${!canEdit ? 'read-only' : ''}`}
                             onClick={() => canEdit && openCaptureModal(record.id, 'kanto', zone)}
                             style={{ cursor: canEdit ? 'pointer' : 'not-allowed', opacity: canEdit ? 1 : 0.7 }}
                           >
                             {zone.captured && zone.capturedPokemon && (
                               <div className="zone-pokemon-sprite">
-                                <img 
+                                <img
                                   src={`https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/${zone.capturedPokemon.pokemon}.png`}
                                   alt={`Pokémon #${zone.capturedPokemon.pokemon}`}
                                 />
@@ -796,15 +823,15 @@ const Resources = ({ audioControls, tournamentData, auth }) => {
                       </h4>
                       <div className="zones-grid">
                         {(record.seviZones || []).map(zone => (
-                          <div 
-                            key={zone.id} 
+                          <div
+                            key={zone.id}
                             className={`zone-item ${zone.captured ? 'captured' : ''} ${!canEdit ? 'read-only' : ''}`}
                             onClick={() => canEdit && openCaptureModal(record.id, 'sevi', zone)}
                             style={{ cursor: canEdit ? 'pointer' : 'not-allowed', opacity: canEdit ? 1 : 0.7 }}
                           >
                             {zone.captured && zone.capturedPokemon && (
                               <div className="zone-pokemon-sprite">
-                                <img 
+                                <img
                                   src={`https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/${zone.capturedPokemon.pokemon}.png`}
                                   alt={`Pokémon #${zone.capturedPokemon.pokemon}`}
                                 />
@@ -835,15 +862,15 @@ const Resources = ({ audioControls, tournamentData, auth }) => {
                         </h4>
                         <div className="zones-grid">
                           {(record.extraCaptureSlots || []).map(slot => (
-                            <div 
-                              key={slot.id} 
+                            <div
+                              key={slot.id}
                               className={`zone-item ${slot.captured ? 'captured' : ''} extra-capture ${!canEdit ? 'read-only' : ''}`}
                               onClick={() => canEdit && openCaptureModal(record.id, 'extra', slot)}
                               style={{ cursor: canEdit ? 'pointer' : 'not-allowed', opacity: canEdit ? 1 : 0.7 }}
                             >
                               {slot.captured && slot.capturedPokemon && (
                                 <div className="zone-pokemon-sprite">
-                                  <img 
+                                  <img
                                     src={`https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/${slot.capturedPokemon.pokemon}.png`}
                                     alt={`Pokémon #${slot.capturedPokemon.pokemon}`}
                                   />
@@ -884,7 +911,7 @@ const Resources = ({ audioControls, tournamentData, auth }) => {
                     )}
 
                     {/* Close Button */}
-                    <button 
+                    <button
                       className="close-record-btn pixel-button"
                       onClick={() => setExpandedRecord(null)}
                     >
@@ -902,13 +929,13 @@ const Resources = ({ audioControls, tournamentData, auth }) => {
       {showConnectionGuide && (
         <div className="modal-overlay" onClick={() => setShowConnectionGuide(false)}>
           <div className="modal-content connection-guide-modal pixel-card" onClick={(e) => e.stopPropagation()}>
-            <button 
+            <button
               className="close-modal-btn"
               onClick={() => setShowConnectionGuide(false)}
             >
               ✕
             </button>
-            
+
             <h2>🎮 GUÍA DE CONEXIÓN ONLINE</h2>
             <p className="guide-intro">Sigue estos pasos para conectar dos emuladores GBA y jugar Pokémon online</p>
 
@@ -1019,16 +1046,16 @@ const Resources = ({ audioControls, tournamentData, auth }) => {
                       const value = e.target.value;
                       // Si es un número directo, usarlo
                       if (/^\d+$/.test(value)) {
-                        setCaptureData({...captureData, pokemon: value});
+                        setCaptureData({ ...captureData, pokemon: value });
                       } else {
                         // Buscar por nombre
-                        const pokemon = POKEDEX_DATA.find(p => 
+                        const pokemon = POKEDEX_DATA.find(p =>
                           p.name.toLowerCase() === value.toLowerCase()
                         );
                         if (pokemon) {
-                          setCaptureData({...captureData, pokemon: pokemon.number.toString()});
+                          setCaptureData({ ...captureData, pokemon: pokemon.number.toString() });
                         } else {
-                          setCaptureData({...captureData, pokemon: value});
+                          setCaptureData({ ...captureData, pokemon: value });
                         }
                       }
                     }}
@@ -1044,7 +1071,7 @@ const Resources = ({ audioControls, tournamentData, auth }) => {
                   </datalist>
                   {captureData.pokemon && /^\d+$/.test(captureData.pokemon) && (
                     <div className="pokemon-preview">
-                      <img 
+                      <img
                         src={`https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/${captureData.pokemon}.png`}
                         alt={`Pokémon #${captureData.pokemon}`}
                         onError={(e) => e.target.style.display = 'none'}
@@ -1066,7 +1093,7 @@ const Resources = ({ audioControls, tournamentData, auth }) => {
                   placeholder="Nombre personalizado"
                   maxLength="12"
                   value={captureData.nickname}
-                  onChange={(e) => setCaptureData({...captureData, nickname: e.target.value})}
+                  onChange={(e) => setCaptureData({ ...captureData, nickname: e.target.value })}
                 />
               </div>
 
@@ -1075,7 +1102,7 @@ const Resources = ({ audioControls, tournamentData, auth }) => {
                 <select
                   className="pixel-input"
                   value={captureData.ability}
-                  onChange={(e) => setCaptureData({...captureData, ability: e.target.value})}
+                  onChange={(e) => setCaptureData({ ...captureData, ability: e.target.value })}
                 >
                   <option value="">Seleccionar habilidad...</option>
                   {ABILITIES_DATA.map(ability => (
@@ -1087,7 +1114,7 @@ const Resources = ({ audioControls, tournamentData, auth }) => {
               </div>
 
               <div className="modal-actions">
-                <button 
+                <button
                   className="pixel-button confirm-btn"
                   onClick={saveCapturedPokemon}
                   disabled={!captureData.pokemon}
@@ -1095,14 +1122,14 @@ const Resources = ({ audioControls, tournamentData, auth }) => {
                   ✓ GUARDAR
                 </button>
                 {selectedZoneForCapture.zone.captured && (
-                  <button 
+                  <button
                     className="pixel-button delete-btn"
                     onClick={removeCapturedPokemon}
                   >
                     🗑️ ELIMINAR
                   </button>
                 )}
-                <button 
+                <button
                   className="pixel-button cancel-btn"
                   onClick={() => setSelectedZoneForCapture(null)}
                 >

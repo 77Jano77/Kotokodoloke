@@ -17,6 +17,7 @@ function App() {
   const [currentSection, setCurrentSection] = useState('home');
   const [isMuted, setIsMuted] = useState(false);
   const [volume, setVolume] = useState(30);
+  const [resourceAction, setResourceAction] = useState(null);
   const tournamentData = useTournamentData();
   const auth = useAuth();
 
@@ -38,7 +39,13 @@ function App() {
     players: <Players tournamentData={tournamentData} audioControls={audioControls} auth={auth} />,
     roulette: <Roulette tournamentData={tournamentData} audioControls={audioControls} auth={auth} />,
     standings: <Standings tournamentData={tournamentData} audioControls={audioControls} auth={auth} />,
-    resources: <Resources audioControls={audioControls} tournamentData={tournamentData} auth={auth} />,
+    resources: <Resources
+      audioControls={audioControls}
+      tournamentData={tournamentData}
+      auth={auth}
+      resourceAction={resourceAction}
+      setResourceAction={setResourceAction}
+    />,
     downloads: <Downloads audioControls={audioControls} auth={auth} tournamentData={tournamentData} />,
     gallery: <Gallery tournamentData={tournamentData} audioControls={audioControls} auth={auth} />,
   };
@@ -59,6 +66,7 @@ function App() {
       {/* Banners System */}
       <Banners
         setCurrentSection={setCurrentSection}
+        setResourceAction={setResourceAction}
       />
 
       <div className="audio-controls">

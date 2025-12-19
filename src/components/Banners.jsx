@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import './Banners.css';
 
-const Banners = ({ setCurrentSection }) => {
+const Banners = ({ setCurrentSection, setResourceAction }) => {
     const [showBanners, setShowBanners] = useState(true);
     const [currentAdIndex, setCurrentAdIndex] = useState(0);
 
@@ -87,10 +87,13 @@ const Banners = ({ setCurrentSection }) => {
                                 </div>
                                 <button
                                     className="banner-link-btn pixel-button zones-btn"
-                                    onClick={() => setCurrentSection('roulette')}
-                                    title="Ir a registro de zonas"
+                                    onClick={() => {
+                                        setResourceAction('open_my_zones');
+                                        setCurrentSection('resources');
+                                    }}
+                                    title="Ir a mi registro de zonas"
                                 >
-                                    📍 Registrar Zonas
+                                    📍 Ir a mi registro
                                 </button>
                             </div>
                         </div>
