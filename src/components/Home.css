@@ -1602,7 +1602,7 @@
 
 
 /* OAK TIPS - HEADER INTEGRATION ONLY */
-.header-oak-container .oak-global-container {
+.header-oak-v10 .oak-v10-container {
   position: relative;
   z-index: 5000;
   display: flex;
@@ -1637,7 +1637,7 @@
   object-fit: cover;
 }
 
-.header-oak-container .notification-dot {
+.header-oak-v10 .notification-dot {
   position: absolute;
   top: 0;
   right: 0;
@@ -1726,7 +1726,7 @@
 
 /* Ensure no legacy styles appear on mobile either */
 @media (max-width: 768px) {
-  .header-oak-container .oak-tips-bubble {
+  .header-oak-v10 .oak-v10-bubble {
     position: fixed;
     top: auto;
     bottom: 20px;

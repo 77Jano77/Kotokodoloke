@@ -70,7 +70,7 @@ const OakTips = () => {
     };
 
     return (
-        <div className="oak-global-container">
+        <div className="oak-v10-container">
             {/* Oak's Face Trigger (Always Visible) */}
             <div
                 className={`oak-face-trigger ${isOpen ? 'active' : ''} ${!isOpen ? 'pulse' : ''}`}
@@ -84,7 +84,7 @@ const OakTips = () => {
             </div>
 
             {isOpen && (
-                <div className="oak-tips-bubble slide-up">
+                <div className="oak-v10-bubble slide-up">
                     <div className="oak-bubble-header">
                         <span className="oak-name-tag">PROFR. OAK</span>
                         <button className="oak-close-mini" onClick={() => setIsOpen(false)}>✕</button>

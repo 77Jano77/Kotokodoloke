@@ -81,7 +81,7 @@ function Header({ currentSection, setCurrentSection, currentUser, onLogout, audi
         </div>
 
         {/* Oak in Header - Centered in Right Gap */}
-        <div className="header-oak-container">
+        <div className="header-oak-v10">
           <OakTips />
         </div>
       </div>
