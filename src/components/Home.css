@@ -1612,7 +1612,7 @@
   transform: none;
 }
 
-.header-oak-container .oak-face-trigger {
+.header-oak-v10 .oak-face-trigger {
   width: 70px;
   /* Compact for header */
   height: 70px;
@@ -1654,7 +1654,7 @@
   font-weight: bold;
 }
 
-.header-oak-container .oak-tips-bubble {
+.header-oak-v10 .oak-v10-bubble {
   width: 320px;
   position: absolute;
   top: 85px;
