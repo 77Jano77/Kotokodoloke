@@ -1816,13 +1816,12 @@
 }
 
 .oak-text-bubble {
-  background: #fff9c4;
-  /* Light yellow text paper */
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
   padding: 1.5rem 1.5rem 1rem 2.8rem;
   border-radius: 20px 20px 0 20px;
-  box-shadow: 0 -4px 15px rgba(0, 0, 0, 0.2), inset 0 0 20px rgba(0, 0, 0, 0.05);
-  border: 4px solid #b45309;
-  /* Brownish border */
+  box-shadow: 0 -4px 15px rgba(0, 0, 0, 0.3), inset 0 0 20px rgba(255, 255, 255, 0.1);
+  border: 4px solid rgba(255, 255, 255, 0.2);
+  backdrop-filter: blur(5px);
   position: relative;
   margin-bottom: 20px;
   max-width: 380px;
@@ -1832,14 +1831,15 @@
 }
 
 .oak-title {
-  color: #854d0e;
-  /* Darker yellow/brown */
+  color: #fff;
+  /* White title */
   margin: 0 0 0.8rem 0;
   font-size: 0.8rem;
   font-weight: bold;
   text-transform: uppercase;
-  border-bottom: 2px solid rgba(133, 77, 14, 0.2);
+  border-bottom: 2px solid rgba(255, 255, 255, 0.2);
   padding-bottom: 4px;
+  text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.3);
 }
 
 .oak-tip-body {
@@ -1851,12 +1851,13 @@
 
 .oak-tip-text {
   font-size: 0.95rem;
-  color: #3e2723;
-  /* Dark brown for maximum readability */
+  color: #ffffff;
+  /* White text for maximum contrast */
   font-weight: 500;
   margin: 0;
   line-height: 1.5;
   transition: opacity 0.3s ease;
+  text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.4);
 }
 
 .oak-nav-arrows {
@@ -1867,9 +1868,9 @@
 }
 
 .oak-arrow-btn {
-  background: white;
-  border: 2px solid #b45309;
-  color: #b45309;
+  background: rgba(255, 255, 255, 0.1);
+  border: 2px solid white;
+  color: white;
   width: 32px;
   height: 32px;
   border-radius: 6px;
@@ -1879,12 +1880,12 @@
   cursor: pointer;
   font-size: 0.8rem;
   transition: all 0.2s;
-  box-shadow: 2px 2px 0 rgba(0, 0, 0, 0.1);
+  box-shadow: 2px 2px 0 rgba(0, 0, 0, 0.2);
 }
 
 .oak-arrow-btn:hover {
-  background: #b45309;
-  color: white;
+  background: white;
+  color: #764ba2;
   transform: translateY(-2px);
 }
 
