@@ -169,6 +169,60 @@ const Home = ({ tournamentData, audioControls, auth }) => {
         <source src="/audio/Pallet.mp3" type="audio/mpeg" />
       </audio>
 
+      {/* Rules Info (Moved Top) */}
+      <section className="rules-section-compact">
+        <h2 className="rules-compact-title pixel-text">NORMAS DEL TORNEO</h2>
+        <div className="rules-grid-compact">
+          <button
+            className="rule-button-compact pixel-button"
+            onClick={() => setSelectedRule('modalidades')}
+          >
+            <img
+              src="https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/25.png"
+              alt="Pikachu"
+              className="rule-pokemon-sprite"
+            />
+            <span className="rule-title-compact">MODALIDADES</span>
+          </button>
+
+          <button
+            className="rule-button-compact pixel-button"
+            onClick={() => setSelectedRule('compartida')}
+          >
+            <img
+              src="https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/102.png"
+              alt="Exeggcute"
+              className="rule-pokemon-sprite"
+            />
+            <span className="rule-title-compact">EXP. COMPARTIDA</span>
+          </button>
+
+          <button
+            className="rule-button-compact pixel-button"
+            onClick={() => setSelectedRule('aliento')}
+          >
+            <img
+              src="https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/113.png"
+              alt="Chansey"
+              className="rule-pokemon-sprite"
+            />
+            <span className="rule-title-compact">ÚLTIMO ALIENTO</span>
+          </button>
+
+          <button
+            className="rule-button-compact pixel-button"
+            onClick={() => setSelectedRule('niveles')}
+          >
+            <img
+              src="https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/150.png"
+              alt="Mewtwo"
+              className="rule-pokemon-sprite"
+            />
+            <span className="rule-title-compact">NIVEL MÁX. GYM</span>
+          </button>
+        </div>
+      </section>
+
       {/* Video Section */}
       <section className="video-section">
         <div className="video-toggle-buttons">
@@ -259,59 +313,8 @@ const Home = ({ tournamentData, audioControls, auth }) => {
 
 
 
-      {/* Rules Info */}
-      <section className="rules-section-compact">
-        <h2 className="rules-compact-title pixel-text">NORMAS DEL TORNEO</h2>
-        <div className="rules-grid-compact">
-          <button
-            className="rule-button-compact pixel-button"
-            onClick={() => setSelectedRule('modalidades')}
-          >
-            <img
-              src="https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/25.png"
-              alt="Pikachu"
-              className="rule-pokemon-sprite"
-            />
-            <span className="rule-title-compact">MODALIDADES</span>
-          </button>
 
-          <button
-            className="rule-button-compact pixel-button"
-            onClick={() => setSelectedRule('compartida')}
-          >
-            <img
-              src="https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/102.png"
-              alt="Exeggcute"
-              className="rule-pokemon-sprite"
-            />
-            <span className="rule-title-compact">EXP. COMPARTIDA</span>
-          </button>
 
-          <button
-            className="rule-button-compact pixel-button"
-            onClick={() => setSelectedRule('aliento')}
-          >
-            <img
-              src="https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/113.png"
-              alt="Chansey"
-              className="rule-pokemon-sprite"
-            />
-            <span className="rule-title-compact">ÚLTIMO ALIENTO</span>
-          </button>
-
-          <button
-            className="rule-button-compact pixel-button"
-            onClick={() => setSelectedRule('niveles')}
-          >
-            <img
-              src="https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/150.png"
-              alt="Mewtwo"
-              className="rule-pokemon-sprite"
-            />
-            <span className="rule-title-compact">NIVEL MÁX. GYM</span>
-          </button>
-        </div>
-      </section>
 
       {/* Latest Gallery Posts */}
       {latestImages.length > 0 && (
