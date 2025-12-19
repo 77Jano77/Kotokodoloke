@@ -1,7 +1,7 @@
 import './Header.css';
 import { FaHome, FaUsers, FaDice, FaTrophy, FaDownload, FaImages, FaSignOutAlt, FaUser } from 'react-icons/fa';
 
-function Header({ currentSection, setCurrentSection, currentUser, onLogout }) {
+function Header({ currentSection, setCurrentSection, currentUser, onLogout, audioState }) {
   const menuItems = [
     { id: 'home', label: 'Inicio', icon: FaHome },
     { id: 'players', label: 'Participantes', icon: FaUsers },
@@ -20,7 +20,7 @@ function Header({ currentSection, setCurrentSection, currentUser, onLogout }) {
             <FaUser className="user-icon" />
             <span className="username">{currentUser.username}</span>
             {currentUser.isAdmin && <span className="admin-badge">👑 ADMIN</span>}
-            <button 
+            <button
               className="logout-btn pixel-button"
               onClick={onLogout}
               title="Cerrar sesión"
@@ -32,8 +32,32 @@ function Header({ currentSection, setCurrentSection, currentUser, onLogout }) {
       )}
 
       <div className="header-content">
-        <div className="kakuna-logo">
-          <img src="/recursos/kakuna.gif" alt="Kakuna" className="logo-gif" />
+        <div className="header-left-group">
+          <div className="kakuna-logo">
+            <img src="/recursos/kakuna.gif" alt="Kakuna" className="logo-gif" />
+          </div>
+
+          {/* Audio Controls */}
+          {audioState && (
+            <div className="compact-audio-controls pixel-card-sm">
+              <button
+                className="compact-mute-btn"
+                onClick={() => audioState.setIsMuted(!audioState.isMuted)}
+                title={audioState.isMuted ? 'Activar música' : 'Silenciar música'}
+              >
+                {audioState.isMuted ? '🔇' : '🔊'}
+              </button>
+              <input
+                type="range"
+                className="compact-volume-slider"
+                min="0"
+                max="100"
+                value={audioState.volume}
+                onChange={(e) => audioState.setVolume(Number(e.target.value))}
+                title={`Volumen: ${audioState.volume}%`}
+              />
+            </div>
+          )}
         </div>
         <h1 className="pixel-title">KOTOKODOS CUP</h1>
 

@@ -57,6 +57,7 @@ function App() {
         setCurrentSection={setCurrentSection}
         currentUser={auth.currentUser}
         onLogout={auth.logout}
+        audioState={{ isMuted, setIsMuted, volume, setVolume }}
       />
 
       <main className="main-content">
@@ -68,26 +69,6 @@ function App() {
         setCurrentSection={setCurrentSection}
         setResourceAction={setResourceAction}
       />
-
-      <div className="audio-controls">
-        <button
-          className="audio-control-btn"
-          onClick={() => setIsMuted(!isMuted)}
-          title={isMuted ? 'Activar música' : 'Silenciar música'}
-        >
-          {isMuted ? '🔇' : '🔊'}
-        </button>
-        <input
-          type="range"
-          className="volume-slider"
-          min="0"
-          max="100"
-          value={volume}
-          onChange={(e) => setVolume(Number(e.target.value))}
-          title={`Volumen: ${volume}%`}
-        />
-        <span className="volume-label">{volume}%</span>
-      </div>
 
       <footer className="pixel-footer">
         <div className="footer-content">
