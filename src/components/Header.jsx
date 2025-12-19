@@ -56,7 +56,7 @@ function Header({ currentSection, setCurrentSection, currentUser, onLogout, audi
         <div className="header-main-group">
           <div className="header-brand">
             <span className="logo-emoji logo-left">🏆</span>
-            <h1 className="pixel-title">KOTOKODOS CUP</h1>
+            <h1 className="pixel-title pixel-text">KOTOKODOS CUP</h1>
             <span className="logo-emoji logo-right">🏆</span>
           </div>
 
