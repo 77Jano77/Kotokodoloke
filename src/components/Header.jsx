@@ -54,6 +54,7 @@ function Header({ currentSection, setCurrentSection, currentUser, onLogout, audi
       {/* Main Header Content */}
       <div className="header-content">
         <div className="header-brand">
+          <img src="/recursos/copakakuna.jpg" alt="Copa Kakuna" className="kakuna-logo" />
           <h1 className="pixel-title">KOTOKODOS CUP</h1>
         </div>
 
