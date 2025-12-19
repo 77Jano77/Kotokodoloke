@@ -11,7 +11,6 @@ import Resources from './components/Resources';
 import Gallery from './components/Gallery';
 import Downloads from './components/Downloads';
 import Banners from './components/Banners';
-import Banners from './components/Banners';
 import './styles/App.css';
 
 function App() {
