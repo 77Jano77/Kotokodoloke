@@ -3,6 +3,7 @@ import './Resources.css';
 import { TYPE_CHART } from '../data/typeChart';
 import { POKEDEX_DATA } from '../data/pokedex';
 import { ABILITIES_DATA } from '../data/abilities';
+import { MOVES_DATA } from '../data/moves';
 import { CAPTURE_ZONES } from '../data/captureZones';
 
 const Resources = ({ audioControls, tournamentData, auth, resourceAction, setResourceAction }) => {
@@ -321,6 +322,12 @@ const Resources = ({ audioControls, tournamentData, auth, resourceAction, setRes
           ⚡ HABILIDADES
         </button>
         <button
+          className={`tab-btn pixel-button ${activeTab === 'moves' ? 'active' : ''}`}
+          onClick={() => setActiveTab('moves')}
+        >
+          ⚔️ ATAQUES
+        </button>
+        <button
           className={`tab-btn pixel-button ${activeTab === 'map' ? 'active' : ''}`}
           onClick={() => setActiveTab('map')}
         >
@@ -604,6 +611,70 @@ const Resources = ({ audioControls, tournamentData, auth, resourceAction, setRes
               allowFullScreen
             />
           </div>
+        </div>
+      )}
+
+      {/* Moves Tab */}
+      {activeTab === 'moves' && (
+        <div className="abilities-section">
+          <div className="abilities-header pixel-card">
+            <h2>ATAQUES (Gen 1-6)</h2>
+            <p className="section-description">
+              Listado completo de movimientos hasta la Sexta Generación.
+            </p>
+
+            <div className="pokedex-filters">
+              <input
+                type="text"
+                className="pixel-input search-input"
+                placeholder="Buscar ataque..."
+                value={searchTerm}
+                onChange={(e) => setSearchTerm(e.target.value)}
+              />
+              <select
+                className="pixel-input"
+                value={selectedType}
+                onChange={(e) => setSelectedType(e.target.value)}
+              >
+                <option value="">Todos los tipos</option>
+                {TYPE_CHART.types.map(type => (
+                  <option key={type} value={type}>{type}</option>
+                ))}
+              </select>
+            </div>
+          </div>
+
+          <div className="abilities-list">
+            {MOVES_DATA.filter(move => {
+              const matchesSearch = move.name.toLowerCase().includes(searchTerm.toLowerCase());
+              const matchesType = !selectedType || move.type === selectedType;
+              return matchesSearch && matchesType;
+            }).map(move => (
+              <div key={move.id} className="ability-card pixel-card" style={{ borderLeftColor: move.category === 'Físico' ? '#FF5959' : move.category === 'Especial' ? '#6890F0' : '#A8A878' }}>
+                <div className="ability-header">
+                  <h3 className="ability-name">{move.name}</h3>
+                  <div style={{ display: 'flex', gap: '0.5rem' }}>
+                    <span className={`type-badge type-${move.type.toLowerCase()}`}>{move.type}</span>
+                    <span className="ability-gen" style={{ background: '#eee' }}>{move.category}</span>
+                  </div>
+                </div>
+                <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '0.5rem', fontSize: '0.85rem', fontWeight: 'bold', color: '#666' }}>
+                  <span>POW: {move.power}</span>
+                  <span>PP: {move.pp}</span>
+                </div>
+                <p className="ability-description">{move.description}</p>
+              </div>
+            ))}
+          </div>
+          {MOVES_DATA.filter(move => {
+            const matchesSearch = move.name.toLowerCase().includes(searchTerm.toLowerCase());
+            const matchesType = !selectedType || move.type === selectedType;
+            return matchesSearch && matchesType;
+          }).length === 0 && (
+              <div className="no-results pixel-card">
+                <p>❌ No se encontraron ataques</p>
+              </div>
+            )}
         </div>
       )}
 
