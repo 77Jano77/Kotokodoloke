@@ -1821,14 +1821,10 @@
 
 /* GLOBAL OAK TIPS RE-DESIGN */
 .oak-global-container {
-  position: absolute;
-  top: 50%;
-  right: 50px;
-  transform: translateY(-50%);
+  position: relative;
   z-index: 5000;
   display: flex;
-  flex-direction: row-reverse;
-  /* Bubble appears to the left of face */
+  flex-direction: column;
   align-items: center;
   gap: 15px;
 }
@@ -1900,10 +1896,10 @@
 .oak-tips-bubble {
   width: 400px;
   position: absolute;
-  right: 160px;
-  /* Position to the left of the face */
-  top: 50%;
-  transform: translateY(-50%);
+  top: 110%;
+  /* Below Oak */
+  right: 0;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.6);
 }
 
 .oak-bubble-header {
