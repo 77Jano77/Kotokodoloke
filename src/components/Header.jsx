@@ -55,31 +55,35 @@ function Header({ currentSection, setCurrentSection, currentUser, onLogout, audi
       )}
 
       <div className="header-content">
-        <div className="header-brand">
-          <div className="kakuna-logo">
-            <img src="/recursos/kakuna.gif" alt="Kakuna" className="logo-gif" />
+        <div className="header-main-group">
+          <div className="header-brand">
+            <div className="kakuna-logo">
+              <img src="/recursos/kakuna.gif" alt="Kakuna" className="logo-gif" />
+            </div>
+            <h1 className="pixel-title">KOTOKODOS CUP</h1>
           </div>
-          <h1 className="pixel-title">KOTOKODOS CUP</h1>
+
+          <nav className="pixel-nav">
+            {menuItems.map((item) => {
+              const Icon = item.icon;
+              return (
+                <button
+                  key={item.id}
+                  className={`pixel-button ${currentSection === item.id ? 'active' : ''}`}
+                  onClick={() => setCurrentSection(item.id)}
+                >
+                  <Icon className="icon" />
+                  <span>{item.label}</span>
+                </button>
+              );
+            })}
+          </nav>
         </div>
 
-        <nav className="pixel-nav">
-          {menuItems.map((item) => {
-            const Icon = item.icon;
-            return (
-              <button
-                key={item.id}
-                className={`pixel-button ${currentSection === item.id ? 'active' : ''}`}
-                onClick={() => setCurrentSection(item.id)}
-              >
-                <Icon className="icon" />
-                <span>{item.label}</span>
-              </button>
-            );
-          })}
-        </nav>
-
-        {/* Oak in Header */}
-        <OakTips />
+        {/* Oak in Header - Centered in Right Gap */}
+        <div className="header-oak-container">
+          <OakTips />
+        </div>
       </div>
     </header>
   );

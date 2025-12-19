@@ -66,15 +66,32 @@
 .header-content {
   max-width: 1400px;
   margin: 0 auto;
-  padding: 2rem 2rem 1.5rem;
+  padding: 1rem 2rem;
   display: flex;
-  flex-direction: column;
-  /* VERTICAL STACK */
-  justify-content: center;
+  flex-direction: row;
+  /* HORIZONTAL LAYOUT */
+  justify-content: space-between;
+  /* Space between main content and Oak */
   align-items: center;
   gap: 2rem;
   position: relative;
-  /* For absolute children like Oak */
+}
+
+.header-main-group {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1.5rem;
+  flex: 1;
+  /* Take available center space */
+}
+
+.header-oak-container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 151px;
+  /* Ensure space for Oak */
 }
 
 .header-brand {
