@@ -31,6 +31,19 @@
   flex-direction: column;
   gap: 15px;
   max-width: 280px;
+  animation: floatBanners 4s ease-in-out infinite;
+}
+
+@keyframes floatBanners {
+
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+
+  50% {
+    transform: translateY(-15px);
+  }
 }
 
 /* Info Banners */
@@ -148,6 +161,7 @@
   flex-direction: column;
   gap: 15px;
   max-width: 300px;
+  animation: floatBanners 4s ease-in-out infinite;
 }
 
 .manage-ads-btn {

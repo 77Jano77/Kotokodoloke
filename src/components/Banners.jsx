@@ -17,18 +17,20 @@ const Banners = ({ setCurrentSection }) => {
         'publi8.jpg'
     ];
 
-    // Rotación automática de banners cada 5 segundos
+    // Rotación automática de banners cada 12 segundos
     useEffect(() => {
         if (availableAds.length === 0) return;
 
         const interval = setInterval(() => {
             setCurrentAdIndex((prevIndex) => (prevIndex + 1) % availableAds.length);
-        }, 5000); // Cambiar cada 5 segundos
+        }, 12000); // Cambiar cada 12 segundos
 
         return () => clearInterval(interval);
     }, [availableAds.length]);
 
-    const currentAd = availableAds[currentAdIndex];
+    // Obtener los 2 banners actuales
+    const currentAd1 = availableAds[currentAdIndex];
+    const currentAd2 = availableAds[(currentAdIndex + 1) % availableAds.length];
 
     return (
         <>
@@ -94,13 +96,24 @@ const Banners = ({ setCurrentSection }) => {
                         </div>
                     </div>
 
-                    {/* Left Banners - Publicitarios (Rotación Automática) */}
+                    {/* Left Banners - Publicitarios (Rotación Automática - 2 simultáneos) */}
                     <div className="left-banners">
-                        {currentAd && (
-                            <div className="ad-banner pixel-card ad-rotating" key={currentAdIndex}>
+                        {currentAd1 && (
+                            <div className="ad-banner pixel-card ad-rotating" key={`ad1-${currentAdIndex}`}>
                                 <img
-                                    src={`/publi/${currentAd}`}
+                                    src={`/publi/${currentAd1}`}
                                     alt={`Publicidad ${currentAdIndex + 1}`}
+                                    onError={(e) => {
+                                        e.target.style.display = 'none';
+                                    }}
+                                />
+                            </div>
+                        )}
+                        {currentAd2 && (
+                            <div className="ad-banner pixel-card ad-rotating" key={`ad2-${currentAdIndex}`}>
+                                <img
+                                    src={`/publi/${currentAd2}`}
+                                    alt={`Publicidad ${((currentAdIndex + 1) % availableAds.length) + 1}`}
                                     onError={(e) => {
                                         e.target.style.display = 'none';
                                     }}
