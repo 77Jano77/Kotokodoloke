@@ -27,7 +27,7 @@
 .right-banners {
   position: fixed;
   right: 25px;
-  top: 160px;
+  top: 200px;
   z-index: 997;
   display: flex;
   flex-direction: column;
@@ -182,7 +182,7 @@
 .left-banners {
   position: fixed;
   left: 25px;
-  top: 160px;
+  top: 200px;
   z-index: 997;
   display: flex;
   flex-direction: column;
