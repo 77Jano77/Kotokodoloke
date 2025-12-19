@@ -66,9 +66,7 @@
   box-shadow: 0 8px 25px rgba(0, 0, 0, 0.45);
 }
 
-.info-banner.zones-banner {
-  /* Inherits the same blue/purple gradient from .info-banner */
-}
+
 
 .banner-header {
   display: flex;
