@@ -83,79 +83,80 @@ const Home = ({ tournamentData, audioControls, auth }) => {
     }
 
     const medals = ['🥇', '🥈', '🥉'];
-    const badgeCount = (player.badges || []).filter(Boolean).length;
 
     return (
       <div className="podium-player-card">
         <div className="podium-medal">{medals[position]}</div>
 
-        <div className="player-avatar-frame">
-          {player.avatarImage ? (
-            <img src={player.avatarImage} alt={player.name} />
-          ) : (
-            <div className="avatar-placeholder">👤</div>
-          )}
-          <span className={`mode-indicator ${player.mode}`}>
-            {player.mode === 'hardcore' ? 'HARD' : 'SOFT'}
-          </span>
+        {/* 1. Header: Avatar & Info */}
+        <div className="card-header-section">
+          <div className="player-avatar-frame">
+            {player.avatarImage ? (
+              <img src={player.avatarImage} alt={player.name} />
+            ) : (
+              <div className="avatar-placeholder">👤</div>
+            )}
+            <span className={`mode-indicator ${player.mode}`}>
+              {player.mode === 'hardcore' ? 'HARD' : 'SOFT'}
+            </span>
+          </div>
+
+          <div className="player-identity">
+            <h3 className="player-name pixel-text-outline">{player.name}</h3>
+            {player.trainerName && (
+              <p className="trainer-name">"{player.trainerName}"</p>
+            )}
+          </div>
         </div>
 
-        <h3 className="player-name pixel-text-outline">{player.name}</h3>
-        {player.trainerName && (
-          <p className="trainer-name">"{player.trainerName}"</p>
-        )}
-
-        <div className="player-stats">
-          <div className="stat-row">
-            <div className="stat-badge stat-points">
-              <span className="stat-value-big">{tournamentData.calculatePlayerPoints(player.id)}</span>
-              <span className="stat-label-small">PTS</span>
-            </div>
-            <div className="stat-badge stat-wins">
-              <span className="stat-value-big">{tournamentData.calculatePlayerWins(player.id)}</span>
-              <span className="stat-label-small">WINS</span>
-            </div>
-          </div>
-          <div className="stat-badges-display">
-            <span className="badges-label">MEDALLAS</span>
-            <div className="badges-mini">
-              {KANTO_BADGES.map((badge, i) => (
-                (player.badges || [])[i] ? (
+        {/* 2. Team Showcase (Main Visual) */}
+        <div className="team-showcase-section">
+          <div className="section-label-pixel">EQUIPO</div>
+          <div className="team-sprites-row">
+            {safeTeamToArray(player.team).slice(0, 6).map((pokemon, idx) => {
+              if (!pokemon) return <div key={idx} className="team-sprite-slot empty"></div>;
+              const pokemonName = typeof pokemon === 'object' ? pokemon.name : pokemon;
+              const pokemonData = POKEDEX_DATA.find(p => p.name === pokemonName);
+              if (!pokemonData) return <div key={idx} className="team-sprite-slot empty"></div>;
+              return (
+                <div key={idx} className="team-sprite-slot filled" title={pokemonData.name}>
                   <img
-                    key={i}
+                    src={`https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/${pokemonData.number}.png`}
+                    alt={pokemonData.name}
+                    className="pokemon-sprite-img"
+                  />
+                </div>
+              );
+            })}
+          </div>
+        </div>
+
+        {/* 3. Badges Strip */}
+        <div className="badges-section">
+          <div className="badges-strip">
+            {KANTO_BADGES.map((badge, i) => (
+              <div key={i} className={`badge-slot ${player.badges?.[i] ? 'obtained' : 'missing'}`}>
+                {(player.badges || [])[i] && (
+                  <img
                     src={badge.image}
                     alt={badge.name}
-                    className="badge-mini-image"
                     title={badge.name}
                   />
-                ) : null
-              ))}
-              {(player.badges || []).filter(Boolean).length === 0 && (
-                <span className="no-badges-text">Ninguna</span>
-              )}
-            </div>
+                )}
+              </div>
+            ))}
           </div>
+        </div>
 
-          {/* Equipo Pokémon */}
-          <div className="team-sprites-display">
-            <span className="team-label">EQUIPO</span>
-            <div className="team-sprites">
-              {safeTeamToArray(player.team).slice(0, 6).map((pokemon, idx) => {
-                if (!pokemon) return <div key={idx} className="team-sprite-empty">?</div>;
-                const pokemonName = typeof pokemon === 'object' ? pokemon.name : pokemon;
-                const pokemonData = POKEDEX_DATA.find(p => p.name === pokemonName);
-                if (!pokemonData) return <div key={idx} className="team-sprite-empty">?</div>;
-                return (
-                  <div key={idx} className="team-sprite-slot" title={pokemonData.name}>
-                    <img
-                      src={`https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/${pokemonData.number}.png`}
-                      alt={pokemonData.name}
-                      className="team-sprite-mini"
-                    />
-                  </div>
-                );
-              })}
-            </div>
+        {/* 4. Footer Stats */}
+        <div className="card-footer-stats">
+          <div className="stat-pill points">
+            <span className="label">PTS</span>
+            <span className="value">{tournamentData.calculatePlayerPoints(player.id)}</span>
+          </div>
+          <div className="stat-pill wins">
+            <span className="label">WINS</span>
+            <span className="value">{tournamentData.calculatePlayerWins(player.id)}</span>
           </div>
         </div>
       </div>
@@ -215,26 +216,26 @@ const Home = ({ tournamentData, audioControls, auth }) => {
         <div className="podium-container">
           {/* 2nd Place */}
           <div className="podium-spot podium-2">
+            {renderPodiumPlayer(podiumPlayers[1], 1)}
             <div className="podium-base">
               <span className="podium-rank">2</span>
             </div>
-            {renderPodiumPlayer(podiumPlayers[1], 1)}
           </div>
 
           {/* 1st Place */}
           <div className="podium-spot podium-1">
+            {renderPodiumPlayer(podiumPlayers[0], 0)}
             <div className="podium-base">
               <span className="podium-rank">1</span>
             </div>
-            {renderPodiumPlayer(podiumPlayers[0], 0)}
           </div>
 
           {/* 3rd Place */}
           <div className="podium-spot podium-3">
+            {renderPodiumPlayer(podiumPlayers[2], 2)}
             <div className="podium-base">
               <span className="podium-rank">3</span>
             </div>
-            {renderPodiumPlayer(podiumPlayers[2], 2)}
           </div>
         </div>
       </section>
