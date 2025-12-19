@@ -893,12 +893,13 @@ const Players = ({ tournamentData, audioControls, auth }) => {
                   {capturedPokemon.map((pokemon, index) => {
                     const pokemonData = POKEDEX_DATA.find(p => p.number === parseInt(pokemon.pokemon));
                     return (
-                      <div key={index} className="captured-pokemon-card pixel-card">
+                      <div key={index} className={`captured-pokemon-card pixel-card ${pokemon.isDead ? 'is-dead' : ''}`}>
                         <div className="captured-sprite">
                           <img
                             src={`https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/${pokemon.pokemon}.png`}
                             alt={`#${pokemon.pokemon}`}
                           />
+                          {pokemon.isDead && <div className="dead-overlay">💀</div>}
                         </div>
                         <div className="captured-info">
                           <h4>{pokemon.nickname || (pokemonData ? pokemonData.name : `#${pokemon.pokemon}`)}</h4>
@@ -912,47 +913,60 @@ const Players = ({ tournamentData, audioControls, auth }) => {
                           <span className="pokemon-region">{pokemon.region}</span>
                         </div>
                         {canEdit && (
-                          <button
-                            className="add-to-team-btn pixel-button"
-                            onClick={() => {
-                              // Añadir al equipo
-                              const player = (tournamentData.players || []).find(p => p.id === showCapturedModal.playerId);
-                              if (!player) return;
+                          <div className="captured-actions">
+                            <button
+                              className={`status-toggle-btn pixel-button ${pokemon.isDead ? 'dead' : 'alive'}`}
+                              onClick={() => tournamentData.togglePokemonDeathStatus(pokemon)}
+                              title={pokemon.isDead ? "Revivir Pokémon" : "Marcar como muerto"}
+                            >
+                              {pokemon.isDead ? "💀 MUERTO" : "❤️ VIVO"}
+                            </button>
 
-                              const team = player.team || [];
+                            <button
+                              className="add-to-team-btn pixel-button"
+                              disabled={pokemon.isDead}
+                              onClick={() => {
+                                // Añadir al equipo (solo si no está muerto)
+                                if (pokemon.isDead) return;
 
-                              // Buscar primer slot vacío
-                              const emptySlotIndex = team.findIndex(slot => !slot);
+                                const player = (tournamentData.players || []).find(p => p.id === showCapturedModal.playerId);
+                                if (!player) return;
 
-                              if (emptySlotIndex === -1 && team.length >= 6) {
-                                alert('❌ El equipo está completo (6 Pokémon)');
-                                return;
-                              }
+                                const team = player.team || [];
 
-                              const pokemonToAdd = {
-                                name: pokemonData ? pokemonData.name : `#${pokemon.pokemon}`,
-                                nickname: pokemon.nickname || '',
-                                ability: pokemon.ability || ''
-                              };
+                                // Buscar primer slot vacío
+                                const emptySlotIndex = team.findIndex(slot => !slot);
 
-                              const newTeam = [...team];
-                              if (emptySlotIndex !== -1) {
-                                newTeam[emptySlotIndex] = pokemonToAdd;
-                              } else {
-                                newTeam.push(pokemonToAdd);
-                              }
+                                if (emptySlotIndex === -1 && team.length >= 6) {
+                                  alert('❌ El equipo está completo (6 Pokémon)');
+                                  return;
+                                }
 
-                              // Rellenar con null hasta tener 6 slots
-                              while (newTeam.length < 6) {
-                                newTeam.push(null);
-                              }
+                                const pokemonToAdd = {
+                                  name: pokemonData ? pokemonData.name : `#${pokemon.pokemon}`,
+                                  nickname: pokemon.nickname || '',
+                                  ability: pokemon.ability || ''
+                                };
 
-                              tournamentData.updatePlayer(player.id, { team: newTeam });
-                              alert('✅ Pokémon añadido al equipo');
-                            }}
-                          >
-                            ➕ AÑADIR
-                          </button>
+                                const newTeam = [...team];
+                                if (emptySlotIndex !== -1) {
+                                  newTeam[emptySlotIndex] = pokemonToAdd;
+                                } else {
+                                  newTeam.push(pokemonToAdd);
+                                }
+
+                                // Rellenar con null hasta tener 6 slots
+                                while (newTeam.length < 6) {
+                                  newTeam.push(null);
+                                }
+
+                                tournamentData.updatePlayer(player.id, { team: newTeam });
+                                alert('✅ Pokémon añadido al equipo');
+                              }}
+                            >
+                              {pokemon.isDead ? "🚫 NO DISP." : "➕ AÑADIR"}
+                            </button>
+                          </div>
                         )}
                       </div>
                     );

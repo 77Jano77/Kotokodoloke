@@ -71,8 +71,15 @@
 }
 
 @keyframes adminPulse {
-  0%, 100% { box-shadow: 0 0 10px rgba(251, 191, 36, 0.3); }
-  50% { box-shadow: 0 0 20px rgba(251, 191, 36, 0.6); }
+
+  0%,
+  100% {
+    box-shadow: 0 0 10px rgba(251, 191, 36, 0.3);
+  }
+
+  50% {
+    box-shadow: 0 0 20px rgba(251, 191, 36, 0.6);
+  }
 }
 
 .admin-add-btn {
@@ -81,8 +88,15 @@
 }
 
 @keyframes adminGlowBtn {
-  0%, 100% { box-shadow: 0 4px 8px rgba(251, 191, 36, 0.4); }
-  50% { box-shadow: 0 6px 20px rgba(251, 191, 36, 0.6); }
+
+  0%,
+  100% {
+    box-shadow: 0 4px 8px rgba(251, 191, 36, 0.4);
+  }
+
+  50% {
+    box-shadow: 0 6px 20px rgba(251, 191, 36, 0.6);
+  }
 }
 
 .view-only-badge {
@@ -107,9 +121,19 @@
 }
 
 @keyframes crownSpin {
-  0%, 100% { transform: rotate(0deg); }
-  25% { transform: rotate(-10deg); }
-  75% { transform: rotate(10deg); }
+
+  0%,
+  100% {
+    transform: rotate(0deg);
+  }
+
+  25% {
+    transform: rotate(-10deg);
+  }
+
+  75% {
+    transform: rotate(10deg);
+  }
 }
 
 /* Admin editable card */
@@ -222,13 +246,13 @@
   background: #f1f5f9;
 }
 
-.sprite-option input[type="radio"]:checked + .sprite-preview {
+.sprite-option input[type="radio"]:checked+.sprite-preview {
   border-color: var(--poke-yellow);
   box-shadow: 0 0 0 3px rgba(251, 191, 36, 0.3);
   transform: scale(1.05);
 }
 
-.sprite-option input[type="radio"]:checked + .sprite-preview .sprite-name {
+.sprite-option input[type="radio"]:checked+.sprite-preview .sprite-name {
   background: var(--poke-yellow);
   color: var(--bg-primary);
 }
@@ -317,7 +341,7 @@
   margin-bottom: 1.5rem;
 }
 
-.player-avatar-section > label {
+.player-avatar-section>label {
   font-size: 0.9rem;
   font-weight: bold;
   color: var(--poke-red);
@@ -348,7 +372,7 @@
   left: 0;
   right: 0;
   padding: 0.6rem;
-  background: rgba(0,0,0,0.9);
+  background: rgba(0, 0, 0, 0.9);
   color: white;
   border: none;
   font-size: 0.6rem;
@@ -416,7 +440,7 @@
   font-size: 1rem;
   color: var(--poke-yellow);
   margin: 0;
-  text-shadow: 2px 2px 0 rgba(0,0,0,0.3);
+  text-shadow: 2px 2px 0 rgba(0, 0, 0, 0.3);
 }
 
 .team-buttons {
@@ -523,7 +547,7 @@
   image-rendering: pixelated;
   image-rendering: -moz-crisp-edges;
   image-rendering: crisp-edges;
-  filter: drop-shadow(2px 2px 2px rgba(0,0,0,0.3));
+  filter: drop-shadow(2px 2px 2px rgba(0, 0, 0, 0.3));
 }
 
 .ability-select {
@@ -545,7 +569,7 @@
 }
 
 .remove-pokemon-btn {
-  background: rgba(255,0,0,0.8);
+  background: rgba(255, 0, 0, 0.8);
   color: white;
   border: none;
   padding: 0.2rem 0.5rem;
@@ -994,23 +1018,73 @@
 }
 
 /* Type colors */
-.type-planta { background: #78c850; }
-.type-veneno { background: #a040a0; }
-.type-fuego { background: #f08030; }
-.type-agua { background: #6890f0; }
-.type-bicho { background: #a8b820; }
-.type-volador { background: #a890f0; }
-.type-normal { background: #a8a878; }
-.type-eléctrico { background: #f8d030; }
-.type-tierra { background: #e0c068; }
-.type-lucha { background: #c03028; }
-.type-psíquico { background: #f85888; }
-.type-roca { background: #b8a038; }
-.type-fantasma { background: #705898; }
-.type-hielo { background: #98d8d8; }
-.type-dragón { background: #7038f8; }
-.type-siniestro { background: #705848; }
-.type-acero { background: #b8b8d0; }
+.type-planta {
+  background: #78c850;
+}
+
+.type-veneno {
+  background: #a040a0;
+}
+
+.type-fuego {
+  background: #f08030;
+}
+
+.type-agua {
+  background: #6890f0;
+}
+
+.type-bicho {
+  background: #a8b820;
+}
+
+.type-volador {
+  background: #a890f0;
+}
+
+.type-normal {
+  background: #a8a878;
+}
+
+.type-eléctrico {
+  background: #f8d030;
+}
+
+.type-tierra {
+  background: #e0c068;
+}
+
+.type-lucha {
+  background: #c03028;
+}
+
+.type-psíquico {
+  background: #f85888;
+}
+
+.type-roca {
+  background: #b8a038;
+}
+
+.type-fantasma {
+  background: #705898;
+}
+
+.type-hielo {
+  background: #98d8d8;
+}
+
+.type-dragón {
+  background: #7038f8;
+}
+
+.type-siniestro {
+  background: #705848;
+}
+
+.type-acero {
+  background: #b8b8d0;
+}
 
 /* Card Actions */
 .card-actions {
@@ -1203,4 +1277,57 @@
   .border-options {
     grid-template-columns: repeat(3, 1fr);
   }
+}
+
+/* Estado de muerte */
+.captured-pokemon-card.is-dead {
+  background: #e2e8f0;
+  border-color: #64748b;
+}
+
+.captured-pokemon-card.is-dead .captured-sprite img {
+  filter: grayscale(100%);
+  opacity: 0.6;
+}
+
+.dead-overlay {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  font-size: 3rem;
+  z-index: 2;
+  text-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+}
+
+.captured-actions {
+  display: flex;
+  gap: 0.5rem;
+  width: 100%;
+}
+
+.status-toggle-btn {
+  flex: 1;
+  font-size: 0.7rem;
+  padding: 0.5rem;
+  white-space: nowrap;
+}
+
+.status-toggle-btn.alive {
+  background: var(--poke-red);
+}
+
+.status-toggle-btn.dead {
+  background: #64748b;
+}
+
+.add-to-team-btn:disabled {
+  background: #94a3b8;
+  cursor: not-allowed;
+  opacity: 0.7;
+}
+
+.add-to-team-btn:disabled:hover {
+  background: #94a3b8;
+  transform: none;
 }

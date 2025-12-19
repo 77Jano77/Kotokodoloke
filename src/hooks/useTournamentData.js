@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import { database, ref, onValue, set } from '../config/firebase';
+import { POKEDEX_DATA } from '../data/pokedex';
 
 const initialData = {
   players: [],
@@ -409,6 +410,69 @@ export const useTournamentData = () => {
     updateFirebase(newData);
   };
 
+
+
+  const togglePokemonDeathStatus = (pokemon) => {
+    if (!pokemon.recordId || !pokemon.zoneId || !pokemon.regionKey) {
+      console.error('Faltan metadatos para actualizar estado de muerte', pokemon);
+      return;
+    }
+
+    const { recordId, zoneId, regionKey, isDead } = pokemon;
+    const newDeadStatus = !isDead;
+
+    // 1. Obtener el registro completo
+    const record = (data.captureRecords || []).find(r => r.id === recordId);
+    if (!record) return;
+
+    // 2. Actualizar la zona específica
+    const zones = record[regionKey];
+    const updatedZones = zones.map(z => {
+      if (z.id === zoneId) {
+        return {
+          ...z,
+          capturedPokemon: {
+            ...z.capturedPokemon,
+            isDead: newDeadStatus
+          }
+        };
+      }
+      return z;
+    });
+
+    // 3. Guardar cambios en el registro
+    updateCaptureRecord(recordId, {
+      [regionKey]: updatedZones
+    });
+
+    // 4. Si se marcó como muerto y está en el equipo, eliminarlo
+    if (newDeadStatus) {
+      const player = (data.players || []).find(p => p.name === record.playerName);
+      if (player && player.team) {
+        const pokemonData = POKEDEX_DATA.find(p => p.number === parseInt(pokemon.pokemon));
+        if (pokemonData) {
+          let pokemonRemoved = false;
+          const updatedTeam = player.team.map(teamPokemon => {
+            if (!teamPokemon) return teamPokemon;
+            const teamPokemonName = typeof teamPokemon === 'object' ? teamPokemon.name : teamPokemon;
+
+            // Comparar nombres (case insensitive)
+            if (teamPokemonName && teamPokemonName.toLowerCase() === pokemonData.name.toLowerCase()) {
+              pokemonRemoved = true;
+              return null;
+            }
+            return teamPokemon;
+          });
+
+          if (pokemonRemoved) {
+            updatePlayer(player.id, { team: updatedTeam });
+            alert(`⚰️ ${pokemonData.name} ha muerto y ha sido eliminado del equipo.`);
+          }
+        }
+      }
+    }
+  };
+
   const getCapturedPokemonByPlayer = (playerName) => {
     const record = (data.captureRecords || []).find(r =>
       r.playerName.toLowerCase() === playerName.toLowerCase()
@@ -424,7 +488,12 @@ export const useTournamentData = () => {
         capturedPokemon.push({
           ...zone.capturedPokemon,
           zone: zone.name,
-          region: 'Kanto'
+          region: 'Kanto',
+          // Metadatos para edición
+          recordId: record.id,
+          zoneId: zone.id,
+          regionKey: 'kantoZones',
+          isDead: zone.capturedPokemon.isDead || false
         });
       }
     });
@@ -435,7 +504,28 @@ export const useTournamentData = () => {
         capturedPokemon.push({
           ...zone.capturedPokemon,
           zone: zone.name,
-          region: 'Islas Sevi'
+          region: 'Islas Sevi',
+          // Metadatos para edición
+          recordId: record.id,
+          zoneId: zone.id,
+          regionKey: 'seviZones',
+          isDead: zone.capturedPokemon.isDead || false
+        });
+      }
+    });
+
+    // Recopilar Pokémon Extra
+    (record.extraCaptureSlots || []).forEach(slot => {
+      if (slot.captured && slot.capturedPokemon) {
+        capturedPokemon.push({
+          ...slot.capturedPokemon,
+          zone: slot.name,
+          region: 'Extra',
+          // Metadatos para edición
+          recordId: record.id,
+          zoneId: slot.id,
+          regionKey: 'extraCaptureSlots',
+          isDead: slot.capturedPokemon.isDead || false
         });
       }
     });
@@ -482,6 +572,7 @@ export const useTournamentData = () => {
     addExtraCaptureSlot,
     consumeReward,
     updateAdBanners,
+    togglePokemonDeathStatus,
     selectedAdBanners: data.selectedAdBanners || [],
   };
 };
