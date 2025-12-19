@@ -216,26 +216,23 @@ const Home = ({ tournamentData, audioControls, auth }) => {
         <div className="podium-container">
           {/* 2nd Place */}
           <div className="podium-spot podium-2">
+            <div className="rank-badge">2</div>
             {renderPodiumPlayer(podiumPlayers[1], 1)}
-            <div className="podium-base">
-              <span className="podium-rank">2</span>
-            </div>
+            <div className="podium-base"></div>
           </div>
 
           {/* 1st Place */}
           <div className="podium-spot podium-1">
+            <div className="rank-badge">1</div>
             {renderPodiumPlayer(podiumPlayers[0], 0)}
-            <div className="podium-base">
-              <span className="podium-rank">1</span>
-            </div>
+            <div className="podium-base"></div>
           </div>
 
           {/* 3rd Place */}
           <div className="podium-spot podium-3">
+            <div className="rank-badge">3</div>
             {renderPodiumPlayer(podiumPlayers[2], 2)}
-            <div className="podium-base">
-              <span className="podium-rank">3</span>
-            </div>
+            <div className="podium-base"></div>
           </div>
         </div>
       </section>
