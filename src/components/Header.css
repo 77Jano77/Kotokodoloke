@@ -66,16 +66,20 @@
 .header-content {
   max-width: 1400px;
   margin: 0 auto;
-  padding: 1rem 2rem;
+  padding: 1.5rem 2rem;
+  /* Increased padding */
   display: flex;
   justify-content: space-between;
   align-items: center;
-  gap: 2rem;
+  gap: 3rem;
+  /* Increased gap */
 }
 
 .kakuna-logo {
-  width: 50px;
-  height: 50px;
+  width: 70px;
+  /* Increased from 50px */
+  height: 70px;
+  /* Increased from 50px */
   display: flex;
   align-items: center;
   justify-content: center;
@@ -93,10 +97,12 @@
 }
 
 .pixel-title {
-  font-size: 1.3rem;
+  font-size: 1.8rem;
+  /* Increased from 1.3rem */
   color: var(--poke-yellow);
-  letter-spacing: 2px;
-  text-shadow: 3px 3px 0px rgba(0, 0, 0, 0.3);
+  letter-spacing: 3px;
+  /* Slightly more letter spacing */
+  text-shadow: 4px 4px 0px rgba(0, 0, 0, 0.4);
   white-space: nowrap;
   flex-shrink: 0;
 }
@@ -140,16 +146,37 @@
 
 .pixel-nav {
   display: flex;
-  gap: 8px;
-  flex-wrap: wrap;
+  gap: 12px;
+  flex-wrap: nowrap;
+  /* DISABLED wrapping */
   justify-content: flex-end;
   flex: 1;
+  overflow-x: auto;
+  /* Enable horizontal scroll */
+  padding: 10px 5px;
+  scrollbar-width: thin;
+  scrollbar-color: var(--poke-red) transparent;
+}
+
+/* Custom Scrollbar for Nav */
+.pixel-nav::-webkit-scrollbar {
+  height: 4px;
+}
+
+.pixel-nav::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.pixel-nav::-webkit-scrollbar-thumb {
+  background: var(--poke-red);
+  border-radius: 10px;
 }
 
 .pixel-button {
   font-family: 'Press Start 2P', cursive;
-  font-size: 0.5rem;
-  padding: 10px 14px;
+  font-size: 0.55rem;
+  /* Slightly larger */
+  padding: 10px 16px;
   background: var(--bg-primary);
   color: var(--text-secondary);
   border: 3px solid var(--border-color);
@@ -159,7 +186,10 @@
   flex-direction: column;
   align-items: center;
   gap: 5px;
-  min-width: 75px;
+  min-width: 90px;
+  /* Slightly wider */
+  flex-shrink: 0;
+  /* Prevent shrinking */
   position: relative;
 }
 
@@ -195,26 +225,32 @@
 }
 
 .pixel-button .icon {
-  font-size: 1.2rem;
+  font-size: 1.3rem;
 }
 
 .pixel-button span {
-  font-size: 0.5rem;
+  font-size: 0.55rem;
   white-space: nowrap;
 }
 
 @media (max-width: 1024px) {
   .header-content {
-    gap: 1rem;
+    gap: 1.5rem;
+    padding: 1rem 1.5rem;
+  }
+
+  .pixel-title {
+    font-size: 1.4rem;
+  }
+
+  .kakuna-logo {
+    width: 60px;
+    height: 60px;
   }
 
   .pixel-nav {
-    flex: none;
-  }
-
-  .pixel-button {
-    min-width: 70px;
-    font-size: 0.45rem;
+    justify-content: flex-start;
+    /* Better for horizontal scroll */
   }
 }
 
@@ -234,37 +270,28 @@
   }
 
   .header-content {
-    flex-direction: column;
+    flex-direction: row;
+    /* KEEP ROW */
+    flex-wrap: wrap;
+    /* Allow title/logo to be one group and nav another if needed, but nav stays row */
     padding: 1rem;
-    gap: 1.5rem;
+    gap: 1rem;
+    justify-content: center;
   }
 
   .kakuna-logo {
-    width: 40px;
-    height: 40px;
+    width: 50px;
+    height: 50px;
   }
 
   .pixel-nav {
     width: 100%;
-    justify-content: center;
-  }
-
-  .pixel-button {
-    min-width: 60px;
-    padding: 8px 10px;
-    font-size: 0.4rem;
-  }
-
-  .pixel-button .icon {
-    font-size: 1rem;
-  }
-
-  .pixel-button span {
-    font-size: 0.4rem;
+    justify-content: flex-start;
+    padding-bottom: 5px;
   }
 
   .pixel-title {
-    font-size: 0.9rem;
+    font-size: 1.2rem;
     letter-spacing: 1px;
   }
 }
