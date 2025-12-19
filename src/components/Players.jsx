@@ -2,6 +2,7 @@ import { useState, useEffect, useRef } from 'react';
 import './Players.css';
 import { ABILITIES_DATA } from '../data/abilities';
 import { POKEDEX_DATA } from '../data/pokedex';
+import { safeTeamToArray } from '../utils/teamHelpers';
 
 const AVAILABLE_SPRITES = [
   { id: 'aleja', name: 'Aleja', image: '/sprites/Aleja.jpg' },
@@ -63,24 +64,24 @@ const POKEMON_LIST = POKEDEX_DATA
 // Función para identificar Pokémon que son primera fase de línea evolutiva de 3
 const getThreeStageStarters = () => {
   const starters = [];
-  
+
   POKEDEX_DATA.forEach(pokemon => {
     // Verificar si este Pokémon evoluciona
     const evolutionMatch = pokemon.evolution.match(/Evoluciona a (\w+)/);
     if (!evolutionMatch) return;
-    
+
     const secondStageName = evolutionMatch[1];
     const secondStage = POKEDEX_DATA.find(p => p.name === secondStageName);
-    
+
     if (!secondStage) return;
-    
+
     // Verificar si la segunda fase también evoluciona
     const secondEvolutionMatch = secondStage.evolution.match(/Evoluciona a (\w+)/);
     if (!secondEvolutionMatch) return;
-    
+
     const thirdStageName = secondEvolutionMatch[1];
     const thirdStage = POKEDEX_DATA.find(p => p.name === thirdStageName);
-    
+
     // Verificar que la tercera fase no evoluciona más (línea completa de 3)
     if (thirdStage && thirdStage.evolution === 'No evoluciona') {
       // Verificar que sea Gen 1-3
@@ -89,7 +90,7 @@ const getThreeStageStarters = () => {
       }
     }
   });
-  
+
   return starters;
 };
 
@@ -107,10 +108,10 @@ const Players = ({ tournamentData, audioControls, auth }) => {
   const [showCustomizeModal, setShowCustomizeModal] = useState(null); // playerId
 
   // Verificar si el usuario ya tiene un jugador creado
-  const userPlayer = auth.currentUser?.hasPlayer 
+  const userPlayer = auth.currentUser?.hasPlayer
     ? (tournamentData.players || []).find(p => p.id === auth.currentUser.playerId)
     : null;
-  
+
   const isAdmin = auth.currentUser?.isAdmin;
 
   useEffect(() => {
@@ -145,7 +146,7 @@ const Players = ({ tournamentData, audioControls, auth }) => {
 
     const formData = new FormData(e.target);
     const selectedSprite = formData.get('sprite');
-    
+
     if (!selectedSprite) {
       alert('⚠️ Debes seleccionar un sprite');
       return;
@@ -195,14 +196,14 @@ const Players = ({ tournamentData, audioControls, auth }) => {
 
     const newTeam = [...(player.team || [])];
     if (pokemonName) {
-      newTeam[slotIndex] = typeof newTeam[slotIndex] === 'object' 
+      newTeam[slotIndex] = typeof newTeam[slotIndex] === 'object'
         ? { ...newTeam[slotIndex], name: pokemonName }
         : { name: pokemonName, ability: null };
     } else {
       newTeam[slotIndex] = null;
     }
     tournamentData.updatePlayer(playerId, { team: newTeam });
-    
+
     // Limpiar el valor temporal de búsqueda
     const key = `${playerId}-${slotIndex}`;
     setPokemonSearchValues(prev => ({ ...prev, [key]: '' }));
@@ -247,7 +248,7 @@ const Players = ({ tournamentData, audioControls, auth }) => {
   const handleChangeBackground = (playerId, backgroundId) => {
     const background = CARD_BACKGROUNDS.find(bg => bg.id === backgroundId);
     if (background) {
-      tournamentData.updatePlayer(playerId, { 
+      tournamentData.updatePlayer(playerId, {
         cardBackground: backgroundId,
         cardBackgroundGradient: background.gradient
       });
@@ -257,7 +258,7 @@ const Players = ({ tournamentData, audioControls, auth }) => {
   const handleChangeBorder = (playerId, borderId) => {
     const border = CARD_BORDERS.find(b => b.id === borderId);
     if (border) {
-      tournamentData.updatePlayer(playerId, { 
+      tournamentData.updatePlayer(playerId, {
         cardBorder: borderId,
         cardBorderStyle: border.style,
         cardBorderShadow: border.shadow || null
@@ -268,7 +269,7 @@ const Players = ({ tournamentData, audioControls, auth }) => {
   const handleChangeAvatarBorder = (playerId, borderId) => {
     const border = CARD_BORDERS.find(b => b.id === borderId);
     if (border) {
-      tournamentData.updatePlayer(playerId, { 
+      tournamentData.updatePlayer(playerId, {
         avatarBorder: borderId,
         avatarBorderStyle: border.style,
         avatarBorderShadow: border.shadow || null
@@ -283,12 +284,12 @@ const Players = ({ tournamentData, audioControls, auth }) => {
     const currentPokemon = player.team[slotIndex];
     const pokemonName = typeof currentPokemon === 'object' ? currentPokemon.name : currentPokemon;
     const currentPokemonData = POKEDEX_DATA.find(p => p.name === pokemonName);
-    
+
     if (!currentPokemonData) return;
 
     // Buscar la evolución en la descripción del campo evolution
     const evolutionMatch = currentPokemonData.evolution.match(/Evoluciona a (\w+)/);
-    
+
     if (!evolutionMatch) {
       alert('🚫 Este Pokémon no puede evolucionar más');
       return;
@@ -306,7 +307,7 @@ const Players = ({ tournamentData, audioControls, auth }) => {
     newTeam[slotIndex] = typeof currentPokemon === 'object'
       ? { ...currentPokemon, name: evolvedPokemonName }
       : evolvedPokemonName;
-    
+
     tournamentData.updatePlayer(playerId, { team: newTeam });
     alert(`✨ ${pokemonName} ha evolucionado a ${evolvedPokemonName}!`);
   };
@@ -318,12 +319,12 @@ const Players = ({ tournamentData, audioControls, auth }) => {
     const currentPokemon = player.team[slotIndex];
     const pokemonName = typeof currentPokemon === 'object' ? currentPokemon.name : currentPokemon;
     const currentPokemonData = POKEDEX_DATA.find(p => p.name === pokemonName);
-    
+
     if (!currentPokemonData) return;
 
     // Buscar todas las evoluciones previas
     let previousPokemon = null;
-    
+
     for (const pokemon of POKEDEX_DATA) {
       const evolutionMatch = pokemon.evolution.match(/Evoluciona a (\w+)/);
       if (evolutionMatch && evolutionMatch[1] === pokemonName) {
@@ -341,7 +342,7 @@ const Players = ({ tournamentData, audioControls, auth }) => {
     newTeam[slotIndex] = typeof currentPokemon === 'object'
       ? { ...currentPokemon, name: previousPokemon.name }
       : previousPokemon.name;
-    
+
     tournamentData.updatePlayer(playerId, { team: newTeam });
     alert(`🔙 ${pokemonName} ha devuelto a ${previousPokemon.name}!`);
   };
@@ -351,10 +352,10 @@ const Players = ({ tournamentData, audioControls, auth }) => {
     if (!player) return;
 
     const team = player.team || [];
-    
+
     // Buscar primer slot vacío
     const emptySlotIndex = team.findIndex(slot => !slot);
-    
+
     if (emptySlotIndex === -1 && team.length >= 6) {
       alert('❌ El equipo está completo (6 Pokémon)');
       return;
@@ -366,7 +367,7 @@ const Players = ({ tournamentData, audioControls, auth }) => {
     } else {
       newTeam.push(starterName);
     }
-    
+
     // Rellenar con null hasta tener 6 slots
     while (newTeam.length < 6) {
       newTeam.push(null);
@@ -406,7 +407,7 @@ const Players = ({ tournamentData, audioControls, auth }) => {
     }).filter(name => name !== null);
 
     // Filtrar el equipo para solo mantener Pokémon capturados
-    const syncedTeam = (player.team || []).map(pokemon => {
+    const syncedTeam = safeTeamToArray(player.team).map(pokemon => {
       if (!pokemon) return null;
       const pokemonName = typeof pokemon === 'object' ? pokemon.name : pokemon;
       // Mantener solo si está en los capturados
@@ -428,7 +429,7 @@ const Players = ({ tournamentData, audioControls, auth }) => {
       <div className="players-header">
         <h1 className="pixel-text">👥 GESTIÓN DE JUGADORES</h1>
         {isAdmin ? (
-          <button 
+          <button
             className="pixel-button add-player-btn admin-add-btn"
             onClick={() => setShowAddForm(!showAddForm)}
           >
@@ -440,7 +441,7 @@ const Players = ({ tournamentData, audioControls, auth }) => {
             <span className="badge-text">Tu personaje: {userPlayer.name}</span>
           </div>
         ) : (
-          <button 
+          <button
             className="pixel-button add-player-btn"
             onClick={() => setShowAddForm(!showAddForm)}
           >
@@ -465,24 +466,24 @@ const Players = ({ tournamentData, audioControls, auth }) => {
       {showAddForm && (isAdmin || !userPlayer) && (
         <form className="player-form pixel-card" onSubmit={handleAddPlayer}>
           <h2>AGREGAR NUEVO JUGADOR</h2>
-          
+
           <div className="form-group">
             <label>NOMBRE COMPLETO *</label>
-            <input 
-              type="text" 
-              name="name" 
-              className="pixel-input" 
-              required 
+            <input
+              type="text"
+              name="name"
+              className="pixel-input"
+              required
               placeholder="Ej: ASH KETCHUM"
             />
           </div>
 
           <div className="form-group">
             <label>APODO DE ENTRENADOR</label>
-            <input 
-              type="text" 
-              name="trainerName" 
-              className="pixel-input" 
+            <input
+              type="text"
+              name="trainerName"
+              className="pixel-input"
               placeholder="Ej: El Elegido"
             />
           </div>
@@ -500,9 +501,9 @@ const Players = ({ tournamentData, audioControls, auth }) => {
             <div className="sprite-selection-grid">
               {AVAILABLE_SPRITES.map(sprite => (
                 <label key={sprite.id} className="sprite-option">
-                  <input 
-                    type="radio" 
-                    name="sprite" 
+                  <input
+                    type="radio"
+                    name="sprite"
                     value={sprite.image}
                     required
                   />
@@ -525,335 +526,335 @@ const Players = ({ tournamentData, audioControls, auth }) => {
       <div className="players-grid">
         {(tournamentData.players || []).map(player => {
           const canEdit = isAdmin || player.id === auth.currentUser?.playerId;
-          
+
           return (
-          <div 
-            key={player.id} 
-            className={`player-card pixel-card ${!canEdit ? 'read-only' : ''} ${isAdmin && canEdit ? 'admin-editable' : ''}`}
-            style={{
-              background: player.cardBackgroundGradient || CARD_BACKGROUNDS[0].gradient,
-              border: player.cardBorderStyle || CARD_BORDERS[0].style,
-              boxShadow: player.cardBorderShadow || 'none'
-            }}
-          >
-            {/* Card Header */}
-            <div className="player-card-header">
-              <div className="player-info-top">
-                <h2 className="player-name">
-                  {player.name}
-                  {isAdmin && canEdit && player.id !== auth.currentUser?.playerId && (
-                    <span className="admin-control-badge" title="Controlado por admin">👑</span>
+            <div
+              key={player.id}
+              className={`player-card pixel-card ${!canEdit ? 'read-only' : ''} ${isAdmin && canEdit ? 'admin-editable' : ''}`}
+              style={{
+                background: player.cardBackgroundGradient || CARD_BACKGROUNDS[0].gradient,
+                border: player.cardBorderStyle || CARD_BORDERS[0].style,
+                boxShadow: player.cardBorderShadow || 'none'
+              }}
+            >
+              {/* Card Header */}
+              <div className="player-card-header">
+                <div className="player-info-top">
+                  <h2 className="player-name">
+                    {player.name}
+                    {isAdmin && canEdit && player.id !== auth.currentUser?.playerId && (
+                      <span className="admin-control-badge" title="Controlado por admin">👑</span>
+                    )}
+                  </h2>
+                  {player.trainerName && (
+                    <p className="trainer-name">"{player.trainerName}"</p>
                   )}
-                </h2>
-                {player.trainerName && (
-                  <p className="trainer-name">"{player.trainerName}"</p>
+                  <span className={`mode-badge ${player.mode}`}>
+                    {player.mode === 'hardcore' ? 'HARDCORE' : 'SOFTCORE'}
+                  </span>
+                  {!canEdit && <span className="view-only-badge">👁️ SOLO LECTURA</span>}
+                </div>
+
+                {canEdit && (
+                  <div className="card-actions">
+                    <button
+                      className="customize-btn pixel-button"
+                      onClick={() => setShowCustomizeModal(player.id)}
+                      title="Personalizar ficha"
+                    >
+                      🎨
+                    </button>
+                    <button
+                      className="delete-btn pixel-button-danger"
+                      onClick={async () => {
+                        if (confirm(`¿Eliminar a ${player.name}?`)) {
+                          tournamentData.deletePlayer(player.id);
+                          if (player.id === auth.currentUser?.playerId) {
+                            await auth.deleteUserPlayer();
+                            alert('✅ Jugador eliminado correctamente. Ahora puedes crear uno nuevo.');
+                            // Forzar recarga de la página para actualizar el estado
+                            window.location.reload();
+                          }
+                        }
+                      }}
+                    >
+                      🗑️
+                    </button>
+                  </div>
                 )}
-                <span className={`mode-badge ${player.mode}`}>
-                  {player.mode === 'hardcore' ? 'HARDCORE' : 'SOFTCORE'}
-                </span>
-                {!canEdit && <span className="view-only-badge">👁️ SOLO LECTURA</span>}
               </div>
 
-              {canEdit && (
-                <div className="card-actions">
-                  <button 
-                    className="customize-btn pixel-button"
-                    onClick={() => setShowCustomizeModal(player.id)}
-                    title="Personalizar ficha"
-                  >
-                    🎨
-                  </button>
-                  <button 
-                    className="delete-btn pixel-button-danger"
-                    onClick={async () => {
-                      if (confirm(`¿Eliminar a ${player.name}?`)) {
-                        tournamentData.deletePlayer(player.id);
-                        if (player.id === auth.currentUser?.playerId) {
-                          await auth.deleteUserPlayer();
-                          alert('✅ Jugador eliminado correctamente. Ahora puedes crear uno nuevo.');
-                          // Forzar recarga de la página para actualizar el estado
-                          window.location.reload();
-                        }
-                      }
+              {/* Avatar Section */}
+              <div className="player-avatar-section">
+                <label>AVATAR / SPRITE</label>
+                {player.avatarImage ? (
+                  <div
+                    className="avatar-preview"
+                    style={{
+                      border: player.avatarBorderStyle || CARD_BORDERS[0].style,
+                      boxShadow: player.avatarBorderShadow || 'none'
                     }}
                   >
-                    🗑️
-                  </button>
-                </div>
-              )}
-            </div>
-
-            {/* Avatar Section */}
-            <div className="player-avatar-section">
-              <label>AVATAR / SPRITE</label>
-              {player.avatarImage ? (
-                <div 
-                  className="avatar-preview"
-                  style={{
-                    border: player.avatarBorderStyle || CARD_BORDERS[0].style,
-                    boxShadow: player.avatarBorderShadow || 'none'
-                  }}
-                >
-                  <img src={player.avatarImage} alt="Avatar" />
-                  {canEdit && (
-                    <button 
-                      className="change-avatar-btn pixel-button"
-                      onClick={() => document.getElementById(`avatar-${player.id}`).click()}
-                    >
-                      CAMBIAR
-                    </button>
-                  )}
-                </div>
-              ) : (
-                canEdit && (
-                  <button 
-                    className="upload-avatar-btn pixel-button"
-                    onClick={() => document.getElementById(`avatar-${player.id}`).click()}
-                  >
-                    <span className="upload-icon">📷</span>
-                    <span>SUBIR AVATAR</span>
-                  </button>
-                )
-              )}
-              {canEdit && (
-                <input 
-                  type="file" 
-                  id={`avatar-${player.id}`}
-                  accept="image/*"
-                  style={{ display: 'none' }}
-                  onChange={(e) => handleImageUpload(e, 'avatarImage', player.id)}
-                />
-              )}
-            </div>
-
-            {/* Team Section */}
-            <div className="team-section">
-              <div className="team-section-header">
-                <h3>EQUIPO POKÉMON</h3>
-                <div className="team-buttons">
-                  <button 
-                    className="pixel-btn captured-btn"
-                    onClick={() => setShowCapturedModal({ playerId: player.id, playerName: player.name })}
-                  >
-                    📦 CAPTURADOS
-                  </button>
-                  <button 
-                    className="pixel-btn starter-btn"
-                    onClick={() => setShowStarterModal(player.id)}
-                  >
-                    🎓 STARTER OAK
-                  </button>
-                  {canEdit && (
-                    <button 
-                      className="pixel-btn sync-btn"
-                      onClick={() => handleSyncTeam(player.id)}
-                      title="Limpiar Pokémon no capturados del equipo"
-                    >
-                      🔄 SINCRONIZAR
-                    </button>
-                  )}
-                </div>
-              </div>
-              <div className="pokemon-slots">
-                {(player.team || []).map((pokemon, index) => {
-                  const pokemonData = pokemon ? POKEDEX_DATA.find(p => p.name === (typeof pokemon === 'object' ? pokemon.name : pokemon)) : null;
-                  
-                  return (
-                  <div key={index} className="pokemon-slot">
-                    <label>SLOT {index + 1}</label>
-                    {pokemon ? (
-                      <div className="pokemon-with-ability">
-                        {/* Campo de apodo */}
-                        <input 
-                          type="text"
-                          className="pixel-input nickname-input"
-                          placeholder="Apodo (opcional)"
-                          value={typeof pokemon === 'object' ? (pokemon.nickname || '') : ''}
-                          onChange={(e) => handleNicknameChange(player.id, index, e.target.value)}
-                          disabled={!canEdit}
-                        />
-                        
-                        {/* Nombre del Pokémon */}
-                        <div className="pokemon-selected">
-                          <span>{typeof pokemon === 'object' ? pokemon.name : pokemon}</span>
-                          {canEdit && (
-                            <>
-                              <button 
-                                className="remove-pokemon-btn"
-                                onClick={() => handleRemoveFromTeam(player.id, index)}
-                              >
-                                ✕
-                              </button>
-                            </>
-                          )}
-                        </div>
-                        
-                        {/* Botones de evolución */}
-                        {canEdit && (
-                          <div className="evolution-buttons">
-                            <button 
-                              className="evolve-btn"
-                              onClick={() => handleEvolvePokemon(player.id, index)}
-                              title="Evolucionar"
-                            >
-                              ⬆️ Evolucionar
-                            </button>
-                            <button 
-                              className="devolve-btn"
-                              onClick={() => handleDevolvePokemon(player.id, index)}
-                              title="Devolver"
-                            >
-                              ⬇️ Devolver
-                            </button>
-                          </div>
-                        )}
-                        
-                        {/* Sprite del Pokémon */}
-                        {pokemonData && (
-                          <div className="pokemon-sprite-container">
-                            <img 
-                              src={`https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/${pokemonData.number}.png`}
-                              alt={pokemonData.name}
-                              className="pokemon-team-sprite"
-                            />
-                          </div>
-                        )}
-                        
-                        {/* Selector de habilidad con búsqueda */}
-                        <div className="searchable-select">
-                          <input 
-                            type="text"
-                            list={`abilities-${player.id}-${index}`}
-                            className="pixel-input ability-select"
-                            placeholder="Buscar habilidad..."
-                            value={abilitySearchValues[`${player.id}-${index}`] !== undefined 
-                              ? abilitySearchValues[`${player.id}-${index}`]
-                              : (typeof pokemon === 'object' ? (pokemon.ability || '') : '')}
-                            onChange={(e) => {
-                              const key = `${player.id}-${index}`;
-                              setAbilitySearchValues(prev => ({ ...prev, [key]: e.target.value }));
-                            }}
-                            onBlur={(e) => {
-                              const value = e.target.value.trim();
-                              if (value === '') {
-                                handleAbilityChange(player.id, index, '');
-                                const key = `${player.id}-${index}`;
-                                setAbilitySearchValues(prev => ({ ...prev, [key]: undefined }));
-                                return;
-                              }
-                              if (ABILITIES_DATA.find(a => a.name === value)) {
-                                handleAbilityChange(player.id, index, value);
-                                const key = `${player.id}-${index}`;
-                                setAbilitySearchValues(prev => ({ ...prev, [key]: undefined }));
-                              } else {
-                                alert('⚠️ Por favor selecciona una habilidad válida de la lista');
-                                const key = `${player.id}-${index}`;
-                                setAbilitySearchValues(prev => ({ ...prev, [key]: typeof pokemon === 'object' ? (pokemon.ability || '') : '' }));
-                              }
-                            }}
-                            disabled={!canEdit}
-                          />
-                          <datalist id={`abilities-${player.id}-${index}`}>
-                            <option value="">Sin habilidad</option>
-                            {ABILITIES_DATA.map(ability => (
-                              <option key={ability.id} value={ability.name} />
-                            ))}
-                          </datalist>
-                        </div>
-                      </div>
-                    ) : (
-                      canEdit && (
-                        <div className="searchable-select">
-                          <input 
-                            type="text"
-                            list={`pokemon-${player.id}-${index}`}
-                            className="pixel-input"
-                            placeholder="Buscar Pokémon..."
-                            value={pokemonSearchValues[`${player.id}-${index}`] || ''}
-                            onChange={(e) => {
-                              const key = `${player.id}-${index}`;
-                              setPokemonSearchValues(prev => ({ ...prev, [key]: e.target.value }));
-                            }}
-                            onBlur={(e) => {
-                              const value = e.target.value.trim();
-                              if (value === '') {
-                                return; // No hacer nada si está vacío
-                              }
-                              if (POKEMON_LIST.includes(value)) {
-                                handleTeamChange(player.id, index, value);
-                              } else {
-                                alert('⚠️ Por favor selecciona un Pokémon válido de la lista');
-                                const key = `${player.id}-${index}`;
-                                setPokemonSearchValues(prev => ({ ...prev, [key]: '' }));
-                                e.target.value = '';
-                              }
-                            }}
-                          />
-                          <datalist id={`pokemon-${player.id}-${index}`}>
-                            <option value="">VACÍO</option>
-                            {POKEMON_LIST.map(poke => (
-                              <option key={poke} value={poke} />
-                            ))}
-                          </datalist>
-                        </div>
-                      )
+                    <img src={player.avatarImage} alt="Avatar" />
+                    {canEdit && (
+                      <button
+                        className="change-avatar-btn pixel-button"
+                        onClick={() => document.getElementById(`avatar-${player.id}`).click()}
+                      >
+                        CAMBIAR
+                      </button>
                     )}
                   </div>
-                );
-                })}
+                ) : (
+                  canEdit && (
+                    <button
+                      className="upload-avatar-btn pixel-button"
+                      onClick={() => document.getElementById(`avatar-${player.id}`).click()}
+                    >
+                      <span className="upload-icon">📷</span>
+                      <span>SUBIR AVATAR</span>
+                    </button>
+                  )
+                )}
+                {canEdit && (
+                  <input
+                    type="file"
+                    id={`avatar-${player.id}`}
+                    accept="image/*"
+                    style={{ display: 'none' }}
+                    onChange={(e) => handleImageUpload(e, 'avatarImage', player.id)}
+                  />
+                )}
               </div>
-            </div>
 
-            {/* Badges Section */}
-            <div className="badges-section">
-              <h3>MEDALLAS ({(player.badges || []).filter(Boolean).length}/8)</h3>
-              <div className="badges-grid">
-                {KANTO_BADGES.map((badge, index) => (
-                  <button
-                    key={badge.id}
-                    className={`badge-btn ${(player.badges || [])[index] ? 'obtained' : ''} ${!canEdit ? 'disabled' : ''}`}
-                    onClick={() => canEdit && handleBadgeToggle(player.id, index)}
-                    title={badge.name}
-                    disabled={!canEdit}
-                  >
-                    <img src={badge.image} alt={badge.name} className="badge-image" />
-                  </button>
-                ))}
+              {/* Team Section */}
+              <div className="team-section">
+                <div className="team-section-header">
+                  <h3>EQUIPO POKÉMON</h3>
+                  <div className="team-buttons">
+                    <button
+                      className="pixel-btn captured-btn"
+                      onClick={() => setShowCapturedModal({ playerId: player.id, playerName: player.name })}
+                    >
+                      📦 CAPTURADOS
+                    </button>
+                    <button
+                      className="pixel-btn starter-btn"
+                      onClick={() => setShowStarterModal(player.id)}
+                    >
+                      🎓 STARTER OAK
+                    </button>
+                    {canEdit && (
+                      <button
+                        className="pixel-btn sync-btn"
+                        onClick={() => handleSyncTeam(player.id)}
+                        title="Limpiar Pokémon no capturados del equipo"
+                      >
+                        🔄 SINCRONIZAR
+                      </button>
+                    )}
+                  </div>
+                </div>
+                <div className="pokemon-slots">
+                  {safeTeamToArray(player.team).map((pokemon, index) => {
+                    const pokemonData = pokemon ? POKEDEX_DATA.find(p => p.name === (typeof pokemon === 'object' ? pokemon.name : pokemon)) : null;
+
+                    return (
+                      <div key={index} className="pokemon-slot">
+                        <label>SLOT {index + 1}</label>
+                        {pokemon ? (
+                          <div className="pokemon-with-ability">
+                            {/* Campo de apodo */}
+                            <input
+                              type="text"
+                              className="pixel-input nickname-input"
+                              placeholder="Apodo (opcional)"
+                              value={typeof pokemon === 'object' ? (pokemon.nickname || '') : ''}
+                              onChange={(e) => handleNicknameChange(player.id, index, e.target.value)}
+                              disabled={!canEdit}
+                            />
+
+                            {/* Nombre del Pokémon */}
+                            <div className="pokemon-selected">
+                              <span>{typeof pokemon === 'object' ? pokemon.name : pokemon}</span>
+                              {canEdit && (
+                                <>
+                                  <button
+                                    className="remove-pokemon-btn"
+                                    onClick={() => handleRemoveFromTeam(player.id, index)}
+                                  >
+                                    ✕
+                                  </button>
+                                </>
+                              )}
+                            </div>
+
+                            {/* Botones de evolución */}
+                            {canEdit && (
+                              <div className="evolution-buttons">
+                                <button
+                                  className="evolve-btn"
+                                  onClick={() => handleEvolvePokemon(player.id, index)}
+                                  title="Evolucionar"
+                                >
+                                  ⬆️ Evolucionar
+                                </button>
+                                <button
+                                  className="devolve-btn"
+                                  onClick={() => handleDevolvePokemon(player.id, index)}
+                                  title="Devolver"
+                                >
+                                  ⬇️ Devolver
+                                </button>
+                              </div>
+                            )}
+
+                            {/* Sprite del Pokémon */}
+                            {pokemonData && (
+                              <div className="pokemon-sprite-container">
+                                <img
+                                  src={`https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/${pokemonData.number}.png`}
+                                  alt={pokemonData.name}
+                                  className="pokemon-team-sprite"
+                                />
+                              </div>
+                            )}
+
+                            {/* Selector de habilidad con búsqueda */}
+                            <div className="searchable-select">
+                              <input
+                                type="text"
+                                list={`abilities-${player.id}-${index}`}
+                                className="pixel-input ability-select"
+                                placeholder="Buscar habilidad..."
+                                value={abilitySearchValues[`${player.id}-${index}`] !== undefined
+                                  ? abilitySearchValues[`${player.id}-${index}`]
+                                  : (typeof pokemon === 'object' ? (pokemon.ability || '') : '')}
+                                onChange={(e) => {
+                                  const key = `${player.id}-${index}`;
+                                  setAbilitySearchValues(prev => ({ ...prev, [key]: e.target.value }));
+                                }}
+                                onBlur={(e) => {
+                                  const value = e.target.value.trim();
+                                  if (value === '') {
+                                    handleAbilityChange(player.id, index, '');
+                                    const key = `${player.id}-${index}`;
+                                    setAbilitySearchValues(prev => ({ ...prev, [key]: undefined }));
+                                    return;
+                                  }
+                                  if (ABILITIES_DATA.find(a => a.name === value)) {
+                                    handleAbilityChange(player.id, index, value);
+                                    const key = `${player.id}-${index}`;
+                                    setAbilitySearchValues(prev => ({ ...prev, [key]: undefined }));
+                                  } else {
+                                    alert('⚠️ Por favor selecciona una habilidad válida de la lista');
+                                    const key = `${player.id}-${index}`;
+                                    setAbilitySearchValues(prev => ({ ...prev, [key]: typeof pokemon === 'object' ? (pokemon.ability || '') : '' }));
+                                  }
+                                }}
+                                disabled={!canEdit}
+                              />
+                              <datalist id={`abilities-${player.id}-${index}`}>
+                                <option value="">Sin habilidad</option>
+                                {ABILITIES_DATA.map(ability => (
+                                  <option key={ability.id} value={ability.name} />
+                                ))}
+                              </datalist>
+                            </div>
+                          </div>
+                        ) : (
+                          canEdit && (
+                            <div className="searchable-select">
+                              <input
+                                type="text"
+                                list={`pokemon-${player.id}-${index}`}
+                                className="pixel-input"
+                                placeholder="Buscar Pokémon..."
+                                value={pokemonSearchValues[`${player.id}-${index}`] || ''}
+                                onChange={(e) => {
+                                  const key = `${player.id}-${index}`;
+                                  setPokemonSearchValues(prev => ({ ...prev, [key]: e.target.value }));
+                                }}
+                                onBlur={(e) => {
+                                  const value = e.target.value.trim();
+                                  if (value === '') {
+                                    return; // No hacer nada si está vacío
+                                  }
+                                  if (POKEMON_LIST.includes(value)) {
+                                    handleTeamChange(player.id, index, value);
+                                  } else {
+                                    alert('⚠️ Por favor selecciona un Pokémon válido de la lista');
+                                    const key = `${player.id}-${index}`;
+                                    setPokemonSearchValues(prev => ({ ...prev, [key]: '' }));
+                                    e.target.value = '';
+                                  }
+                                }}
+                              />
+                              <datalist id={`pokemon-${player.id}-${index}`}>
+                                <option value="">VACÍO</option>
+                                {POKEMON_LIST.map(poke => (
+                                  <option key={poke} value={poke} />
+                                ))}
+                              </datalist>
+                            </div>
+                          )
+                        )}
+                      </div>
+                    );
+                  })}
+                </div>
               </div>
-            </div>
 
-            {/* Rewards Section */}
-            <div className="rewards-section">
-              <h3>RECOMPENSAS ({(player.rewards || []).length})</h3>
-              {(player.rewards || []).length > 0 ? (
-                <ul className="rewards-list">
-                  {(player.rewards || []).map((reward, index) => (
-                    <li key={index} className="reward-item">
-                      <span>{reward}</span>
-                      {canEdit && (
-                        <button 
-                          className="remove-reward-btn"
-                          onClick={() => handleRemoveReward(player.id, index)}
-                        >
-                          ✕
-                        </button>
-                      )}
-                    </li>
+              {/* Badges Section */}
+              <div className="badges-section">
+                <h3>MEDALLAS ({(player.badges || []).filter(Boolean).length}/8)</h3>
+                <div className="badges-grid">
+                  {KANTO_BADGES.map((badge, index) => (
+                    <button
+                      key={badge.id}
+                      className={`badge-btn ${(player.badges || [])[index] ? 'obtained' : ''} ${!canEdit ? 'disabled' : ''}`}
+                      onClick={() => canEdit && handleBadgeToggle(player.id, index)}
+                      title={badge.name}
+                      disabled={!canEdit}
+                    >
+                      <img src={badge.image} alt={badge.name} className="badge-image" />
+                    </button>
                   ))}
-                </ul>
-              ) : (
-                <p className="no-rewards">SIN RECOMPENSAS</p>
-              )}
-            </div>
+                </div>
+              </div>
 
-            {/* Stats Footer */}
-            <div className="player-stats-footer">
-              <div className="stat">
-                <span className="stat-label">PUNTOS</span>
-                <span className="stat-value">{player.points}</span>
+              {/* Rewards Section */}
+              <div className="rewards-section">
+                <h3>RECOMPENSAS ({(player.rewards || []).length})</h3>
+                {(player.rewards || []).length > 0 ? (
+                  <ul className="rewards-list">
+                    {(player.rewards || []).map((reward, index) => (
+                      <li key={index} className="reward-item">
+                        <span>{reward}</span>
+                        {canEdit && (
+                          <button
+                            className="remove-reward-btn"
+                            onClick={() => handleRemoveReward(player.id, index)}
+                          >
+                            ✕
+                          </button>
+                        )}
+                      </li>
+                    ))}
+                  </ul>
+                ) : (
+                  <p className="no-rewards">SIN RECOMPENSAS</p>
+                )}
+              </div>
+
+              {/* Stats Footer */}
+              <div className="player-stats-footer">
+                <div className="stat">
+                  <span className="stat-label">PUNTOS</span>
+                  <span className="stat-value">{player.points}</span>
+                </div>
               </div>
             </div>
-          </div>
           );
         })}
       </div>
@@ -876,7 +877,7 @@ const Players = ({ tournamentData, audioControls, auth }) => {
             {(() => {
               const capturedPokemon = tournamentData.getCapturedPokemonByPlayer(showCapturedModal.playerName);
               const canEdit = isAdmin || showCapturedModal.playerId === auth.currentUser?.playerId;
-              
+
               if (capturedPokemon.length === 0) {
                 return (
                   <div className="empty-captured">
@@ -894,7 +895,7 @@ const Players = ({ tournamentData, audioControls, auth }) => {
                     return (
                       <div key={index} className="captured-pokemon-card pixel-card">
                         <div className="captured-sprite">
-                          <img 
+                          <img
                             src={`https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/${pokemon.pokemon}.png`}
                             alt={`#${pokemon.pokemon}`}
                           />
@@ -911,18 +912,18 @@ const Players = ({ tournamentData, audioControls, auth }) => {
                           <span className="pokemon-region">{pokemon.region}</span>
                         </div>
                         {canEdit && (
-                          <button 
+                          <button
                             className="add-to-team-btn pixel-button"
                             onClick={() => {
                               // Añadir al equipo
                               const player = (tournamentData.players || []).find(p => p.id === showCapturedModal.playerId);
                               if (!player) return;
-                              
+
                               const team = player.team || [];
-                              
+
                               // Buscar primer slot vacío
                               const emptySlotIndex = team.findIndex(slot => !slot);
-                              
+
                               if (emptySlotIndex === -1 && team.length >= 6) {
                                 alert('❌ El equipo está completo (6 Pokémon)');
                                 return;
@@ -940,7 +941,7 @@ const Players = ({ tournamentData, audioControls, auth }) => {
                               } else {
                                 newTeam.push(pokemonToAdd);
                               }
-                              
+
                               // Rellenar con null hasta tener 6 slots
                               while (newTeam.length < 6) {
                                 newTeam.push(null);
@@ -960,7 +961,7 @@ const Players = ({ tournamentData, audioControls, auth }) => {
               );
             })()}
 
-            <button 
+            <button
               className="close-modal-btn pixel-button"
               onClick={() => setShowCapturedModal(null)}
             >
@@ -978,7 +979,7 @@ const Players = ({ tournamentData, audioControls, auth }) => {
             <p className="modal-subtitle">Primera fase de líneas evolutivas de 3 etapas (Gen 1-3)</p>
 
             <div className="starter-search">
-              <input 
+              <input
                 type="text"
                 className="pixel-input"
                 placeholder="🔍 Buscar por nombre..."
@@ -995,13 +996,13 @@ const Players = ({ tournamentData, audioControls, auth }) => {
                 })
                 .sort((a, b) => a.number - b.number)
                 .map(pokemon => (
-                  <div 
-                    key={pokemon.number} 
+                  <div
+                    key={pokemon.number}
                     className="starter-pokemon-card pixel-card"
                     onClick={() => handleAddStarter(showStarterModal, pokemon.name)}
                   >
                     <div className="starter-sprite">
-                      <img 
+                      <img
                         src={`https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/${pokemon.number}.png`}
                         alt={pokemon.name}
                       />
@@ -1021,7 +1022,7 @@ const Players = ({ tournamentData, audioControls, auth }) => {
                 ))}
             </div>
 
-            <button 
+            <button
               className="close-modal-btn pixel-button"
               onClick={() => { setShowStarterModal(null); setStarterSearchTerm(''); }}
             >
@@ -1046,7 +1047,7 @@ const Players = ({ tournamentData, audioControls, auth }) => {
                 <h3>🌈 FONDO DE LA FICHA</h3>
                 <div className="background-options">
                   {CARD_BACKGROUNDS.map(bg => (
-                    <div 
+                    <div
                       key={bg.id}
                       className={`background-option ${player.cardBackground === bg.id ? 'selected' : ''}`}
                       style={{ background: bg.gradient }}
@@ -1064,14 +1065,14 @@ const Players = ({ tournamentData, audioControls, auth }) => {
                 <h3>🖼️ MARCO DE LA FICHA</h3>
                 <div className="border-options">
                   {CARD_BORDERS.map(border => (
-                    <div 
+                    <div
                       key={border.id}
                       className={`border-option ${player.cardBorder === border.id ? 'selected' : ''}`}
                       onClick={() => handleChangeBorder(showCustomizeModal, border.id)}
                     >
-                      <div 
+                      <div
                         className="border-preview"
-                        style={{ 
+                        style={{
                           border: border.style,
                           boxShadow: border.shadow || 'none'
                         }}
@@ -1088,22 +1089,22 @@ const Players = ({ tournamentData, audioControls, auth }) => {
                 <h3>📷 MARCO DEL AVATAR</h3>
                 <div className="border-options">
                   {CARD_BORDERS.map(border => (
-                    <div 
+                    <div
                       key={border.id}
                       className={`border-option ${player.avatarBorder === border.id ? 'selected' : ''}`}
                       onClick={() => handleChangeAvatarBorder(showCustomizeModal, border.id)}
                     >
-                      <div 
+                      <div
                         className="border-preview avatar-border-preview"
-                        style={{ 
+                        style={{
                           border: border.style,
                           boxShadow: border.shadow || 'none'
                         }}
                       >
                         {player.avatarBorder === border.id && <span className="check-icon">✓</span>}
                         {player.avatarImage && (
-                          <img 
-                            src={player.avatarImage} 
+                          <img
+                            src={player.avatarImage}
                             alt="Avatar preview"
                             className="avatar-mini-preview"
                           />
@@ -1115,7 +1116,7 @@ const Players = ({ tournamentData, audioControls, auth }) => {
                 </div>
               </div>
 
-              <button 
+              <button
                 className="close-modal-btn pixel-button"
                 onClick={() => setShowCustomizeModal(null)}
               >

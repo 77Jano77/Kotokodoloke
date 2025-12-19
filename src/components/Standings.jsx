@@ -1,5 +1,6 @@
 import { useState, useEffect, useRef } from 'react';
 import './Standings.css';
+import { safeTeamToArray } from '../utils/teamHelpers';
 
 const Standings = ({ tournamentData, audioControls, auth }) => {
   const audioRef = useRef(null);
@@ -68,7 +69,7 @@ const Standings = ({ tournamentData, audioControls, auth }) => {
       <div className="standings-header">
         <h1 className="pixel-text">⚔️ PVP</h1>
         {auth?.currentUser?.isAdmin && (
-          <button 
+          <button
             className="pixel-button add-points-btn"
             onClick={() => setShowAddPointsModal(true)}
           >
@@ -81,31 +82,31 @@ const Standings = ({ tournamentData, audioControls, auth }) => {
       <div className="phase-filter pixel-card">
         <label>SELECCIONAR FASE:</label>
         <div className="phase-buttons">
-          <button 
+          <button
             className={`phase-btn ${selectedPhase === 'all' ? 'active' : ''}`}
             onClick={() => setSelectedPhase('all')}
           >
             TODAS
           </button>
-          <button 
+          <button
             className={`phase-btn ${selectedPhase === '1' ? 'active' : ''}`}
             onClick={() => setSelectedPhase('1')}
           >
             FASE 1
           </button>
-          <button 
+          <button
             className={`phase-btn ${selectedPhase === '2' ? 'active' : ''}`}
             onClick={() => setSelectedPhase('2')}
           >
             FASE 2
           </button>
-          <button 
+          <button
             className={`phase-btn ${selectedPhase === '3' ? 'active' : ''}`}
             onClick={() => setSelectedPhase('3')}
           >
             FASE 3
           </button>
-          <button 
+          <button
             className={`phase-btn ${selectedPhase === '4' ? 'active' : ''}`}
             onClick={() => setSelectedPhase('4')}
           >
@@ -134,9 +135,9 @@ const Standings = ({ tournamentData, audioControls, auth }) => {
             <tbody>
               {sortedPlayers.map((player, index) => {
                 const badgeCount = getBadgeCount(player);
-                const teamSize = (player.team || []).filter(Boolean).length;
+                const teamSize = safeTeamToArray(player.team).filter(Boolean).length;
                 const position = index + 1;
-                
+
                 return (
                   <tr key={player.id} className={`position-${position <= 3 ? position : 'other'}`}>
                     <td className="position-cell">
@@ -145,11 +146,11 @@ const Standings = ({ tournamentData, audioControls, auth }) => {
                       {position === 2 && <span className="medal">🥈</span>}
                       {position === 3 && <span className="medal">🥉</span>}
                     </td>
-                    
+
                     <td className="avatar-cell">
                       {player.avatarImage ? (
-                        <img 
-                          src={player.avatarImage} 
+                        <img
+                          src={player.avatarImage}
                           alt={player.name}
                           className="player-avatar"
                         />
@@ -157,7 +158,7 @@ const Standings = ({ tournamentData, audioControls, auth }) => {
                         <div className="avatar-placeholder">👤</div>
                       )}
                     </td>
-                    
+
                     <td className="player-cell">
                       <div className="player-info">
                         <span className="player-name">{player.name}</span>
@@ -166,39 +167,39 @@ const Standings = ({ tournamentData, audioControls, auth }) => {
                         )}
                       </div>
                     </td>
-                    
+
                     <td className="mode-cell">
                       <span className={`mode-badge ${player.mode}`}>
                         {player.mode === 'hardcore' ? 'HARD' : 'SOFT'}
                       </span>
                     </td>
-                    
+
                     <td className="badges-cell">
                       <div className="badges-display">
                         <span className="badge-count">{badgeCount}/8</span>
                         <div className="badge-bar">
-                          <div 
+                          <div
                             className="badge-progress"
                             style={{ width: `${(badgeCount / 8) * 100}%` }}
                           />
                         </div>
                       </div>
                     </td>
-                    
+
                     <td className="points-cell">
                       <span className="points-number">{tournamentData.calculatePlayerPoints(player.id, currentPhase)}</span>
                     </td>
-                    
+
                     <td className="wins-cell">
                       <span className="wins-number">{tournamentData.calculatePlayerWins(player.id, currentPhase)}</span>
                     </td>
-                    
+
                     <td className="team-cell">
                       <span className={`team-count ${teamSize === 6 ? 'full' : ''}`}>
                         {teamSize}/6
                       </span>
                     </td>
-                    
+
                     <td className="rewards-cell">
                       <span className="rewards-count">{(player.rewards || []).length}</span>
                     </td>
@@ -220,11 +221,11 @@ const Standings = ({ tournamentData, audioControls, auth }) => {
         <div className="modal-overlay" onClick={() => setShowAddPointsModal(false)}>
           <div className="modal-content pixel-card" onClick={(e) => e.stopPropagation()}>
             <h2>➕ AÑADIR PUNTOS</h2>
-            
+
             <div className="modal-form">
               <div className="form-group">
                 <label>SELECCIONA JUGADOR</label>
-                <select 
+                <select
                   className="pixel-input"
                   value={selectedPlayerForPoints}
                   onChange={(e) => setSelectedPlayerForPoints(e.target.value)}
@@ -241,20 +242,20 @@ const Standings = ({ tournamentData, audioControls, auth }) => {
               <div className="form-group">
                 <label>PUNTOS A AÑADIR</label>
                 <div className="points-selector">
-                  <button 
+                  <button
                     className="pixel-button points-preset"
                     onClick={() => setPointsToAdd(6)}
                   >
                     6 PTS (Victoria)
                   </button>
-                  <button 
+                  <button
                     className="pixel-button points-preset"
                     onClick={() => setPointsToAdd(3)}
                   >
                     3 PTS (Top 2)
                   </button>
-                  <input 
-                    type="number" 
+                  <input
+                    type="number"
                     className="pixel-input"
                     value={pointsToAdd}
                     onChange={(e) => setPointsToAdd(parseInt(e.target.value) || 0)}
@@ -265,13 +266,13 @@ const Standings = ({ tournamentData, audioControls, auth }) => {
               </div>
 
               <div className="modal-actions">
-                <button 
+                <button
                   className="pixel-button confirm-btn"
                   onClick={handleAddPoints}
                 >
                   ✓ CONFIRMAR
                 </button>
-                <button 
+                <button
                   className="pixel-button cancel-btn"
                   onClick={() => setShowAddPointsModal(false)}
                 >
@@ -285,177 +286,175 @@ const Standings = ({ tournamentData, audioControls, auth }) => {
 
       {/* Matches Table */}
       {selectedPhase !== 'all' && (
-      <div className="matches-section pixel-card">
-        <h2>⚔️ TABLA DE ENFRENTAMIENTOS</h2>
-        <div className="matches-tabs">
-          {[1, 2, 3, 4].map(phase => (
-            <button
-              key={phase}
-              className={`match-phase-btn ${selectedPhase === phase.toString() ? 'active' : ''}`}
-              onClick={() => setSelectedPhase(phase.toString())}
-            >
-              FASE {phase}
-            </button>
-          ))}
-        </div>
-        
-        {(tournamentData.players || []).length >= 2 ? (
-          <div className="matches-grid">
-            {(tournamentData.players || []).map((player1, i) => 
-              (tournamentData.players || []).slice(i + 1).map((player2, j) => (
-                <div key={`${player1.id}-${player2.id}`} className="match-card">
-                  <div className="match-players">
-                    <div className="match-player">
-                      {player1.avatarImage && (
-                        <img src={player1.avatarImage} alt={player1.name} className="match-avatar" />
-                      )}
-                      <span>{player1.name}</span>
-                      {(() => {
-                        const scores = tournamentData.getMatchScore(player1.id, player2.id, selectedPhase);
-                        if (scores.player1 === 6 || scores.player2 === 6) {
-                          return scores.player1 === 6 ? (
-                            <span className="match-result winner">GANADOR</span>
-                          ) : (
-                            <span className="match-result loser">PERDEDOR</span>
-                          );
-                        }
-                        return null;
-                      })()}
-                    </div>
-                    <span className="vs-text">VS</span>
-                    <div className="match-player">
-                      {player2.avatarImage && (
-                        <img src={player2.avatarImage} alt={player2.name} className="match-avatar" />
-                      )}
-                      <span>{player2.name}</span>
-                      {(() => {
-                        const scores = tournamentData.getMatchScore(player1.id, player2.id, selectedPhase);
-                        if (scores.player1 === 6 || scores.player2 === 6) {
-                          return scores.player2 === 6 ? (
-                            <span className="match-result winner">GANADOR</span>
-                          ) : (
-                            <span className="match-result loser">PERDEDOR</span>
-                          );
-                        }
-                        return null;
-                      })()}
-                    </div>
-                  </div>
-                  <div className="match-score">
-                    {(() => {
-                      const matchData = tournamentData.getMatchScore(player1.id, player2.id, selectedPhase);
-                      const isAdmin = auth?.currentUser?.isAdmin;
-                      const currentPlayerId = auth?.currentUser?.playerId;
-                      const isPlayer1 = currentPlayerId === player1.id;
-                      const isPlayer2 = currentPlayerId === player2.id;
-                      const isInvolved = isPlayer1 || isPlayer2;
-                      const canEdit = isAdmin || (!matchData.locked && isInvolved);
-                      
-                      return (
-                        <>
-                          <div className="score-control">
-                            {canEdit && (
-                              <button 
-                                className="score-btn decrease"
-                                onClick={() => {
-                                  const currentScore = matchData.player1 || 0;
-                                  if (currentScore > 0) {
-                                    tournamentData.updateMatchScore(selectedPhase, player1.id, player2.id, currentScore - 1, matchData.player2 || 0);
-                                  }
-                                }}
-                                title="Restar punto"
-                              >
-                                -
-                              </button>
-                            )}
-                            <input 
-                              type="text" 
-                              readOnly
-                              value={matchData.player1 || 0}
-                              className={`score-display ${
-                                matchData.player1 > matchData.player2 ? 'winning' : 
-                                matchData.player1 < matchData.player2 ? 'losing' : ''
-                              }`}
-                            />
-                            {canEdit && (
-                              <button 
-                                className="score-btn increase"
-                                onClick={() => {
-                                  const currentScore = matchData.player1 || 0;
-                                  if (currentScore < 6) {
-                                    tournamentData.updateMatchScore(selectedPhase, player1.id, player2.id, currentScore + 1, matchData.player2 || 0);
-                                  }
-                                }}
-                                title="Sumar punto"
-                              >
-                                +
-                              </button>
-                            )}
-                          </div>
-                          <span className="vs-divider">-</span>
-                          <div className="score-control">
-                            {canEdit && (
-                              <button 
-                                className="score-btn decrease"
-                                onClick={() => {
-                                  const currentScore = matchData.player2 || 0;
-                                  if (currentScore > 0) {
-                                    tournamentData.updateMatchScore(selectedPhase, player1.id, player2.id, matchData.player1 || 0, currentScore - 1);
-                                  }
-                                }}
-                                title="Restar punto"
-                              >
-                                -
-                              </button>
-                            )}
-                            <input 
-                              type="text" 
-                              readOnly
-                              value={matchData.player2 || 0}
-                              className={`score-display ${
-                                matchData.player2 > matchData.player1 ? 'winning' : 
-                                matchData.player2 < matchData.player1 ? 'losing' : ''
-                              }`}
-                            />
-                            {canEdit && (
-                              <button 
-                                className="score-btn increase"
-                                onClick={() => {
-                                  const currentScore = matchData.player2 || 0;
-                                  if (currentScore < 6) {
-                                    tournamentData.updateMatchScore(selectedPhase, player1.id, player2.id, matchData.player1 || 0, currentScore + 1);
-                                  }
-                                }}
-                                title="Sumar punto"
-                              >
-                                +
-                              </button>
-                            )}
-                          </div>
-                        </>
-                      );
-                    })()}
-                    {tournamentData.getMatchScore(player1.id, player2.id, selectedPhase).locked && 
-                     (auth?.currentUser?.isAdmin || 
-                      auth?.currentUser?.playerId === player1.id || 
-                      auth?.currentUser?.playerId === player2.id) && (
-                      <button 
-                        className="reset-match-btn pixel-button"
-                        onClick={() => tournamentData.resetMatchScore(player1.id, player2.id, selectedPhase)}
-                        title="Reiniciar combate"
-                      >
-                        🔄
-                      </button>
-                    )}
-                  </div>
-                </div>
-              ))
-            )}
+        <div className="matches-section pixel-card">
+          <h2>⚔️ TABLA DE ENFRENTAMIENTOS</h2>
+          <div className="matches-tabs">
+            {[1, 2, 3, 4].map(phase => (
+              <button
+                key={phase}
+                className={`match-phase-btn ${selectedPhase === phase.toString() ? 'active' : ''}`}
+                onClick={() => setSelectedPhase(phase.toString())}
+              >
+                FASE {phase}
+              </button>
+            ))}
           </div>
-        ) : (
-          <p className="no-matches">Añade al menos 2 jugadores para ver enfrentamientos</p>
-        )}
-      </div>
+
+          {(tournamentData.players || []).length >= 2 ? (
+            <div className="matches-grid">
+              {(tournamentData.players || []).map((player1, i) =>
+                (tournamentData.players || []).slice(i + 1).map((player2, j) => (
+                  <div key={`${player1.id}-${player2.id}`} className="match-card">
+                    <div className="match-players">
+                      <div className="match-player">
+                        {player1.avatarImage && (
+                          <img src={player1.avatarImage} alt={player1.name} className="match-avatar" />
+                        )}
+                        <span>{player1.name}</span>
+                        {(() => {
+                          const scores = tournamentData.getMatchScore(player1.id, player2.id, selectedPhase);
+                          if (scores.player1 === 6 || scores.player2 === 6) {
+                            return scores.player1 === 6 ? (
+                              <span className="match-result winner">GANADOR</span>
+                            ) : (
+                              <span className="match-result loser">PERDEDOR</span>
+                            );
+                          }
+                          return null;
+                        })()}
+                      </div>
+                      <span className="vs-text">VS</span>
+                      <div className="match-player">
+                        {player2.avatarImage && (
+                          <img src={player2.avatarImage} alt={player2.name} className="match-avatar" />
+                        )}
+                        <span>{player2.name}</span>
+                        {(() => {
+                          const scores = tournamentData.getMatchScore(player1.id, player2.id, selectedPhase);
+                          if (scores.player1 === 6 || scores.player2 === 6) {
+                            return scores.player2 === 6 ? (
+                              <span className="match-result winner">GANADOR</span>
+                            ) : (
+                              <span className="match-result loser">PERDEDOR</span>
+                            );
+                          }
+                          return null;
+                        })()}
+                      </div>
+                    </div>
+                    <div className="match-score">
+                      {(() => {
+                        const matchData = tournamentData.getMatchScore(player1.id, player2.id, selectedPhase);
+                        const isAdmin = auth?.currentUser?.isAdmin;
+                        const currentPlayerId = auth?.currentUser?.playerId;
+                        const isPlayer1 = currentPlayerId === player1.id;
+                        const isPlayer2 = currentPlayerId === player2.id;
+                        const isInvolved = isPlayer1 || isPlayer2;
+                        const canEdit = isAdmin || (!matchData.locked && isInvolved);
+
+                        return (
+                          <>
+                            <div className="score-control">
+                              {canEdit && (
+                                <button
+                                  className="score-btn decrease"
+                                  onClick={() => {
+                                    const currentScore = matchData.player1 || 0;
+                                    if (currentScore > 0) {
+                                      tournamentData.updateMatchScore(selectedPhase, player1.id, player2.id, currentScore - 1, matchData.player2 || 0);
+                                    }
+                                  }}
+                                  title="Restar punto"
+                                >
+                                  -
+                                </button>
+                              )}
+                              <input
+                                type="text"
+                                readOnly
+                                value={matchData.player1 || 0}
+                                className={`score-display ${matchData.player1 > matchData.player2 ? 'winning' :
+                                    matchData.player1 < matchData.player2 ? 'losing' : ''
+                                  }`}
+                              />
+                              {canEdit && (
+                                <button
+                                  className="score-btn increase"
+                                  onClick={() => {
+                                    const currentScore = matchData.player1 || 0;
+                                    if (currentScore < 6) {
+                                      tournamentData.updateMatchScore(selectedPhase, player1.id, player2.id, currentScore + 1, matchData.player2 || 0);
+                                    }
+                                  }}
+                                  title="Sumar punto"
+                                >
+                                  +
+                                </button>
+                              )}
+                            </div>
+                            <span className="vs-divider">-</span>
+                            <div className="score-control">
+                              {canEdit && (
+                                <button
+                                  className="score-btn decrease"
+                                  onClick={() => {
+                                    const currentScore = matchData.player2 || 0;
+                                    if (currentScore > 0) {
+                                      tournamentData.updateMatchScore(selectedPhase, player1.id, player2.id, matchData.player1 || 0, currentScore - 1);
+                                    }
+                                  }}
+                                  title="Restar punto"
+                                >
+                                  -
+                                </button>
+                              )}
+                              <input
+                                type="text"
+                                readOnly
+                                value={matchData.player2 || 0}
+                                className={`score-display ${matchData.player2 > matchData.player1 ? 'winning' :
+                                    matchData.player2 < matchData.player1 ? 'losing' : ''
+                                  }`}
+                              />
+                              {canEdit && (
+                                <button
+                                  className="score-btn increase"
+                                  onClick={() => {
+                                    const currentScore = matchData.player2 || 0;
+                                    if (currentScore < 6) {
+                                      tournamentData.updateMatchScore(selectedPhase, player1.id, player2.id, matchData.player1 || 0, currentScore + 1);
+                                    }
+                                  }}
+                                  title="Sumar punto"
+                                >
+                                  +
+                                </button>
+                              )}
+                            </div>
+                          </>
+                        );
+                      })()}
+                      {tournamentData.getMatchScore(player1.id, player2.id, selectedPhase).locked &&
+                        (auth?.currentUser?.isAdmin ||
+                          auth?.currentUser?.playerId === player1.id ||
+                          auth?.currentUser?.playerId === player2.id) && (
+                          <button
+                            className="reset-match-btn pixel-button"
+                            onClick={() => tournamentData.resetMatchScore(player1.id, player2.id, selectedPhase)}
+                            title="Reiniciar combate"
+                          >
+                            🔄
+                          </button>
+                        )}
+                    </div>
+                  </div>
+                ))
+              )}
+            </div>
+          ) : (
+            <p className="no-matches">Añade al menos 2 jugadores para ver enfrentamientos</p>
+          )}
+        </div>
       )}
 
       {/* Stats Summary */}
