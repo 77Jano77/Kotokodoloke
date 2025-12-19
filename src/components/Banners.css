@@ -27,7 +27,8 @@
 .right-banners {
   position: fixed;
   right: 25px;
-  top: 200px;
+  top: 350px;
+  /* Increased to avoid overlap with larger header */
   z-index: 997;
   display: flex;
   flex-direction: column;
@@ -182,7 +183,8 @@
 .left-banners {
   position: fixed;
   left: 25px;
-  top: 200px;
+  top: 350px;
+  /* Increased to avoid overlap with larger header */
   z-index: 997;
   display: flex;
   flex-direction: column;
