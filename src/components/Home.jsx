@@ -624,6 +624,7 @@ const OakTipsPopup = () => {
   const [isOpen, setIsOpen] = useState(true);
   const [currentTipIndex, setCurrentTipIndex] = useState(0);
   const [isChanging, setIsChanging] = useState(false);
+  const [userInteracted, setUserInteracted] = useState(false); // Stop auto-rotation if user interacts
 
   const TIPS = [
     "Parálisis: Reduce la velocidad del Pokémon afectado en un 75% (pasa a tener 1/4 de su velocidad).",
@@ -650,6 +651,8 @@ const OakTipsPopup = () => {
     setCurrentTipIndex(Math.floor(Math.random() * TIPS.length));
 
     const interval = setInterval(() => {
+      if (userInteracted) return; // Stop auto-rotation if user clicked arrows
+
       setIsChanging(true);
       setTimeout(() => {
         setCurrentTipIndex(prev => {
@@ -664,32 +667,63 @@ const OakTipsPopup = () => {
     }, 12000);
 
     return () => clearInterval(interval);
-  }, []);
+  }, [userInteracted]);
 
-  if (!isOpen) {
-    return (
-      <button className="oak-toggle-btn pixel-button" onClick={() => setIsOpen(true)}>
-        💡 Consejo
-      </button>
-    );
-  }
+  const handleNext = (e) => {
+    e.stopPropagation();
+    setUserInteracted(true);
+    setIsChanging(true);
+    setTimeout(() => {
+      setCurrentTipIndex(prev => (prev + 1) % TIPS.length);
+      setIsChanging(false);
+    }, 300);
+  };
+
+  const handlePrev = (e) => {
+    e.stopPropagation();
+    setUserInteracted(true);
+    setIsChanging(true);
+    setTimeout(() => {
+      setCurrentTipIndex(prev => (prev - 1 + TIPS.length) % TIPS.length);
+      setIsChanging(false);
+    }, 300);
+  };
 
   return (
-    <div className="oak-tips-container slide-up">
-      <div className="oak-header">
-        <button className="oak-close-btn" onClick={() => setIsOpen(false)}>✕</button>
-      </div>
-      <div className="oak-content">
-        <div className="oak-sprite-container">
-          <img src="/recursos/Oak.jpg" alt="Profesor Oak" className="oak-sprite" />
+    <>
+      <button
+        className={`oak-toggle-btn pixel-button ${!isOpen ? 'show' : ''}`}
+        onClick={() => setIsOpen(true)}
+        title="Ver consejos de Oak"
+      >
+        💡 Ver Consejo
+      </button>
+
+      {isOpen && (
+        <div className="oak-tips-container slide-up">
+          <div className="oak-header">
+            <button className="oak-close-btn" onClick={() => setIsOpen(false)}>✕</button>
+          </div>
+          <div className="oak-content">
+            <div className="oak-sprite-container">
+              <img src="/recursos/Oak.jpg" alt="Profesor Oak" className="oak-sprite" />
+            </div>
+            <div className="oak-text-bubble pixel-card paper-texture">
+              <h4 className="oak-title">Oak dice:</h4>
+              <div className="oak-tip-body">
+                <p className={`oak-tip-text ${isChanging ? 'fade-out' : 'fade-in'}`}>
+                  {TIPS[currentTipIndex]}
+                </p>
+              </div>
+
+              <div className="oak-nav-arrows">
+                <button onClick={handlePrev} className="oak-arrow-btn">◀</button>
+                <button onClick={handleNext} className="oak-arrow-btn">▶</button>
+              </div>
+            </div>
+          </div>
         </div>
-        <div className="oak-text-bubble pixel-card">
-          <h4 className="oak-title">Oak dice:</h4>
-          <p className={`oak-tip-text ${isChanging ? 'fade-out' : 'fade-in'}`}>
-            {TIPS[currentTipIndex]}
-          </p>
-        </div>
-      </div>
-    </div>
+      )}
+    </>
   );
 };

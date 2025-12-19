@@ -1816,34 +1816,76 @@
 }
 
 .oak-text-bubble {
-  background: white;
-  padding: 1.2rem 1.5rem 1.2rem 2.5rem;
+  background: #fff9c4;
+  /* Light yellow text paper */
+  padding: 1.5rem 1.5rem 1rem 2.8rem;
   border-radius: 20px 20px 0 20px;
-  box-shadow: 0 -4px 10px rgba(0, 0, 0, 0.1);
-  border: 4px solid var(--poke-blue);
+  box-shadow: 0 -4px 15px rgba(0, 0, 0, 0.2), inset 0 0 20px rgba(0, 0, 0, 0.05);
+  border: 4px solid #b45309;
+  /* Brownish border */
   position: relative;
   margin-bottom: 20px;
-  max-width: 350px;
-  min-height: 100px;
+  max-width: 380px;
+  min-height: 140px;
   display: flex;
   flex-direction: column;
-  justify-content: center;
 }
 
 .oak-title {
-  color: var(--poke-blue);
-  margin: 0 0 0.5rem 0;
-  font-size: 0.9rem;
+  color: #854d0e;
+  /* Darker yellow/brown */
+  margin: 0 0 0.8rem 0;
+  font-size: 0.8rem;
   font-weight: bold;
   text-transform: uppercase;
+  border-bottom: 2px solid rgba(133, 77, 14, 0.2);
+  padding-bottom: 4px;
+}
+
+.oak-tip-body {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  min-height: 4rem;
 }
 
 .oak-tip-text {
   font-size: 0.95rem;
-  color: var(--text-dark);
+  color: #3e2723;
+  /* Dark brown for maximum readability */
+  font-weight: 500;
   margin: 0;
-  line-height: 1.4;
-  transition: opacity 0.5s ease;
+  line-height: 1.5;
+  transition: opacity 0.3s ease;
+}
+
+.oak-nav-arrows {
+  display: flex;
+  justify-content: flex-end;
+  gap: 0.5rem;
+  margin-top: 1rem;
+}
+
+.oak-arrow-btn {
+  background: white;
+  border: 2px solid #b45309;
+  color: #b45309;
+  width: 32px;
+  height: 32px;
+  border-radius: 6px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  font-size: 0.8rem;
+  transition: all 0.2s;
+  box-shadow: 2px 2px 0 rgba(0, 0, 0, 0.1);
+}
+
+.oak-arrow-btn:hover {
+  background: #b45309;
+  color: white;
+  transform: translateY(-2px);
 }
 
 .oak-header {
@@ -1875,10 +1917,17 @@
   position: fixed;
   bottom: 20px;
   right: 20px;
-  z-index: 1000;
+  z-index: 2000;
+  /* Ensure it's above everything to be clickable */
   font-size: 1rem;
   padding: 0.8rem 1.2rem;
   box-shadow: 0 4px 0 var(--shadow-dark);
+  display: none;
+  /* Controlled by React state visibility class */
+}
+
+.oak-toggle-btn.show {
+  display: flex;
   animation: bounce 2s infinite;
 }
 
