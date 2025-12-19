@@ -7,11 +7,14 @@ const Banners = ({ setCurrentSection }) => {
 
     // Lista de banners publicitarios disponibles en /publi/
     const availableAds = [
-        'banner1.png',
-        'banner2.png',
-        'banner3.png',
-        'banner4.png',
-        'banner5.png'
+        'publi1.jpg',
+        'publi2.jpg',
+        'publi3.jpg',
+        'publi4.jpg',
+        'publi5.jpg',
+        'Publi6.jpg',
+        'publi7.jpg',
+        'publi8.jpg'
     ];
 
     // Rotación automática de banners cada 5 segundos
