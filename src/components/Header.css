@@ -68,12 +68,10 @@
   margin: 0 auto;
   padding: 1rem 2rem;
   display: flex;
-  flex-direction: row;
-  /* HORIZONTAL LAYOUT */
-  justify-content: space-between;
-  /* Space between main content and Oak */
+  flex-direction: column;
+  /* Vertical layout to center groups */
   align-items: center;
-  gap: 2rem;
+  gap: 1.5rem;
   position: relative;
 }
 
@@ -86,13 +84,6 @@
   /* Take available center space */
 }
 
-.header-oak-v10 {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  min-width: 151px;
-  /* Ensure space for Oak */
-}
 
 .header-brand {
   display: flex;
@@ -103,14 +94,17 @@
   flex-shrink: 0;
 }
 
-.kakuna-logo {
-  width: 90px;
-  height: 90px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
+.logo-img {
+  width: 70px;
+  height: 70px;
+  object-fit: contain;
+  filter: drop-shadow(4px 4px 0px rgba(0, 0, 0, 0.4));
   animation: float 3s ease-in-out infinite;
-  flex-shrink: 0;
+}
+
+.logo-right {
+  animation-delay: 1.5s;
+  /* Staggered animation */
 }
 
 .logo-gif {
@@ -265,12 +259,12 @@
   }
 
   .pixel-title {
-    font-size: 1.4rem;
+    font-size: 1.8rem;
   }
 
-  .kakuna-logo {
-    width: 60px;
-    height: 60px;
+  .logo-img {
+    width: 50px;
+    height: 50px;
   }
 
   .pixel-nav {
@@ -299,14 +293,9 @@
     /* KEEP ROW */
     flex-wrap: wrap;
     /* Allow title/logo to be one group and nav another if needed, but nav stays row */
-    padding: 1rem;
+    padding: 0.5rem;
     gap: 1rem;
     justify-content: center;
-  }
-
-  .kakuna-logo {
-    width: 50px;
-    height: 50px;
   }
 
   .pixel-nav {
@@ -316,8 +305,13 @@
   }
 
   .pixel-title {
-    font-size: 1.2rem;
+    font-size: 1.35rem;
     letter-spacing: 1px;
+  }
+
+  .logo-img {
+    width: 35px;
+    height: 35px;
   }
 }
 

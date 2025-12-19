@@ -1,5 +1,5 @@
-import { useState, useEffect } from 'react';
 import './Banners.css';
+import OakTips from './OakTips';
 
 const Banners = ({ setCurrentSection, setResourceAction }) => {
     const [showBanners, setShowBanners] = useState(true);
@@ -123,13 +123,14 @@ const Banners = ({ setCurrentSection, setResourceAction }) => {
                             >
                                 <img
                                     src={`/publi/${currentAd1}`}
-                                    alt={`Publicidad ${currentAdIndex + 1}`}
-                                    onError={(e) => {
-                                        e.target.style.display = 'none';
-                                    }}
                                 />
                             </div>
                         )}
+
+                        {/* Relocated Professor Oak Tips */}
+                        <div className="banner-oak-integration">
+                            <OakTips />
+                        </div>
                     </div>
                 </>
             )}

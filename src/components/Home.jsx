@@ -611,8 +611,7 @@ const Home = ({ tournamentData, audioControls, auth }) => {
           </div>
         </div>
       )}
-      {/* Professor Oak Tips Popup */}
-      {/* Professor Oak Tips Popup moved to App.jsx */}
+
 
     </div>
   );

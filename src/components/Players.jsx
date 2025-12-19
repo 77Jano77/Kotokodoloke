@@ -825,7 +825,23 @@ const Players = ({ tournamentData, audioControls, auth }) => {
 
               {/* Rewards Section */}
               <div className="rewards-section">
-                <h3>RECOMPENSAS ({(player.rewards || []).length})</h3>
+                <div className="section-header">
+                  <h3>RECOMPENSAS ({(player.rewards || []).length})</h3>
+                  {isAdmin && (
+                    <button
+                      className="add-manual-reward-btn pixel-button"
+                      onClick={() => {
+                        const rewardName = prompt('Ingrese el nombre de la recompensa:');
+                        if (rewardName) {
+                          tournamentData.addRouletteReward(player.id, rewardName);
+                        }
+                      }}
+                      title="Añadir recompensa manualmente"
+                    >
+                      ➕
+                    </button>
+                  )}
+                </div>
                 {(player.rewards || []).length > 0 ? (
                   <ul className="rewards-list">
                     {(player.rewards || []).map((reward, index) => (

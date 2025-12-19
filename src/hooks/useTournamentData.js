@@ -135,6 +135,45 @@ export const useTournamentData = () => {
     updateFirebase(newData);
   };
 
+  const addRouletteReward = (playerId, reward) => {
+    const players = data.players || [];
+    const player = players.find(p => p.id === playerId);
+    if (!player) return;
+
+    let newCaptureRecords = data.captureRecords || [];
+
+    // Si es captura extra o captura ruta anterior, crear casilla automáticamente
+    if (reward === '➕ Captura Extra' || reward === '🔙 Captura Ruta Anterior') {
+      newCaptureRecords = newCaptureRecords.map(record => {
+        if (record.playerName === player.name) {
+          const newSlot = {
+            id: `extra_${Date.now()}`,
+            captured: false,
+            name: reward === '➕ Captura Extra' ? 'Captura Extra' : 'Captura Ruta Anterior',
+            isExtra: true,
+            rewardType: reward
+          };
+          return {
+            ...record,
+            extraCaptureSlots: [...(record.extraCaptureSlots || []), newSlot]
+          };
+        }
+        return record;
+      });
+    }
+
+    const newData = {
+      ...data,
+      players: players.map(p =>
+        p.id === playerId
+          ? { ...p, rewards: [...(p.rewards || []), reward] }
+          : p
+      ),
+      captureRecords: newCaptureRecords
+    };
+    updateFirebase(newData);
+  };
+
   const removeReward = (playerId, rewardIndex) => {
     const newData = {
       ...data,
@@ -552,6 +591,7 @@ export const useTournamentData = () => {
     updatePlayer,
     deletePlayer,
     addReward,
+    addRouletteReward,
     removeReward,
     addGalleryImage,
     deleteGalleryImage,

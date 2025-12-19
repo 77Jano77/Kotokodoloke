@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import './Home.css'; // Reusing Home.css for now or move to separate CSS later
+import './OakTips.css';
 
 const OakTips = () => {
     const [isOpen, setIsOpen] = useState(true);

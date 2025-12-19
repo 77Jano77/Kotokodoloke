@@ -1,6 +1,4 @@
-import './Header.css';
 import { FaHome, FaUsers, FaDice, FaTrophy, FaDownload, FaImages, FaSignOutAlt, FaUser } from 'react-icons/fa';
-import OakTips from './OakTips';
 
 function Header({ currentSection, setCurrentSection, currentUser, onLogout, audioState }) {
   const menuItems = [
@@ -57,10 +55,9 @@ function Header({ currentSection, setCurrentSection, currentUser, onLogout, audi
       <div className="header-content">
         <div className="header-main-group">
           <div className="header-brand">
-            <div className="kakuna-logo">
-              <img src="/recursos/kakuna.gif" alt="Kakuna" className="logo-gif" />
-            </div>
+            <img src="/recursos/copakakuna.jpg" alt="Copa Kakuna" className="logo-img logo-left" />
             <h1 className="pixel-title">KOTOKODOS CUP</h1>
+            <img src="/recursos/copakakuna.jpg" alt="Copa Kakuna" className="logo-img logo-right" />
           </div>
 
           <nav className="pixel-nav">
@@ -80,10 +77,6 @@ function Header({ currentSection, setCurrentSection, currentUser, onLogout, audi
           </nav>
         </div>
 
-        {/* Oak in Header - Centered in Right Gap */}
-        <div className="header-oak-v10">
-          <OakTips />
-        </div>
       </div>
     </header>
   );

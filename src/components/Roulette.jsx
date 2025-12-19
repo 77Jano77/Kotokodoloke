@@ -42,7 +42,7 @@ const Roulette = ({ tournamentData, audioControls, auth }) => {
   // Calcular tiradas extra para un jugador
   const getPlayerExtraRolls = (playerId) => {
     let extraRolls = 0;
-    
+
     // Revisar cada fase (1-4)
     for (let phase = 1; phase <= 4; phase++) {
       const phaseWinners = tournamentData.getSortedPlayers(phase);
@@ -53,7 +53,7 @@ const Roulette = ({ tournamentData, audioControls, auth }) => {
         }
       }
     }
-    
+
     return extraRolls;
   };
 
@@ -61,13 +61,13 @@ const Roulette = ({ tournamentData, audioControls, auth }) => {
   const getAvailableRolls = (playerId) => {
     const player = (tournamentData.players || []).find(p => p.id === playerId);
     if (!player) return 0;
-    
+
     const phaseWins = getPlayerExtraRolls(playerId); // Tiradas por ganar fases
     const badgeCount = (player.badges || []).filter(Boolean).length; // Tiradas por medallas
     const manualExtras = player.manualExtraRolls || 0; // Tiradas extras manuales
     const usedRolls = player.rewards ? player.rewards.length : 0;
     const totalAvailable = phaseWins + badgeCount + manualExtras;
-    
+
     return Math.max(0, totalAvailable - usedRolls);
   };
 
@@ -116,13 +116,8 @@ const Roulette = ({ tournamentData, audioControls, auth }) => {
         const rewardPool = createRewardPool();
         const selectedReward = rewardPool[Math.floor(Math.random() * rewardPool.length)];
 
-        // Agregar recompensa al jugador
-        tournamentData.addReward(parseInt(selectedPlayer), selectedReward);
-
-        // Si es captura extra o captura ruta anterior, crear casilla automáticamente
-        if (selectedReward === '➕ Captura Extra' || selectedReward === '🔙 Captura Ruta Anterior') {
-          tournamentData.addExtraCaptureSlot(player.name, selectedReward);
-        }
+        // Agregar recompensa al jugador (usa la nueva función unificada para persistencia)
+        tournamentData.addRouletteReward(parseInt(selectedPlayer), selectedReward);
 
         // Mostrar resultado
         setResult({
@@ -175,7 +170,7 @@ const Roulette = ({ tournamentData, audioControls, auth }) => {
           <>
             <div className="player-selector">
               <label htmlFor="player-select">SELECCIONA JUGADOR</label>
-              <select 
+              <select
                 id="player-select"
                 className="pixel-input"
                 value={selectedPlayer}
@@ -213,13 +208,22 @@ const Roulette = ({ tournamentData, audioControls, auth }) => {
                       {manualExtras > 0 ? ` + ${manualExtras} extra${manualExtras !== 1 ? 's' : ''}` : ''}
                     </p>
                     {auth.currentUser?.isAdmin && (
-                      <button
-                        className="pixel-button add-roll-btn"
-                        onClick={() => tournamentData.incrementManualRolls(parseInt(selectedPlayer))}
-                        disabled={isRolling}
-                      >
-                        ➕ AÑADIR TIRADA EXTRA (ADMIN)
-                      </button>
+                      <div className="admin-rolls-controls">
+                        <button
+                          className="pixel-button add-roll-btn"
+                          onClick={() => tournamentData.incrementManualRolls(parseInt(selectedPlayer))}
+                          disabled={isRolling}
+                        >
+                          ➕ TIRADA (ADMIN)
+                        </button>
+                        <button
+                          className="pixel-button remove-roll-btn"
+                          onClick={() => tournamentData.decrementManualRolls(parseInt(selectedPlayer))}
+                          disabled={isRolling || manualExtras <= 0}
+                        >
+                          ➖ TIRADA (ADMIN)
+                        </button>
+                      </div>
                     )}
                   </div>
                 );
@@ -236,7 +240,7 @@ const Roulette = ({ tournamentData, audioControls, auth }) => {
               )}
             </div>
 
-            <button 
+            <button
               className="pixel-button roll-btn"
               onClick={rollDice}
               disabled={isRolling || !selectedPlayer}
@@ -259,7 +263,7 @@ const Roulette = ({ tournamentData, audioControls, auth }) => {
               </div>
             </div>
 
-            <button 
+            <button
               className="pixel-button reset-btn"
               onClick={resetRoulette}
             >
@@ -279,8 +283,8 @@ const Roulette = ({ tournamentData, audioControls, auth }) => {
               <div key={player.id} className="history-player">
                 <div className="history-player-header">
                   {player.avatarImage && (
-                    <img 
-                      src={player.avatarImage} 
+                    <img
+                      src={player.avatarImage}
                       alt={player.name}
                       className="history-avatar"
                     />

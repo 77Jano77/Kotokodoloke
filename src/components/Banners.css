@@ -27,7 +27,8 @@
 .right-banners {
   position: fixed;
   right: 15px;
-  top: 320px;
+  top: 220px;
+  /* Reduced from 320px */
   z-index: 997;
   display: flex;
   flex-direction: column;
@@ -169,13 +170,20 @@
 .left-banners {
   position: fixed;
   left: 15px;
-  top: 320px;
+  top: 220px;
   z-index: 997;
   display: flex;
   flex-direction: column;
   gap: 20px;
-  max-width: 260px;
+  max-width: 350px;
   animation: floatBanners 6s ease-in-out infinite;
+}
+
+.banner-oak-integration {
+  margin-top: 20px;
+  display: flex;
+  justify-content: center;
+  width: 100%;
 }
 
 .manage-ads-btn {
