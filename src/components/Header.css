@@ -1,14 +1,14 @@
 /* ============================================
-   HEADER - THREE-TIER LAYOUT
+   PIXEL HEADER - CLASSIC STYLE
    ============================================ */
 
 .pixel-header {
-  position: sticky;
-  top: 0;
-  z-index: 1000;
   background: var(--bg-secondary);
   border-bottom: 6px solid var(--poke-red);
   box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
+  position: sticky;
+  top: 0;
+  z-index: 1000;
 }
 
 /* Admin Mode */
@@ -18,26 +18,34 @@
 }
 
 /* ============================================
-   TOP CONTROL BAR (Audio + User Info)
+   USER INFO BAR (Top)
    ============================================ */
 
-.top-control-bar {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 8px 20px;
+.user-info-bar {
   background: var(--bg-primary);
   border-bottom: 2px solid var(--poke-blue);
+  padding: 8px 0;
 }
 
-.top-control-bar.admin-bar {
+.user-info-bar.admin-bar {
   background: linear-gradient(90deg, var(--bg-primary) 0%, rgba(251, 191, 36, 0.1) 50%, var(--bg-primary) 100%);
   border-bottom: 2px solid #fbbf24;
   box-shadow: 0 2px 10px rgba(251, 191, 36, 0.2);
 }
 
-/* Audio Controls - Left Side */
-.audio-controls-left {
+.user-info-content {
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: 0 2rem;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  justify-content: flex-end;
+}
+
+/* Audio Controls */
+.audio-controls {
+  margin-right: auto;
   display: flex;
   align-items: center;
   gap: 1rem;
@@ -48,7 +56,7 @@
   box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.2);
 }
 
-.audio-toggle-btn {
+.audio-btn {
   background: none;
   border: none;
   font-size: 1.1rem;
@@ -61,11 +69,11 @@
   filter: drop-shadow(0 2px 2px rgba(0, 0, 0, 0.3));
 }
 
-.audio-toggle-btn:hover {
+.audio-btn:hover {
   transform: scale(1.2);
 }
 
-.audio-volume-slider {
+.volume-slider {
   width: 80px;
   height: 6px;
   -webkit-appearance: none;
@@ -76,7 +84,7 @@
   cursor: pointer;
 }
 
-.audio-volume-slider::-webkit-slider-thumb {
+.volume-slider::-webkit-slider-thumb {
   -webkit-appearance: none;
   appearance: none;
   width: 14px;
@@ -88,13 +96,7 @@
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.4);
 }
 
-/* User Info - Right Side */
-.user-info-right {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-}
-
+/* User Info */
 .user-icon {
   color: var(--poke-blue);
   font-size: 1rem;
@@ -139,9 +141,11 @@
   min-width: auto !important;
   padding: 8px !important;
   background: var(--poke-red) !important;
-  border-color: var(--text-primary) !important;
+  border: 3px solid var(--text-primary) !important;
   color: var(--text-primary) !important;
-  font-size: 0.9rem;
+  cursor: pointer;
+  transition: all 0.2s;
+  border-radius: 4px;
 }
 
 .logout-btn:hover {
@@ -150,63 +154,93 @@
 }
 
 /* ============================================
-   TITLE BAR (Centered Large Title)
+   HEADER CONTENT (Title + Navigation)
    ============================================ */
 
-.title-bar {
-  padding: 1.5rem 20px;
-  text-align: center;
-  background: var(--bg-secondary);
+.header-content {
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: 1.5rem 2rem;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 2rem;
+  position: relative;
 }
 
-.main-title {
-  font-family: 'Press Start 2P', cursive;
-  font-size: 4rem;
+/* Yellow border lines (top and bottom) */
+.header-content::before,
+.header-content::after {
+  content: '';
+  position: absolute;
+  left: 0;
+  right: 0;
+  height: 4px;
+  background: var(--poke-yellow);
+  box-shadow: 0 0 10px rgba(255, 222, 0, 0.5);
+}
+
+.header-content::before {
+  top: 0;
+}
+
+.header-content::after {
+  bottom: 0;
+}
+
+.header-brand {
+  display: flex;
+  align-items: center;
+  flex-shrink: 0;
+}
+
+.pixel-title {
+  font-size: 2.5rem;
   color: var(--poke-yellow);
-  letter-spacing: 6px;
-  margin: 0;
+  letter-spacing: 4px;
   text-shadow:
     4px 4px 0px rgba(0, 0, 0, 0.4),
     -2px -2px 0 var(--poke-black),
     2px -2px 0 var(--poke-black),
     -2px 2px 0 var(--poke-black),
     2px 2px 0 var(--poke-black);
+  white-space: nowrap;
+  margin: 0;
 }
 
 /* ============================================
-   NAVIGATION BAR (Single Row Buttons)
+   NAVIGATION
    ============================================ */
 
-.navigation-bar {
+.pixel-nav {
   display: flex;
+  gap: 12px;
+  flex-wrap: nowrap;
+  flex: 1;
   justify-content: center;
-  align-items: center;
-  gap: 15px;
-  padding: 20px;
-  background: var(--bg-secondary);
   overflow-x: auto;
+  padding: 10px 5px;
   scrollbar-width: thin;
   scrollbar-color: var(--poke-red) transparent;
-  flex-wrap: nowrap;
 }
 
-.navigation-bar::-webkit-scrollbar {
-  height: 6px;
+.pixel-nav::-webkit-scrollbar {
+  height: 4px;
 }
 
-.navigation-bar::-webkit-scrollbar-track {
+.pixel-nav::-webkit-scrollbar-track {
   background: transparent;
 }
 
-.navigation-bar::-webkit-scrollbar-thumb {
+.pixel-nav::-webkit-scrollbar-thumb {
   background: var(--poke-red);
   border-radius: 10px;
 }
 
-.nav-button {
+.pixel-button {
   font-family: 'Press Start 2P', cursive;
-  font-size: 0.65rem;
-  padding: 14px 20px;
+  font-size: 0.6rem;
+  padding: 12px 18px;
   background: var(--bg-primary);
   color: var(--text-secondary);
   border: 3px solid var(--border-color);
@@ -215,14 +249,14 @@
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 8px;
-  min-width: 110px;
+  gap: 6px;
+  min-width: 100px;
   flex-shrink: 0;
   position: relative;
   border-radius: 4px;
 }
 
-.nav-button::before {
+.pixel-button::before {
   content: '';
   position: absolute;
   top: 0;
@@ -235,17 +269,17 @@
   border-radius: 4px;
 }
 
-.nav-button:hover::before {
+.pixel-button:hover::before {
   width: 100%;
 }
 
-.nav-button:hover {
+.pixel-button:hover {
   color: var(--poke-white);
   border-color: var(--poke-yellow);
   transform: translateY(-2px);
 }
 
-.nav-button.active {
+.pixel-button.active {
   background: var(--poke-red);
   color: var(--poke-white);
   border-color: var(--poke-yellow);
@@ -254,43 +288,38 @@
     inset 0 0 0 2px var(--poke-yellow);
 }
 
-.nav-button .icon {
-  font-size: 1.5rem;
+.pixel-button .icon {
+  font-size: 1.4rem;
 }
 
-.nav-button span {
-  font-size: 0.65rem;
+.pixel-button span {
+  font-size: 0.6rem;
   white-space: nowrap;
 }
 
 /* ============================================
-   RESPONSIVE DESIGN
+   RESPONSIVE
    ============================================ */
 
 @media (max-width: 1024px) {
-  .main-title {
-    font-size: 2.5rem;
-    letter-spacing: 3px;
+  .header-content {
+    gap: 1.5rem;
+    padding: 1rem 1.5rem;
   }
 
-  .navigation-bar {
+  .pixel-title {
+    font-size: 1.8rem;
+  }
+
+  .pixel-nav {
     justify-content: flex-start;
   }
 }
 
 @media (max-width: 768px) {
-  .top-control-bar {
-    padding: 8px 10px;
+  .user-info-content {
+    padding: 0 1rem;
     gap: 8px;
-  }
-
-  .audio-controls-left {
-    padding: 4px 8px;
-    gap: 0.5rem;
-  }
-
-  .audio-volume-slider {
-    width: 60px;
   }
 
   .username {
@@ -302,38 +331,41 @@
     padding: 3px 6px;
   }
 
-  .title-bar {
-    padding: 1rem 10px;
+  .header-content {
+    flex-direction: column;
+    padding: 1rem 0.5rem;
+    gap: 1rem;
   }
 
-  .main-title {
-    font-size: 1.8rem;
+  .pixel-nav {
+    width: 100%;
+    justify-content: flex-start;
+    padding-bottom: 5px;
+  }
+
+  .pixel-title {
+    font-size: 1.4rem;
     letter-spacing: 2px;
   }
 
-  .navigation-bar {
-    padding: 10px;
-    gap: 8px;
-  }
-
-  .nav-button {
-    min-width: 80px;
-    padding: 8px 12px;
+  .pixel-button {
+    min-width: 85px;
+    padding: 10px 14px;
   }
 }
 
 @media (max-width: 480px) {
-  .main-title {
-    font-size: 1.3rem;
+  .pixel-title {
+    font-size: 1.1rem;
     letter-spacing: 1px;
   }
 
-  .nav-button {
-    min-width: 70px;
-    font-size: 0.5rem;
+  .pixel-button {
+    min-width: 75px;
+    font-size: 0.55rem;
   }
 
-  .nav-button .icon {
-    font-size: 1.1rem;
+  .pixel-button .icon {
+    font-size: 1.2rem;
   }
 }
