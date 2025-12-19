@@ -323,10 +323,6 @@ const Home = ({ tournamentData, audioControls, auth }) => {
 
 
 
-
-
-
-
       {/* Latest Gallery Posts */}
       {latestImages.length > 0 && (
         <section className="latest-posts-section">
