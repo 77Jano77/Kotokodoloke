@@ -116,8 +116,8 @@
 }
 
 .pixel-title {
-  font-size: 2.5rem;
-  /* Even larger title */
+  font-size: 3rem;
+  /* Larger title */
   color: var(--poke-yellow);
   letter-spacing: 4px;
   text-shadow: 4px 4px 0px rgba(0, 0, 0, 0.4);
