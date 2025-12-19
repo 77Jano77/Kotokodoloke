@@ -649,22 +649,26 @@ const Resources = ({ audioControls, tournamentData, auth, resourceAction, setRes
               const matchesSearch = move.name.toLowerCase().includes(searchTerm.toLowerCase());
               const matchesType = !selectedType || move.type === selectedType;
               return matchesSearch && matchesType;
-            }).map(move => (
-              <div key={move.id} className="ability-card pixel-card" style={{ borderLeftColor: move.category === 'Físico' ? '#FF5959' : move.category === 'Especial' ? '#6890F0' : '#A8A878' }}>
-                <div className="ability-header">
-                  <h3 className="ability-name">{move.name}</h3>
-                  <div style={{ display: 'flex', gap: '0.5rem' }}>
-                    <span className={`type-badge type-${move.type.toLowerCase()}`}>{move.type}</span>
-                    <span className="ability-gen" style={{ background: '#eee' }}>{move.category}</span>
+            }).map(move => {
+              const categoryClass = move.category === 'Físico' ? 'physical' : move.category === 'Especial' ? 'special' : 'status';
+
+              return (
+                <div key={move.id} className={`move-card pixel-card move-${categoryClass}`}>
+                  <div className="ability-header">
+                    <h3 className="ability-name">{move.name}</h3>
+                    <div style={{ display: 'flex', gap: '0.5rem' }}>
+                      <span className={`type-badge type-${move.type.toLowerCase()}`}>{move.type}</span>
+                      <span className={`move-category-badge category-${categoryClass}`}>{move.category}</span>
+                    </div>
                   </div>
+                  <div className="move-stats-row">
+                    <span>POW: {move.power}</span>
+                    <span>PP: {move.pp}</span>
+                  </div>
+                  <p className="ability-description">{move.description}</p>
                 </div>
-                <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '0.5rem', fontSize: '0.85rem', fontWeight: 'bold', color: '#666' }}>
-                  <span>POW: {move.power}</span>
-                  <span>PP: {move.pp}</span>
-                </div>
-                <p className="ability-description">{move.description}</p>
-              </div>
-            ))}
+              );
+            })}
           </div>
           {MOVES_DATA.filter(move => {
             const matchesSearch = move.name.toLowerCase().includes(searchTerm.toLowerCase());
