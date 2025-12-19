@@ -28,6 +28,19 @@ const Banners = ({ setCurrentSection, setResourceAction }) => {
         return () => clearInterval(interval);
     }, [availableAds.length]);
 
+    const randomUrls = [
+        "https://falange.es/",
+        "https://www.llados.com/",
+        "https://www.gaymaletube.com/es/",
+        "https://partidofeminista.es/",
+        "https://fincasluna.com/"
+    ];
+
+    const handleRandomRedirect = () => {
+        const randomUrl = randomUrls[Math.floor(Math.random() * randomUrls.length)];
+        window.open(randomUrl, '_blank');
+    };
+
     // Obtener los 2 banners actuales
     const currentAd1 = availableAds[currentAdIndex];
     const currentAd2 = availableAds[(currentAdIndex + 1) % availableAds.length];
@@ -102,7 +115,12 @@ const Banners = ({ setCurrentSection, setResourceAction }) => {
                     {/* Left Banners - Publicitarios (Rotación Automática - 2 simultáneos) */}
                     <div className="left-banners">
                         {currentAd1 && (
-                            <div className="ad-banner pixel-card ad-rotating" key={`ad1-${currentAdIndex}`}>
+                            <div
+                                className="ad-banner pixel-card ad-rotating"
+                                key={`ad1-${currentAdIndex}`}
+                                onClick={handleRandomRedirect}
+                                style={{ cursor: 'pointer' }}
+                            >
                                 <img
                                     src={`/publi/${currentAd1}`}
                                     alt={`Publicidad ${currentAdIndex + 1}`}
@@ -113,7 +131,12 @@ const Banners = ({ setCurrentSection, setResourceAction }) => {
                             </div>
                         )}
                         {currentAd2 && (
-                            <div className="ad-banner pixel-card ad-rotating" key={`ad2-${currentAdIndex}`}>
+                            <div
+                                className="ad-banner pixel-card ad-rotating"
+                                key={`ad2-${currentAdIndex}`}
+                                onClick={handleRandomRedirect}
+                                style={{ cursor: 'pointer' }}
+                            >
                                 <img
                                     src={`/publi/${currentAd2}`}
                                     alt={`Publicidad ${((currentAdIndex + 1) % availableAds.length) + 1}`}

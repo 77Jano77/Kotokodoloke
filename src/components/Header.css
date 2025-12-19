@@ -77,11 +77,11 @@
 
 .header-brand {
   display: flex;
-  flex-direction: column;
+  flex-direction: row;
+  /* HORIZONTAL BRANDING */
   align-items: center;
-  gap: 1rem;
+  gap: 1.5rem;
   flex-shrink: 0;
-  text-align: center;
 }
 
 .kakuna-logo {
@@ -104,7 +104,8 @@
 }
 
 .pixel-title {
-  font-size: 2.2rem;
+  font-size: 2.5rem;
+  /* Even larger title */
   color: var(--poke-yellow);
   letter-spacing: 4px;
   text-shadow: 4px 4px 0px rgba(0, 0, 0, 0.4);
