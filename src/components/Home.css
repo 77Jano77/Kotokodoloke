@@ -478,6 +478,46 @@
   border-color: #FDB931;
 }
 
+.player-avatar-frame img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  image-rendering: pixelated;
+}
+
+.avatar-placeholder {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 3rem;
+  background: #cbd5e1;
+  color: #64748b;
+}
+
+.mode-indicator {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  padding: 2px;
+  font-size: 0.6rem;
+  font-weight: 800;
+  color: white;
+  text-align: center;
+  text-transform: uppercase;
+  z-index: 2;
+}
+
+.mode-indicator.hardcore {
+  background: rgba(220, 38, 38, 0.9);
+}
+
+.mode-indicator.softcore {
+  background: rgba(37, 99, 235, 0.9);
+}
+
 .podium-medal {
   position: absolute;
   top: -20px;
@@ -489,6 +529,14 @@
 }
 
 /* Stats Badges */
+.player-stats {
+  display: flex;
+  flex-direction: column;
+  gap: 0.8rem;
+  margin-top: 1rem;
+  width: 100%;
+}
+
 .stat-row {
   display: flex;
   justify-content: center;
@@ -548,6 +596,51 @@
   color: #64748b;
   font-style: italic;
   margin-bottom: 0.8rem;
+}
+
+.stat-badges-display {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.4rem;
+  padding: 0.5rem;
+  background: rgba(241, 245, 249, 0.5);
+  border: 1px solid #e2e8f0;
+  border-radius: 6px;
+}
+
+.badges-label {
+  font-size: 0.55rem;
+  color: #64748b;
+  font-weight: bold;
+  text-transform: uppercase;
+}
+
+.badges-mini {
+  display: flex;
+  gap: 4px;
+  flex-wrap: wrap;
+  justify-content: center;
+  min-height: 24px;
+  align-items: center;
+}
+
+.badge-mini-image {
+  width: 24px;
+  height: 24px;
+  object-fit: contain;
+  filter: drop-shadow(0 0 2px rgba(251, 191, 36, 0.5));
+  transition: transform 0.2s;
+}
+
+.badge-mini-image:hover {
+  transform: scale(1.2);
+}
+
+.no-badges-text {
+  font-size: 0.6rem;
+  color: #94a3b8;
+  font-style: italic;
 }
 
 /* Team Mini Display - Simplified */
