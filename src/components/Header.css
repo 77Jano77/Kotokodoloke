@@ -181,8 +181,8 @@
   display: flex;
   justify-content: center;
   align-items: center;
-  gap: 12px;
-  padding: 15px 20px;
+  gap: 15px;
+  padding: 20px;
   background: var(--bg-secondary);
   overflow-x: auto;
   scrollbar-width: thin;
@@ -191,7 +191,7 @@
 }
 
 .navigation-bar::-webkit-scrollbar {
-  height: 4px;
+  height: 6px;
 }
 
 .navigation-bar::-webkit-scrollbar-track {
@@ -205,8 +205,8 @@
 
 .nav-button {
   font-family: 'Press Start 2P', cursive;
-  font-size: 0.55rem;
-  padding: 10px 16px;
+  font-size: 0.65rem;
+  padding: 14px 20px;
   background: var(--bg-primary);
   color: var(--text-secondary);
   border: 3px solid var(--border-color);
@@ -215,10 +215,11 @@
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 5px;
-  min-width: 90px;
+  gap: 8px;
+  min-width: 110px;
   flex-shrink: 0;
   position: relative;
+  border-radius: 4px;
 }
 
 .nav-button::before {
@@ -231,6 +232,7 @@
   background: var(--poke-red);
   transition: width 0.3s;
   z-index: -1;
+  border-radius: 4px;
 }
 
 .nav-button:hover::before {
@@ -253,11 +255,11 @@
 }
 
 .nav-button .icon {
-  font-size: 1.3rem;
+  font-size: 1.5rem;
 }
 
 .nav-button span {
-  font-size: 0.55rem;
+  font-size: 0.65rem;
   white-space: nowrap;
 }
 
