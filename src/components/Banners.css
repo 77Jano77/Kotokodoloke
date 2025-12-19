@@ -25,7 +25,7 @@
 .right-banners {
   position: fixed;
   right: 20px;
-  top: 100px;
+  top: 140px;
   z-index: 997;
   display: flex;
   flex-direction: column;
@@ -127,15 +127,22 @@
 }
 
 @keyframes float {
-  0%, 100% { transform: translateY(0); }
-  50% { transform: translateY(-10px); }
+
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+
+  50% {
+    transform: translateY(-10px);
+  }
 }
 
 /* Left Banners Container */
 .left-banners {
   position: fixed;
   left: 20px;
-  top: 100px;
+  top: 140px;
   z-index: 997;
   display: flex;
   flex-direction: column;
@@ -250,6 +257,7 @@
     opacity: 0;
     transform: translateX(100px);
   }
+
   to {
     opacity: 1;
     transform: translateX(0);
@@ -261,6 +269,7 @@
     opacity: 0;
     transform: translateX(-100px);
   }
+
   to {
     opacity: 1;
     transform: translateX(0);
@@ -269,11 +278,12 @@
 
 /* Responsive */
 @media (max-width: 1400px) {
+
   .right-banners,
   .left-banners {
     display: none;
   }
-  
+
   .toggle-banners-btn {
     display: none;
   }
@@ -281,6 +291,7 @@
 
 /* Ocultar en pantallas pequeñas */
 @media (max-width: 768px) {
+
   .right-banners,
   .left-banners,
   .toggle-banners-btn {
