@@ -10,6 +10,7 @@ import Standings from './components/Standings';
 import Resources from './components/Resources';
 import Gallery from './components/Gallery';
 import Downloads from './components/Downloads';
+import Banners from './components/Banners';
 import './styles/App.css';
 
 function App() {
@@ -22,7 +23,7 @@ function App() {
   // Si no hay usuario logueado, mostrar pantalla de login
   if (!auth.currentUser) {
     return (
-      <Auth 
+      <Auth
         onLogin={auth.login}
         onRegister={auth.register}
         onRecover={auth.recoverPassword}
@@ -44,55 +45,37 @@ function App() {
 
   return (
     <div className="app-container pixel-bg">
-      <Header 
-        currentSection={currentSection} 
+      <Header
+        currentSection={currentSection}
         setCurrentSection={setCurrentSection}
         currentUser={auth.currentUser}
         onLogout={auth.logout}
       />
-      
+
       <main className="main-content">
         {sections[currentSection]}
       </main>
 
-      {/* Floating Server Info Banner */}
-      <div className="floating-server-info">
-        <div className="server-info-header">
-          <span className="server-icon">🌐</span>
-          <span className="server-title">SERVIDOR</span>
-        </div>
-        <div className="server-info-content">
-          <div className="server-info-item">
-            <span className="info-label">📡 Red Radmin:</span>
-            <span className="info-value">Kotokodos Cup</span>
-          </div>
-          <div className="server-info-item">
-            <span className="info-label">🔑 Contraseña:</span>
-            <span className="info-value">Somalia</span>
-          </div>
-          <button 
-            className="guide-link-btn"
-            onClick={() => setCurrentSection('resources')}
-            title="Ver guía de conexión en Recursos"
-          >
-            📖 Guía de conexión
-          </button>
-        </div>
-      </div>
+      {/* Banners System */}
+      <Banners
+        tournamentData={tournamentData}
+        auth={auth}
+        setCurrentSection={setCurrentSection}
+      />
 
       <div className="audio-controls">
-        <button 
+        <button
           className="audio-control-btn"
           onClick={() => setIsMuted(!isMuted)}
           title={isMuted ? 'Activar música' : 'Silenciar música'}
         >
           {isMuted ? '🔇' : '🔊'}
         </button>
-        <input 
-          type="range" 
+        <input
+          type="range"
           className="volume-slider"
-          min="0" 
-          max="100" 
+          min="0"
+          max="100"
           value={volume}
           onChange={(e) => setVolume(Number(e.target.value))}
           title={`Volumen: ${volume}%`}

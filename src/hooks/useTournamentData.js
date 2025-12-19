@@ -15,10 +15,10 @@ export const useTournamentData = () => {
   // Escuchar cambios en tiempo real de Firebase
   useEffect(() => {
     const tournamentRef = ref(database, 'tournament');
-    
+
     // Limpiar datos antiguos de LocalStorage
     localStorage.removeItem('pokemon-tournament-data');
-    
+
     const unsubscribe = onValue(tournamentRef, (snapshot) => {
       const firebaseData = snapshot.val();
       if (firebaseData) {
@@ -83,17 +83,17 @@ export const useTournamentData = () => {
   const updatePlayer = (playerId, updates) => {
     const players = data.players || [];
     const oldPlayer = players.find(p => p.id === playerId);
-    
+
     // Si se está cambiando el nombre, actualizar también el registro de capturas
     let captureRecords = data.captureRecords || [];
     if (updates.name && oldPlayer && oldPlayer.name !== updates.name) {
-      captureRecords = captureRecords.map(record => 
-        record.playerName === oldPlayer.name 
+      captureRecords = captureRecords.map(record =>
+        record.playerName === oldPlayer.name
           ? { ...record, playerName: updates.name }
           : record
       );
     }
-    
+
     const newData = {
       ...data,
       players: players.map(p =>
@@ -107,13 +107,13 @@ export const useTournamentData = () => {
   const deletePlayer = (playerId) => {
     const players = data.players || [];
     const playerToDelete = players.find(p => p.id === playerId);
-    
+
     // Eliminar también el registro de capturas asociado
     const captureRecords = data.captureRecords || [];
-    const filteredRecords = playerToDelete 
+    const filteredRecords = playerToDelete
       ? captureRecords.filter(r => r.playerName !== playerToDelete.name)
       : captureRecords;
-    
+
     const newData = {
       ...data,
       players: players.filter(p => p.id !== playerId),
@@ -140,9 +140,9 @@ export const useTournamentData = () => {
       players: (data.players || []).map(p =>
         p.id === playerId
           ? {
-              ...p,
-              rewards: (p.rewards || []).filter((_, i) => i !== rewardIndex),
-            }
+            ...p,
+            rewards: (p.rewards || []).filter((_, i) => i !== rewardIndex),
+          }
           : p
       ),
     };
@@ -188,16 +188,16 @@ export const useTournamentData = () => {
   const calculatePlayerPoints = (playerId, filterPhase = null) => {
     let totalPoints = 0;
     const players = data.players || [];
-    
+
     players.forEach(player => {
       if (!player.matchScores) return;
-      
+
       Object.entries(player.matchScores).forEach(([key, scores]) => {
         const [phaseStr, id1, id2] = key.split('-');
         const phase = phaseStr.replace('phase', '');
-        
+
         if (filterPhase !== null && phase !== filterPhase.toString()) return;
-        
+
         if (parseInt(id1) === playerId) {
           totalPoints += scores.player1 || 0;
         }
@@ -206,23 +206,23 @@ export const useTournamentData = () => {
         }
       });
     });
-    
+
     return totalPoints;
   };
 
   const calculatePlayerWins = (playerId, filterPhase = null) => {
     let totalWins = 0;
     const players = data.players || [];
-    
+
     players.forEach(player => {
       if (!player.matchScores) return;
-      
+
       Object.entries(player.matchScores).forEach(([key, scores]) => {
         const [phaseStr, id1, id2] = key.split('-');
         const phase = phaseStr.replace('phase', '');
-        
+
         if (filterPhase !== null && phase !== filterPhase.toString()) return;
-        
+
         if (parseInt(id1) === playerId && scores.player1 > scores.player2) {
           totalWins++;
         }
@@ -231,7 +231,7 @@ export const useTournamentData = () => {
         }
       });
     });
-    
+
     return totalWins;
   };
 
@@ -242,12 +242,12 @@ export const useTournamentData = () => {
       const pointsA = calculatePlayerPoints(a.id, filterPhase);
       const pointsB = calculatePlayerPoints(b.id, filterPhase);
       if (pointsB !== pointsA) return pointsB - pointsA;
-      
+
       // 2. En caso de empate, ordenar por victorias (o de la fase específica)
       const winsA = calculatePlayerWins(a.id, filterPhase);
       const winsB = calculatePlayerWins(b.id, filterPhase);
       if (winsB !== winsA) return winsB - winsA;
-      
+
       // 3. En caso de empate, ordenar por medallas
       const badgesA = (a.badges || []).filter(Boolean).length;
       const badgesB = (b.badges || []).filter(Boolean).length;
@@ -268,7 +268,7 @@ export const useTournamentData = () => {
 
   const updateMatchScore = (phase, player1Id, player2Id, player1Score, player2Score) => {
     const matchKey = `phase${phase}-${player1Id}-${player2Id}`;
-    
+
     const newData = {
       ...data,
       players: (data.players || []).map(p => {
@@ -399,9 +399,9 @@ export const useTournamentData = () => {
       players: (data.players || []).map(p =>
         p.id === player.id
           ? {
-              ...p,
-              rewards: (p.rewards || []).filter((_, i) => i !== rewardIndex),
-            }
+            ...p,
+            rewards: (p.rewards || []).filter((_, i) => i !== rewardIndex),
+          }
           : p
       ),
     };
@@ -410,14 +410,14 @@ export const useTournamentData = () => {
   };
 
   const getCapturedPokemonByPlayer = (playerName) => {
-    const record = (data.captureRecords || []).find(r => 
+    const record = (data.captureRecords || []).find(r =>
       r.playerName.toLowerCase() === playerName.toLowerCase()
     );
-    
+
     if (!record) return [];
 
     const capturedPokemon = [];
-    
+
     // Recopilar Pokémon de Kanto
     (record.kantoZones || []).forEach(zone => {
       if (zone.captured && zone.capturedPokemon) {
@@ -441,6 +441,14 @@ export const useTournamentData = () => {
     });
 
     return capturedPokemon;
+  };
+
+  const updateAdBanners = (selectedAds) => {
+    const newData = {
+      ...data,
+      selectedAdBanners: selectedAds,
+    };
+    updateFirebase(newData);
   };
 
   return {
@@ -473,5 +481,7 @@ export const useTournamentData = () => {
     getCapturedPokemonByPlayer,
     addExtraCaptureSlot,
     consumeReward,
+    updateAdBanners,
+    selectedAdBanners: data.selectedAdBanners || [],
   };
 };
