@@ -106,7 +106,6 @@ const Players = ({ tournamentData, audioControls, auth }) => {
   const [showStarterModal, setShowStarterModal] = useState(null); // playerId
   const [starterSearchTerm, setStarterSearchTerm] = useState('');
   const [showCustomizeModal, setShowCustomizeModal] = useState(null); // playerId
-  const [showSpriteModal, setShowSpriteModal] = useState(null); // playerId
 
   // Verificar si el usuario ya tiene un jugador creado
   const userPlayer = auth.currentUser?.hasPlayer
@@ -598,40 +597,23 @@ const Players = ({ tournamentData, audioControls, auth }) => {
                   >
                     <img src={player.avatarImage} alt="Avatar" />
                     {canEdit && (
-                      <div className="avatar-buttons">
-                        <button
-                          className="change-avatar-btn pixel-button"
-                          onClick={() => setShowSpriteModal(player.id)}
-                        >
-                          🎭 SPRITES
-                        </button>
-                        <button
-                          className="change-avatar-btn pixel-button"
-                          onClick={() => document.getElementById(`avatar-${player.id}`).click()}
-                        >
-                          📷 SUBIR
-                        </button>
-                      </div>
+                      <button
+                        className="change-avatar-btn pixel-button"
+                        onClick={() => document.getElementById(`avatar-${player.id}`).click()}
+                      >
+                        CAMBIAR
+                      </button>
                     )}
                   </div>
                 ) : (
                   canEdit && (
-                    <div className="avatar-upload-buttons">
-                      <button
-                        className="upload-avatar-btn pixel-button"
-                        onClick={() => setShowSpriteModal(player.id)}
-                      >
-                        <span className="upload-icon">🎭</span>
-                        <span>ELEGIR SPRITE</span>
-                      </button>
-                      <button
-                        className="upload-avatar-btn pixel-button"
-                        onClick={() => document.getElementById(`avatar-${player.id}`).click()}
-                      >
-                        <span className="upload-icon">📷</span>
-                        <span>SUBIR IMAGEN</span>
-                      </button>
-                    </div>
+                    <button
+                      className="upload-avatar-btn pixel-button"
+                      onClick={() => document.getElementById(`avatar-${player.id}`).click()}
+                    >
+                      <span className="upload-icon">📷</span>
+                      <span>SUBIR AVATAR</span>
+                    </button>
                   )
                 )}
                 {canEdit && (
@@ -1134,53 +1116,31 @@ const Players = ({ tournamentData, audioControls, auth }) => {
                 </div>
               </div>
 
+              <div className="customize-section">
+                <h3>🎭 SPRITE DEL PERSONAJE</h3>
+                <div className="sprite-selection-grid">
+                  {AVAILABLE_SPRITES.map(sprite => (
+                    <div
+                      key={sprite.id}
+                      className={`sprite-option ${player.avatarImage === sprite.image ? 'selected' : ''}`}
+                      onClick={() => tournamentData.updatePlayer(player.id, { avatarImage: sprite.image })}
+                    >
+                      <div className="sprite-preview">
+                        <img src={sprite.image} alt={sprite.name} />
+                        {player.avatarImage === sprite.image && <span className="check-icon">✓</span>}
+                      </div>
+                      <span className="sprite-name">{sprite.name}</span>
+                    </div>
+                  ))}
+                </div>
+              </div>
+
               <button
                 className="close-modal-btn pixel-button"
                 onClick={() => setShowCustomizeModal(null)}
               >
                 ✓ GUARDAR Y CERRAR
               </button>
-            </div>
-          </div>
-        );
-      })()}
-
-      {/* Sprite Selection Modal */}
-      {showSpriteModal && (() => {
-        const player = (tournamentData.players || []).find(p => p.id === showSpriteModal);
-        if (!player) return null;
-
-        return (
-          <div className="modal-overlay" onClick={() => setShowSpriteModal(null)}>
-            <div className="modal-content pixel-card" onClick={(e) => e.stopPropagation()}>
-              <button
-                className="close-modal-btn"
-                onClick={() => setShowSpriteModal(null)}
-              >
-                ✕
-              </button>
-
-              <h2>🎭 SELECCIONAR SPRITE</h2>
-              <p className="modal-subtitle">Elige un sprite para {player.name}</p>
-
-              <div className="sprite-selection-grid">
-                {AVAILABLE_SPRITES.map(sprite => (
-                  <div
-                    key={sprite.id}
-                    className={`sprite-option ${player.avatarImage === sprite.image ? 'selected' : ''}`}
-                    onClick={() => {
-                      tournamentData.updatePlayer(player.id, { avatarImage: sprite.image });
-                      setShowSpriteModal(null);
-                    }}
-                  >
-                    <div className="sprite-preview">
-                      <img src={sprite.image} alt={sprite.name} />
-                      {player.avatarImage === sprite.image && <span className="check-icon">✓</span>}
-                    </div>
-                    <span className="sprite-name">{sprite.name}</span>
-                  </div>
-                ))}
-              </div>
             </div>
           </div>
         );
