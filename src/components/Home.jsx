@@ -244,6 +244,12 @@ const Home = ({ tournamentData, audioControls, auth }) => {
           >
             🎬Video Intro 3
           </button>
+          <button
+            className={`pixel-button toggle-btn ${videoVersion === 4 ? 'active' : ''}`}
+            onClick={() => setVideoVersion(4)}
+          >
+            🎬Video Intro 4
+          </button>
         </div>
 
         <div className="video-container">
@@ -255,7 +261,12 @@ const Home = ({ tournamentData, audioControls, auth }) => {
             key={`video${videoVersion}`}
           >
             <source
-              src={videoVersion === 1 ? "/recursos/video intro.mp4" : videoVersion === 2 ? "/recursos/Video intro 2.mp4" : "/recursos/Video Intro 3.mp4"}
+              src={
+                videoVersion === 1 ? "/recursos/video intro.mp4" :
+                  videoVersion === 2 ? "/recursos/Video intro 2.mp4" :
+                    videoVersion === 3 ? "/recursos/Video Intro 3.mp4" :
+                      "/recursos/video intro 4.mp4"
+              }
               type="video/mp4"
             />
             Tu navegador no soporta el elemento de video.
