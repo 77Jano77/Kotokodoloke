@@ -66,26 +66,27 @@
 .header-content {
   max-width: 1400px;
   margin: 0 auto;
-  padding: 1.5rem 2rem;
+  padding: 2rem 2rem 1.5rem;
   display: flex;
-  justify-content: space-between;
+  flex-direction: column;
+  /* VERTICAL STACK */
+  justify-content: center;
   align-items: center;
   gap: 2rem;
-  /* Reduced gap since brand is grouped */
 }
 
 .header-brand {
   display: flex;
+  flex-direction: column;
   align-items: center;
-  gap: 1.5rem;
+  gap: 1rem;
   flex-shrink: 0;
+  text-align: center;
 }
 
 .kakuna-logo {
-  width: 70px;
-  /* Increased from 50px */
-  height: 70px;
-  /* Increased from 50px */
+  width: 90px;
+  height: 90px;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -103,14 +104,13 @@
 }
 
 .pixel-title {
-  font-size: 1.8rem;
-  /* Increased from 1.3rem */
+  font-size: 2.2rem;
   color: var(--poke-yellow);
-  letter-spacing: 3px;
-  /* Slightly more letter spacing */
+  letter-spacing: 4px;
   text-shadow: 4px 4px 0px rgba(0, 0, 0, 0.4);
   white-space: nowrap;
   flex-shrink: 0;
+  margin: 0;
 }
 
 .user-icon {

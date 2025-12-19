@@ -1815,122 +1815,132 @@
   background: white;
 }
 
-.oak-text-bubble {
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-  padding: 1.5rem 1.5rem 1rem 2.8rem;
-  border-radius: 20px 20px 0 20px;
-  box-shadow: 0 -4px 15px rgba(0, 0, 0, 0.3), inset 0 0 20px rgba(255, 255, 255, 0.1);
-  border: 4px solid rgba(255, 255, 255, 0.2);
-  backdrop-filter: blur(5px);
-  position: relative;
-  margin-bottom: 20px;
-  max-width: 380px;
-  min-height: 140px;
+/* GLOBAL OAK TIPS RE-DESIGN */
+.oak-global-container {
+  position: fixed;
+  bottom: 25px;
+  right: 25px;
+  z-index: 5000;
   display: flex;
   flex-direction: column;
+  align-items: flex-end;
+  gap: 15px;
 }
 
-.oak-title {
-  color: #fff;
-  /* White title */
-  margin: 0 0 0.8rem 0;
-  font-size: 0.8rem;
-  font-weight: bold;
-  text-transform: uppercase;
-  border-bottom: 2px solid rgba(255, 255, 255, 0.2);
-  padding-bottom: 4px;
-  text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.3);
+.oak-face-trigger {
+  width: 70px;
+  height: 70px;
+  cursor: pointer;
+  transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  position: relative;
 }
 
-.oak-tip-body {
-  flex: 1;
-  display: flex;
-  align-items: center;
-  min-height: 4rem;
+.oak-avatar-circle {
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  border: 4px solid var(--poke-yellow);
+  overflow: hidden;
+  background: white;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.4);
 }
 
-.oak-tip-text {
-  font-size: 0.95rem;
-  color: #ffffff;
-  /* White text for maximum contrast */
-  font-weight: 500;
-  margin: 0;
-  line-height: 1.5;
-  transition: opacity 0.3s ease;
-  text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.4);
+.oak-avatar-circle img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.3s;
 }
 
-.oak-nav-arrows {
-  display: flex;
-  justify-content: flex-end;
-  gap: 0.5rem;
-  margin-top: 1rem;
+.oak-face-trigger:hover {
+  transform: scale(1.1) rotate(5deg);
 }
 
-.oak-arrow-btn {
-  background: rgba(255, 255, 255, 0.1);
-  border: 2px solid white;
+.oak-face-trigger.pulse:not(.active) {
+  animation: oakPulse 2s infinite;
+}
+
+@keyframes oakPulse {
+  0% {
+    box-shadow: 0 0 0 0 rgba(251, 191, 36, 0.7);
+  }
+
+  70% {
+    box-shadow: 0 0 0 15px rgba(251, 191, 36, 0);
+  }
+
+  100% {
+    box-shadow: 0 0 0 0 rgba(251, 191, 36, 0);
+  }
+}
+
+.notification-dot {
+  position: absolute;
+  top: 0;
+  right: 0;
+  background: #ef4444;
   color: white;
-  width: 32px;
-  height: 32px;
-  border-radius: 6px;
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  border: 2px solid white;
   display: flex;
   align-items: center;
   justify-content: center;
+  font-size: 0.7rem;
+  font-weight: bold;
+}
+
+.oak-tips-bubble {
+  width: 350px;
+}
+
+.oak-bubble-header {
+  background: var(--poke-red);
+  padding: 6px 12px;
+  border-radius: 8px 8px 0 0;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border: 2px solid #000;
+  border-bottom: none;
+}
+
+.oak-name-tag {
+  color: white;
+  font-family: 'Press Start 2P', cursive;
+  font-size: 0.55rem;
+}
+
+.oak-close-mini {
+  background: none;
+  border: none;
+  color: white;
   cursor: pointer;
   font-size: 0.8rem;
-  transition: all 0.2s;
-  box-shadow: 2px 2px 0 rgba(0, 0, 0, 0.2);
 }
 
-.oak-arrow-btn:hover {
-  background: white;
-  color: #764ba2;
-  transform: translateY(-2px);
+.oak-bubble-content .oak-text-bubble {
+  border-radius: 0 0 8px 8px;
+  margin-top: 0;
+  padding: 1.5rem;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  border: 2px solid #000;
 }
 
-.oak-header {
-  position: absolute;
-  top: -15px;
-  right: 0;
-  z-index: 10;
-  pointer-events: auto;
+@media (max-width: 600px) {
+  .oak-tips-bubble {
+    width: 280px;
+    position: fixed;
+    bottom: 110px;
+    right: 15px;
+  }
 }
 
-.oak-close-btn {
-  background: var(--poke-red);
-  color: white;
-  border: 2px solid white;
-  width: 30px;
-  height: 30px;
-  border-radius: 50%;
-  font-weight: bold;
-  cursor: pointer;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
-  transition: transform 0.2s;
-}
-
-.oak-close-btn:hover {
-  transform: scale(1.1);
-}
-
-.section-title.pixel-text {
-  font-size: 1.4rem !important;
-  /* Smaller than header title (1.8rem) */
-  margin-bottom: 2rem;
-}
-
+/* Cleanup */
+.oak-tips-container,
 .oak-toggle-btn {
-  position: fixed;
-  bottom: 20px;
-  right: 20px;
-  z-index: 5000;
-  /* Extremely high to be above everything */
-  font-size: 1rem;
-  padding: 0.8rem 1.2rem;
-  box-shadow: 0 4px 0 var(--shadow-dark);
-  display: none;
-  /* Controlled by React state visibility class */
+  display: none !important;
 }
 
 .oak-toggle-btn.show {

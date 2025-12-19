@@ -70,26 +70,27 @@ const OakTips = () => {
     };
 
     return (
-        <>
-            <button
-                className={`oak-toggle-btn pixel-button ${!isOpen ? 'show' : ''}`}
-                onClick={() => setIsOpen(true)}
-                title="Ver consejos de Oak"
+        <div className="oak-global-container">
+            {/* Oak's Face Trigger (Always Visible) */}
+            <div
+                className={`oak-face-trigger ${isOpen ? 'active' : ''} ${!isOpen ? 'pulse' : ''}`}
+                onClick={() => setIsOpen(!isOpen)}
+                title={isOpen ? "Cerrar consejos" : "Ver consejos de Oak"}
             >
-                💡 Ver Consejo
-            </button>
+                <div className="oak-avatar-circle">
+                    <img src="/recursos/Oak.jpg" alt="Profesor Oak" />
+                    {!isOpen && <div className="notification-dot">!</div>}
+                </div>
+            </div>
 
             {isOpen && (
-                <div className="oak-tips-container slide-up">
-                    <div className="oak-header">
-                        <button className="oak-close-btn" onClick={() => setIsOpen(false)}>✕</button>
+                <div className="oak-tips-bubble slide-up">
+                    <div className="oak-bubble-header">
+                        <span className="oak-name-tag">PROFR. OAK</span>
+                        <button className="oak-close-mini" onClick={() => setIsOpen(false)}>✕</button>
                     </div>
-                    <div className="oak-content">
-                        <div className="oak-sprite-container">
-                            <img src="/recursos/Oak.jpg" alt="Profesor Oak" className="oak-sprite" />
-                        </div>
+                    <div className="oak-bubble-content">
                         <div className="oak-text-bubble pixel-card paper-texture">
-                            <h4 className="oak-title">Oak dice:</h4>
                             <div className="oak-tip-body">
                                 <p className={`oak-tip-text ${isChanging ? 'fade-out' : 'fade-in'}`}>
                                     {TIPS[currentTipIndex]}
@@ -103,7 +104,7 @@ const OakTips = () => {
                     </div>
                 </div>
             )}
-        </>
+        </div>
     );
 };
 
