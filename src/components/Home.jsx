@@ -208,6 +208,37 @@ const Home = ({ tournamentData, audioControls, auth }) => {
         </div>
       </section>
 
+      {/* Top 3 Podium */}
+      <section className="podium-section">
+        <h2 className="section-title pixel-text">🏆 CLASIFICACIÓN (TOP 3) 🏆</h2>
+
+        <div className="podium-container">
+          {/* 2nd Place */}
+          <div className="podium-spot podium-2">
+            <div className="podium-base">
+              <span className="podium-rank">2</span>
+            </div>
+            {renderPodiumPlayer(podiumPlayers[1], 1)}
+          </div>
+
+          {/* 1st Place */}
+          <div className="podium-spot podium-1">
+            <div className="podium-base">
+              <span className="podium-rank">1</span>
+            </div>
+            {renderPodiumPlayer(podiumPlayers[0], 0)}
+          </div>
+
+          {/* 3rd Place */}
+          <div className="podium-spot podium-3">
+            <div className="podium-base">
+              <span className="podium-rank">3</span>
+            </div>
+            {renderPodiumPlayer(podiumPlayers[2], 2)}
+          </div>
+        </div>
+      </section>
+
       {/* Hero Banner */}
       <section className="hero-banner pixel-card">
         <div className="hero-content">
@@ -360,36 +391,7 @@ const Home = ({ tournamentData, audioControls, auth }) => {
         </section>
       )}
 
-      {/* Top 3 Podium */}
-      <section className="podium-section">
-        <h2 className="section-title pixel-text">🏆 TOP 3 JUGADORES 🏆</h2>
 
-        <div className="podium-container">
-          {/* 2nd Place */}
-          <div className="podium-spot podium-2">
-            <div className="podium-base">
-              <span className="podium-rank">2</span>
-            </div>
-            {renderPodiumPlayer(podiumPlayers[1], 1)}
-          </div>
-
-          {/* 1st Place */}
-          <div className="podium-spot podium-1">
-            <div className="podium-base">
-              <span className="podium-rank">1</span>
-            </div>
-            {renderPodiumPlayer(podiumPlayers[0], 0)}
-          </div>
-
-          {/* 3rd Place */}
-          <div className="podium-spot podium-3">
-            <div className="podium-base">
-              <span className="podium-rank">3</span>
-            </div>
-            {renderPodiumPlayer(podiumPlayers[2], 2)}
-          </div>
-        </div>
-      </section>
 
       {/* Rule Details Modal */}
       {selectedRule && (
