@@ -911,21 +911,28 @@ const Players = ({ tournamentData, audioControls, auth }) => {
                   <ul className="rewards-list">
                     {(() => {
                       const displayRewards = [];
+                      const deletedInsurances = player.deletedInsurances || [];
+
                       (player.rewards || []).forEach((reward, index) => {
                         // Si es "🛡️ 2 Seguros de Muerte", dividirlo en 2 items individuales
                         if (reward === '🛡️ 2 Seguros de Muerte') {
-                          displayRewards.push({
-                            originalIndex: index,
-                            displayText: '🛡️ Seguro de Muerte #1',
-                            insuranceId: '🛡️ Seguro de Muerte #1',
-                            isInsurance: true
-                          });
-                          displayRewards.push({
-                            originalIndex: index,
-                            displayText: '🛡️ Seguro de Muerte #2',
-                            insuranceId: '🛡️ Seguro de Muerte #2',
-                            isInsurance: true
-                          });
+                          // Solo mostrar seguros que no hayan sido eliminados
+                          if (!deletedInsurances.includes('🛡️ Seguro de Muerte #1')) {
+                            displayRewards.push({
+                              originalIndex: index,
+                              displayText: '🛡️ Seguro de Muerte #1',
+                              insuranceId: '🛡️ Seguro de Muerte #1',
+                              isInsurance: true
+                            });
+                          }
+                          if (!deletedInsurances.includes('🛡️ Seguro de Muerte #2')) {
+                            displayRewards.push({
+                              originalIndex: index,
+                              displayText: '🛡️ Seguro de Muerte #2',
+                              insuranceId: '🛡️ Seguro de Muerte #2',
+                              isInsurance: true
+                            });
+                          }
                         } else {
                           displayRewards.push({
                             originalIndex: index,
@@ -992,6 +999,20 @@ const Players = ({ tournamentData, audioControls, auth }) => {
                                         tournamentData.removeDeathInsurance(player.id, insuranceToRemove.identifier);
                                       }
                                     }
+
+                                    // Marcar este seguro como eliminado
+                                    const deletedInsurances = player.deletedInsurances || [];
+                                    if (!deletedInsurances.includes(item.insuranceId)) {
+                                      const newDeletedInsurances = [...deletedInsurances, item.insuranceId];
+                                      tournamentData.updatePlayer(player.id, { deletedInsurances: newDeletedInsurances });
+
+                                      // Si ambos seguros han sido eliminados, eliminar la recompensa padre
+                                      if (newDeletedInsurances.includes('🛡️ Seguro de Muerte #1') &&
+                                        newDeletedInsurances.includes('🛡️ Seguro de Muerte #2')) {
+                                        handleRemoveReward(player.id, item.originalIndex);
+                                      }
+                                    }
+
                                     alert('✅ Seguro eliminado correctamente');
                                   }
                                 }}
