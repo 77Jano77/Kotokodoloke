@@ -11,6 +11,7 @@ import Resources from './components/Resources';
 import Gallery from './components/Gallery';
 import Downloads from './components/Downloads';
 import Banners from './components/Banners';
+import OakTips from './components/OakTips';
 import './styles/App.css';
 
 function App() {
@@ -70,6 +71,8 @@ function App() {
         setResourceAction={setResourceAction}
       />
 
+      {/* Professor Oak Tips - Bottom Center */}
+      <OakTips />
 
 
       <footer className="pixel-footer">
