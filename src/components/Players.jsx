@@ -1381,6 +1381,16 @@ const Players = ({ tournamentData, audioControls, auth }) => {
         const maxInsurances = insuranceRewards * 2; // 2 seguros por cada recompensa
         const remainingSlots = maxInsurances - currentInsurances.length;
 
+        // Debug
+        console.log('🛡️ DEBUG Seguros:', {
+          insuranceRewards,
+          maxInsurances,
+          currentInsurances: currentInsurances.length,
+          remainingSlots,
+          selectedInsurancePokemon: selectedInsurancePokemon.length,
+          currentInsurancesData: currentInsurances
+        });
+
         // Combinar seguros actuales con selección temporal
         const totalSelected = currentInsurances.length + selectedInsurancePokemon.length;
 
@@ -1422,11 +1432,14 @@ const Players = ({ tournamentData, audioControls, auth }) => {
         };
 
         const toggleSelection = (identifier) => {
+          console.log('🔍 Toggle selection:', identifier, 'Current selected:', selectedInsurancePokemon);
+
           if (selectedInsurancePokemon.includes(identifier)) {
             // Deseleccionar
             setSelectedInsurancePokemon(prev => prev.filter(id => id !== identifier));
           } else {
             // Seleccionar (máximo = slots restantes)
+            console.log('Checking limit:', selectedInsurancePokemon.length, '>=', remainingSlots);
             if (selectedInsurancePokemon.length >= remainingSlots) {
               alert(`⚠️ Solo puedes seleccionar ${remainingSlots} Pokémon más (tienes ${insuranceRewards} recompensa(s) = ${maxInsurances} seguros máximo)`);
               return;
@@ -1435,11 +1448,14 @@ const Players = ({ tournamentData, audioControls, auth }) => {
           }
         };
 
+        const handleCloseModal = () => {
+          console.log('🚪 Cerrando modal, limpiando selección');
+          setSelectedInsurancePokemon([]);
+          setShowDeathInsuranceModal(null);
+        };
+
         return (
-          <div className="modal-overlay" onClick={() => {
-            setSelectedInsurancePokemon([]);
-            setShowDeathInsuranceModal(null);
-          }}>
+          <div className="modal-overlay" onClick={handleCloseModal}>
             <div className="modal-content pixel-card death-insurance-modal" onClick={(e) => e.stopPropagation()}>
               <h2>🛡️ ACTIVAR SEGUROS DE MUERTE</h2>
               <p className="modal-subtitle">
