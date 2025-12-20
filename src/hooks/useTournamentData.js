@@ -606,21 +606,11 @@ export const useTournamentData = () => {
   };
 
   // Añadir seguro de muerte a un Pokémon
-  const addDeathInsurance = (playerId, pokemonIdentifier) => {
+  const addDeathInsurance = (playerId, pokemonIdentifier, insuranceId) => {
     const player = (data.players || []).find(p => p.id === playerId);
-    if (!player) return;
+    if (!player) return false;
 
     const deathInsurances = player.deathInsurances || [];
-
-    // Contar cuántas recompensas de seguros tiene (cada una da 2 seguros)
-    const insuranceRewards = (player.rewards || []).filter(r => r === '🛡️ 2 Seguros de Muerte').length;
-    const maxInsurances = insuranceRewards * 2;
-
-    // Verificar que no exceda el máximo permitido
-    if (deathInsurances.length >= maxInsurances) {
-      alert(`❌ Ya tienes ${maxInsurances} Pokémon con seguro de muerte activo (${insuranceRewards} recompensa(s) × 2)`);
-      return false;
-    }
 
     // Verificar que este Pokémon no tenga ya seguro
     if (deathInsurances.some(ins => ins.identifier === pokemonIdentifier)) {
@@ -628,16 +618,39 @@ export const useTournamentData = () => {
       return false;
     }
 
+    // Verificar que el seguro no haya sido usado ya
+    const rewards = player.rewards || [];
+    const usedRewards = player.usedRewards || [];
+    const insuranceIndex = rewards.findIndex(r => r === insuranceId);
+
+    if (insuranceIndex === -1) {
+      alert('❌ Este seguro no existe');
+      return false;
+    }
+
+    if (usedRewards.includes(insuranceIndex)) {
+      alert('❌ Este seguro ya ha sido usado');
+      return false;
+    }
+
     const newInsurance = {
       identifier: pokemonIdentifier,
+      insuranceId: insuranceId,
       addedAt: Date.now()
     };
+
+    // Marcar el seguro como usado
+    const newUsedRewards = [...usedRewards, insuranceIndex];
 
     const newData = {
       ...data,
       players: (data.players || []).map(p =>
         p.id === playerId
-          ? { ...p, deathInsurances: [...deathInsurances, newInsurance] }
+          ? {
+            ...p,
+            deathInsurances: [...deathInsurances, newInsurance],
+            usedRewards: newUsedRewards
+          }
           : p
       ),
     };
@@ -645,7 +658,7 @@ export const useTournamentData = () => {
     return true;
   };
 
-  // Remover seguro de muerte de un Pokémon
+  // Remover seguro de muerte de un Pokémon (el seguro permanece como usado)
   const removeDeathInsurance = (playerId, pokemonIdentifier) => {
     const player = (data.players || []).find(p => p.id === playerId);
     if (!player) return;
@@ -655,6 +668,7 @@ export const useTournamentData = () => {
       ins => ins.identifier !== pokemonIdentifier
     );
 
+    // NO desmarcar el seguro como usado - permanece consumido
     const newData = {
       ...data,
       players: (data.players || []).map(p =>
@@ -674,6 +688,17 @@ export const useTournamentData = () => {
     const deathInsurances = player.deathInsurances || [];
     return deathInsurances.some(ins => ins.identifier === pokemonIdentifier);
   };
+
+  // Obtener el ID del seguro aplicado a un Pokémon
+  const getInsuranceId = (playerId, pokemonIdentifier) => {
+    const player = (data.players || []).find(p => p.id === playerId);
+    if (!player) return null;
+
+    const deathInsurances = player.deathInsurances || [];
+    const insurance = deathInsurances.find(ins => ins.identifier === pokemonIdentifier);
+    return insurance ? insurance.insuranceId : null;
+  };
+
 
 
   return {
@@ -713,6 +738,7 @@ export const useTournamentData = () => {
     addDeathInsurance,
     removeDeathInsurance,
     hasDeathInsurance,
+    getInsuranceId,
     selectedAdBanners: data.selectedAdBanners || [],
   };
 };

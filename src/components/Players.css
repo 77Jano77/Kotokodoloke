@@ -1374,12 +1374,31 @@
 /* Recompensas usadas */
 .reward-item.used {
   opacity: 0.6;
-  background: #e2e8f0;
+  background: var(--shadow-medium);
 }
 
 .reward-item.used .reward-text {
   text-decoration: line-through;
   color: #64748b;
+}
+
+/* Insurance item styling */
+.reward-item.insurance-item {
+  border-color: #fbbf24;
+  background: linear-gradient(135deg, rgba(251, 191, 36, 0.1) 0%, rgba(251, 191, 36, 0.05) 100%);
+}
+
+.clickable-insurance {
+  cursor: pointer;
+  transition: all 0.2s;
+  padding: 4px 8px;
+  border-radius: 4px;
+}
+
+.clickable-insurance:hover {
+  background: rgba(251, 191, 36, 0.2);
+  transform: scale(1.05);
+  text-shadow: 0 0 10px rgba(251, 191, 36, 0.5);
 }
 
 .reward-content {
