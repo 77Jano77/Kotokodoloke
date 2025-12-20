@@ -1345,3 +1345,28 @@
   background: #94a3b8;
   transform: none;
 }
+
+/* Modal buttons */
+.modal-buttons {
+  display: flex;
+  gap: 1rem;
+  margin-top: 1.5rem;
+}
+
+.modal-buttons .pixel-button,
+.modal-buttons .pixel-button-danger {
+  flex: 1;
+  padding: 0.75rem;
+  font-size: 0.8rem;
+}
+
+.modal-buttons .pixel-button:disabled {
+  background: #94a3b8;
+  cursor: not-allowed;
+  opacity: 0.6;
+}
+
+.modal-buttons .pixel-button:disabled:hover {
+  background: #94a3b8;
+  transform: none;
+}

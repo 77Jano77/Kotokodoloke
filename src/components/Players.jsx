@@ -106,6 +106,8 @@ const Players = ({ tournamentData, audioControls, auth }) => {
   const [showStarterModal, setShowStarterModal] = useState(null); // playerId
   const [starterSearchTerm, setStarterSearchTerm] = useState('');
   const [showCustomizeModal, setShowCustomizeModal] = useState(null); // playerId
+  const [showAddRewardModal, setShowAddRewardModal] = useState(null); // playerId
+  const [selectedReward, setSelectedReward] = useState('');
 
   // Verificar si el usuario ya tiene un jugador creado
   const userPlayer = auth.currentUser?.hasPlayer
@@ -831,10 +833,8 @@ const Players = ({ tournamentData, audioControls, auth }) => {
                     <button
                       className="add-manual-reward-btn pixel-button"
                       onClick={() => {
-                        const rewardName = prompt('Ingrese el nombre de la recompensa:');
-                        if (rewardName) {
-                          tournamentData.addRouletteReward(player.id, rewardName);
-                        }
+                        setShowAddRewardModal(player.id);
+                        setSelectedReward('');
                       }}
                       title="Añadir recompensa manualmente"
                     >
@@ -850,7 +850,13 @@ const Players = ({ tournamentData, audioControls, auth }) => {
                         {canEdit && (
                           <button
                             className="remove-reward-btn"
-                            onClick={() => handleRemoveReward(player.id, index)}
+                            onClick={() => {
+                              if (confirm(`¿Eliminar la recompensa "${reward}"?`)) {
+                                handleRemoveReward(player.id, index);
+                                alert('✅ Recompensa eliminada correctamente');
+                              }
+                            }}
+                            title="Eliminar recompensa"
                           >
                             ✕
                           </button>
@@ -942,16 +948,26 @@ const Players = ({ tournamentData, audioControls, auth }) => {
                               className="add-to-team-btn pixel-button"
                               disabled={pokemon.isDead}
                               onClick={() => {
+                                console.log('🔍 DEBUG: Botón añadir clickeado');
                                 // Añadir al equipo (solo si no está muerto)
-                                if (pokemon.isDead) return;
+                                if (pokemon.isDead) {
+                                  console.log('❌ Pokémon está muerto');
+                                  return;
+                                }
 
                                 const player = (tournamentData.players || []).find(p => p.id === showCapturedModal.playerId);
-                                if (!player) return;
+                                console.log('🔍 DEBUG: Player encontrado:', player);
+                                if (!player) {
+                                  console.log('❌ Player no encontrado');
+                                  return;
+                                }
 
-                                const team = player.team || [];
+                                const team = safeTeamToArray(player.team);
+                                console.log('🔍 DEBUG: Team actual:', team);
 
                                 // Buscar primer slot vacío
                                 const emptySlotIndex = team.findIndex(slot => !slot);
+                                console.log('🔍 DEBUG: Empty slot index:', emptySlotIndex);
 
                                 if (emptySlotIndex === -1 && team.length >= 6) {
                                   alert('❌ El equipo está completo (6 Pokémon)');
@@ -963,6 +979,7 @@ const Players = ({ tournamentData, audioControls, auth }) => {
                                   nickname: pokemon.nickname || '',
                                   ability: pokemon.ability || ''
                                 };
+                                console.log('🔍 DEBUG: Pokemon a añadir:', pokemonToAdd);
 
                                 const newTeam = [...team];
                                 if (emptySlotIndex !== -1) {
@@ -972,11 +989,17 @@ const Players = ({ tournamentData, audioControls, auth }) => {
                                 }
 
                                 // Rellenar con null hasta tener 6 slots
+                                // IMPORTANTE: Firebase no acepta undefined, solo null
                                 while (newTeam.length < 6) {
                                   newTeam.push(null);
                                 }
 
-                                tournamentData.updatePlayer(player.id, { team: newTeam });
+                                // Asegurarse de que no hay undefined en el array
+                                const cleanTeam = newTeam.map(slot => slot === undefined ? null : slot);
+
+                                console.log('🔍 DEBUG: Nuevo team:', cleanTeam);
+                                console.log('🔍 DEBUG: Llamando updatePlayer con playerId:', player.id);
+                                tournamentData.updatePlayer(player.id, { team: cleanTeam });
                                 alert('✅ Pokémon añadido al equipo');
                               }}
                             >
@@ -1175,6 +1198,60 @@ const Players = ({ tournamentData, audioControls, auth }) => {
           </div>
         );
       })()}
+
+      {/* Add Reward Modal */}
+      {showAddRewardModal && (
+        <div className="modal-overlay" onClick={() => setShowAddRewardModal(null)}>
+          <div className="modal-content pixel-card" onClick={(e) => e.stopPropagation()}>
+            <h2>➕ AÑADIR RECOMPENSA</h2>
+            <p className="modal-subtitle">Selecciona una recompensa de la ruleta</p>
+
+            <div className="form-group">
+              <label>RECOMPENSA</label>
+              <select
+                className="pixel-input"
+                value={selectedReward}
+                onChange={(e) => setSelectedReward(e.target.value)}
+              >
+                <option value="">-- Selecciona una recompensa --</option>
+                <option value="🛒 Artículo de Tienda">🛒 Artículo de Tienda</option>
+                <option value="➕ Captura Extra">➕ Captura Extra</option>
+                <option value="🔙 Captura Ruta Anterior">🔙 Captura Ruta Anterior</option>
+                <option value="💚 Revivir Pokémon">💚 Revivir Pokémon</option>
+                <option value="🛡️ 2 Seguros de Muerte">🛡️ 2 Seguros de Muerte</option>
+              </select>
+            </div>
+
+            <div className="modal-buttons">
+              <button
+                className="pixel-button"
+                onClick={() => {
+                  if (!selectedReward) {
+                    alert('⚠️ Por favor selecciona una recompensa');
+                    return;
+                  }
+                  tournamentData.addRouletteReward(showAddRewardModal, selectedReward);
+                  alert(`✅ Recompensa "${selectedReward}" añadida correctamente`);
+                  setShowAddRewardModal(null);
+                  setSelectedReward('');
+                }}
+                disabled={!selectedReward}
+              >
+                ✓ AÑADIR RECOMPENSA
+              </button>
+              <button
+                className="pixel-button-danger"
+                onClick={() => {
+                  setShowAddRewardModal(null);
+                  setSelectedReward('');
+                }}
+              >
+                ✕ CANCELAR
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 };

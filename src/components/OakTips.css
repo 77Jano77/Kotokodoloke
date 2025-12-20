@@ -100,10 +100,10 @@
 .oak-v10-bubble {
     width: 450px;
     max-height: 600px;
-    position: fixed;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
+    position: absolute;
+    top: 0;
+    left: 80px;
+    /* Immediately to the right of the 70px icon */
     z-index: 1001;
     box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4);
     overflow: visible;
