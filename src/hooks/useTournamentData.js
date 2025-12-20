@@ -618,17 +618,17 @@ export const useTournamentData = () => {
       return false;
     }
 
-    // Verificar que el seguro no haya sido usado ya
+    // Verificar que el jugador tenga la recompensa "🛡️ 2 Seguros de Muerte"
     const rewards = player.rewards || [];
-    const usedRewards = player.usedRewards || [];
-    const insuranceIndex = rewards.findIndex(r => r === insuranceId);
+    const hasInsuranceReward = rewards.some(r => r === '🛡️ 2 Seguros de Muerte');
 
-    if (insuranceIndex === -1) {
-      alert('❌ Este seguro no existe');
+    if (!hasInsuranceReward) {
+      alert('❌ No tienes recompensas de seguro de muerte disponibles');
       return false;
     }
 
-    if (usedRewards.includes(insuranceIndex)) {
+    // Verificar que este insuranceId específico no haya sido usado ya
+    if (deathInsurances.some(ins => ins.insuranceId === insuranceId)) {
       alert('❌ Este seguro ya ha sido usado');
       return false;
     }
@@ -639,17 +639,14 @@ export const useTournamentData = () => {
       addedAt: Date.now()
     };
 
-    // Marcar el seguro como usado
-    const newUsedRewards = [...usedRewards, insuranceIndex];
-
+    // NO marcar la recompensa como usada aquí - se maneja visualmente en el componente
     const newData = {
       ...data,
       players: (data.players || []).map(p =>
         p.id === playerId
           ? {
             ...p,
-            deathInsurances: [...deathInsurances, newInsurance],
-            usedRewards: newUsedRewards
+            deathInsurances: [...deathInsurances, newInsurance]
           }
           : p
       ),

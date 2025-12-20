@@ -979,21 +979,23 @@ const Players = ({ tournamentData, audioControls, auth }) => {
                               </span>
                             </div>
                             {/* Admin puede eliminar seguros incluso si están usados */}
-                            {isAdmin && item.isInsurance && isUsed && (
+                            {isAdmin && item.isInsurance && (
                               <button
                                 className="remove-reward-btn"
                                 onClick={() => {
-                                  if (confirm(`¿Eliminar el seguro "${item.displayText}"? Esto también eliminará el seguro del Pokémon que lo tenga.`)) {
-                                    // Encontrar y eliminar el seguro del Pokémon
-                                    const deathInsurances = player.deathInsurances || [];
-                                    const insuranceToRemove = deathInsurances.find(ins => ins.insuranceId === item.insuranceId);
-                                    if (insuranceToRemove) {
-                                      tournamentData.removeDeathInsurance(player.id, insuranceToRemove.identifier);
+                                  if (confirm(`¿Eliminar el seguro "${item.displayText}"?${isUsed ? ' Esto también eliminará el seguro del Pokémon que lo tenga.' : ''}`)) {
+                                    if (isUsed) {
+                                      // Encontrar y eliminar el seguro del Pokémon
+                                      const deathInsurances = player.deathInsurances || [];
+                                      const insuranceToRemove = deathInsurances.find(ins => ins.insuranceId === item.insuranceId);
+                                      if (insuranceToRemove) {
+                                        tournamentData.removeDeathInsurance(player.id, insuranceToRemove.identifier);
+                                      }
                                     }
                                     alert('✅ Seguro eliminado correctamente');
                                   }
                                 }}
-                                title="Eliminar seguro (Admin)"
+                                title={`Eliminar seguro (Admin)${isUsed ? ' - Usado' : ' - Disponible'}`}
                               >
                                 ✕
                               </button>
