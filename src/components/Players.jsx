@@ -306,6 +306,38 @@ const Players = ({ tournamentData, audioControls, auth }) => {
     }
   };
 
+  // Helper function to update captured Pokémon evolution
+  const updateCapturedPokemonEvolution = (playerName, oldPokemonNumber, newPokemonNumber, zone) => {
+    const record = (tournamentData.captureRecords || []).find(r =>
+      r.playerName.toLowerCase() === playerName.toLowerCase()
+    );
+
+    if (!record) return; // Pokémon not in capture records (e.g., starter)
+
+    const updateZone = (zones) => zones.map(z => {
+      if (z.captured && z.capturedPokemon &&
+        parseInt(z.capturedPokemon.pokemon) === oldPokemonNumber &&
+        z.name === zone) {
+        return {
+          ...z,
+          capturedPokemon: {
+            ...z.capturedPokemon,
+            pokemon: newPokemonNumber.toString()
+          }
+        };
+      }
+      return z;
+    });
+
+    const updatedRecord = {
+      kantoZones: updateZone(record.kantoZones || []),
+      seviZones: updateZone(record.seviZones || []),
+      extraCaptureSlots: updateZone(record.extraCaptureSlots || [])
+    };
+
+    tournamentData.updateCaptureRecord(record.id, updatedRecord);
+  };
+
   const handleEvolvePokemon = (playerId, slotIndex) => {
     const player = (tournamentData.players || []).find(p => p.id === playerId);
     if (!player) return;
@@ -333,6 +365,7 @@ const Players = ({ tournamentData, audioControls, auth }) => {
       return;
     }
 
+    // Actualizar equipo
     const newTeam = [...team];
     newTeam[slotIndex] = typeof currentPokemon === 'object'
       ? { ...currentPokemon, name: evolvedPokemonName }
@@ -342,6 +375,44 @@ const Players = ({ tournamentData, audioControls, auth }) => {
     const cleanTeam = newTeam.map(slot => slot === undefined ? null : slot);
 
     tournamentData.updatePlayer(playerId, { team: cleanTeam });
+
+    // Actualizar Pokémon capturado si existe
+    const capturedPokemon = tournamentData.getCapturedPokemonByPlayer(player.name);
+    const captured = capturedPokemon.find(p => {
+      const capPokemonData = POKEDEX_DATA.find(pd => pd.number === parseInt(p.pokemon));
+      return capPokemonData && capPokemonData.name === pokemonName;
+    });
+
+    if (captured) {
+      updateCapturedPokemonEvolution(
+        player.name,
+        currentPokemonData.number,
+        evolvedPokemonData.number,
+        captured.zone
+      );
+
+      // Transferir seguro de muerte si existe
+      const oldIdentifier = `captured-${playerId}-${currentPokemonData.number}-${captured.zone}`;
+      const newIdentifier = `captured-${playerId}-${evolvedPokemonData.number}-${captured.zone}`;
+
+      if (tournamentData.hasDeathInsurance(playerId, oldIdentifier)) {
+        const insuranceId = tournamentData.getInsuranceId(playerId, oldIdentifier);
+        tournamentData.removeDeathInsurance(playerId, oldIdentifier);
+
+        // Añadir seguro a la evolución con el mismo insuranceId
+        const deathInsurances = player.deathInsurances || [];
+        const newInsurance = {
+          identifier: newIdentifier,
+          insuranceId: insuranceId,
+          addedAt: Date.now()
+        };
+
+        tournamentData.updatePlayer(playerId, {
+          deathInsurances: [...deathInsurances.filter(ins => ins.identifier !== oldIdentifier), newInsurance]
+        });
+      }
+    }
+
     alert(`✨ ${pokemonName} ha evolucionado a ${evolvedPokemonName}!`);
   };
 
@@ -372,6 +443,7 @@ const Players = ({ tournamentData, audioControls, auth }) => {
       return;
     }
 
+    // Actualizar equipo
     const newTeam = [...team];
     newTeam[slotIndex] = typeof currentPokemon === 'object'
       ? { ...currentPokemon, name: previousPokemon.name }
@@ -381,6 +453,44 @@ const Players = ({ tournamentData, audioControls, auth }) => {
     const cleanTeam = newTeam.map(slot => slot === undefined ? null : slot);
 
     tournamentData.updatePlayer(playerId, { team: cleanTeam });
+
+    // Actualizar Pokémon capturado si existe
+    const capturedPokemon = tournamentData.getCapturedPokemonByPlayer(player.name);
+    const captured = capturedPokemon.find(p => {
+      const capPokemonData = POKEDEX_DATA.find(pd => pd.number === parseInt(p.pokemon));
+      return capPokemonData && capPokemonData.name === pokemonName;
+    });
+
+    if (captured) {
+      updateCapturedPokemonEvolution(
+        player.name,
+        currentPokemonData.number,
+        previousPokemon.number,
+        captured.zone
+      );
+
+      // Transferir seguro de muerte si existe
+      const oldIdentifier = `captured-${playerId}-${currentPokemonData.number}-${captured.zone}`;
+      const newIdentifier = `captured-${playerId}-${previousPokemon.number}-${captured.zone}`;
+
+      if (tournamentData.hasDeathInsurance(playerId, oldIdentifier)) {
+        const insuranceId = tournamentData.getInsuranceId(playerId, oldIdentifier);
+        tournamentData.removeDeathInsurance(playerId, oldIdentifier);
+
+        // Añadir seguro a la forma previa con el mismo insuranceId
+        const deathInsurances = player.deathInsurances || [];
+        const newInsurance = {
+          identifier: newIdentifier,
+          insuranceId: insuranceId,
+          addedAt: Date.now()
+        };
+
+        tournamentData.updatePlayer(playerId, {
+          deathInsurances: [...deathInsurances.filter(ins => ins.identifier !== oldIdentifier), newInsurance]
+        });
+      }
+    }
+
     alert(`🔙 ${pokemonName} ha devuelto a ${previousPokemon.name}!`);
   };
 
