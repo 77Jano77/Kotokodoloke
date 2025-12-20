@@ -164,11 +164,34 @@ export const useTournamentData = () => {
       });
     }
 
+    // Si es seguro de muerte, crear 2 items individuales con IDs únicos
+    let rewardsToAdd = [];
+    let updatedPlayer = { ...player };
+
+    if (reward === '🛡️ 2 Seguros de Muerte') {
+      // Obtener el contador actual de seguros del jugador
+      const insuranceCounter = player.insuranceCounter || 0;
+
+      // Crear 2 seguros con IDs únicos e incrementales
+      rewardsToAdd = [
+        `🛡️ Seguro #${insuranceCounter + 1}`,
+        `🛡️ Seguro #${insuranceCounter + 2}`
+      ];
+
+      // Actualizar el contador
+      updatedPlayer.insuranceCounter = insuranceCounter + 2;
+    } else {
+      rewardsToAdd = [reward];
+    }
+
     const newData = {
       ...data,
       players: players.map(p =>
         p.id === playerId
-          ? { ...p, rewards: [...(p.rewards || []), reward] }
+          ? {
+            ...updatedPlayer,
+            rewards: [...(p.rewards || []), ...rewardsToAdd]
+          }
           : p
       ),
       captureRecords: newCaptureRecords
@@ -618,11 +641,11 @@ export const useTournamentData = () => {
       return false;
     }
 
-    // Verificar que el jugador tenga la recompensa "🛡️ 2 Seguros de Muerte"
+    // Verificar que el jugador tenga al menos un seguro disponible
     const rewards = player.rewards || [];
-    const hasInsuranceReward = rewards.some(r => r === '🛡️ 2 Seguros de Muerte');
+    const hasAnyInsurance = rewards.some(r => r.startsWith('🛡️ Seguro #'));
 
-    if (!hasInsuranceReward) {
+    if (!hasAnyInsurance) {
       alert('❌ No tienes recompensas de seguro de muerte disponibles');
       return false;
     }
