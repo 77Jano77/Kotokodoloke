@@ -166,7 +166,7 @@
   }
 }
 
-/* Left Banners Container */
+/* Left Banners Container - Vertical Skyscraper Format */
 .left-banners {
   position: fixed;
   left: 15px;
@@ -176,7 +176,8 @@
   display: flex;
   flex-direction: column;
   gap: 20px;
-  max-width: 350px;
+  width: 160px;
+  /* Standard skyscraper width */
   animation: floatBanners 6s ease-in-out infinite;
 }
 
@@ -208,25 +209,31 @@
 
 .ad-banner {
   background: white;
-  padding: 10px;
+  padding: 8px;
   border-radius: 12px;
   overflow: hidden;
   box-shadow: 0 6px 20px rgba(0, 0, 0, 0.35);
   animation: slideInLeft 0.6s ease;
   border: 3px solid rgba(0, 0, 0, 0.1);
   transition: all 0.3s ease;
+  width: 160px;
+  /* Standard skyscraper width */
+  height: 600px;
+  /* Standard skyscraper height */
 }
 
 .ad-banner:hover {
-  transform: scale(1.03);
+  transform: scale(1.02);
   box-shadow: 0 8px 25px rgba(0, 0, 0, 0.45);
 }
 
 .ad-banner img {
   width: 100%;
-  height: auto;
+  height: 100%;
   display: block;
   border-radius: 8px;
+  object-fit: cover;
+  /* Ensure image fills the space properly */
 }
 
 /* Animación de fade para banners rotativos */
@@ -344,13 +351,18 @@
 /* Responsive */
 @media (max-width: 1600px) {
 
-  .right-banners,
+  .right-banners {
+    max-width: 240px;
+  }
+
   .left-banners {
-    max-width: 260px;
+    width: 160px;
   }
 
   .ad-banner {
-    padding: 8px;
+    padding: 6px;
+    width: 160px;
+    height: 600px;
   }
 }
 
@@ -361,8 +373,14 @@
   }
 
   .left-banners {
-    left: 15px;
-    max-width: 260px;
+    left: 10px;
+    width: 140px;
+  }
+
+  .ad-banner {
+    width: 140px;
+    height: 525px;
+    /* Proportional scaling */
   }
 }
 
