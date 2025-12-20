@@ -930,6 +930,7 @@ const Players = ({ tournamentData, audioControls, auth }) => {
                               <button
                                 className="activate-insurance-btn pixel-button"
                                 onClick={() => {
+                                  setSelectedInsurancePokemon([]); // Limpiar selección anterior
                                   setShowDeathInsuranceModal({ playerId: player.id, playerName: player.name });
                                 }}
                                 title="Activar seguros de muerte"
