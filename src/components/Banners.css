@@ -166,7 +166,7 @@
   }
 }
 
-/* Left Banners Container - Vertical Skyscraper Format */
+/* Left Banners Container - Wide Skyscraper Format */
 .left-banners {
   position: fixed;
   left: 15px;
@@ -176,8 +176,8 @@
   display: flex;
   flex-direction: column;
   gap: 20px;
-  width: 160px;
-  /* Standard skyscraper width */
+  width: 300px;
+  /* Wide skyscraper width */
   animation: floatBanners 6s ease-in-out infinite;
 }
 
@@ -216,10 +216,10 @@
   animation: slideInLeft 0.6s ease;
   border: 3px solid rgba(0, 0, 0, 0.1);
   transition: all 0.3s ease;
-  width: 160px;
-  /* Standard skyscraper width */
+  width: 300px;
+  /* Wide skyscraper width */
   height: 600px;
-  /* Standard skyscraper height */
+  /* Wide skyscraper height */
 }
 
 .ad-banner:hover {
@@ -356,12 +356,12 @@
   }
 
   .left-banners {
-    width: 160px;
+    width: 300px;
   }
 
   .ad-banner {
     padding: 6px;
-    width: 160px;
+    width: 300px;
     height: 600px;
   }
 }
@@ -374,12 +374,12 @@
 
   .left-banners {
     left: 10px;
-    width: 140px;
+    width: 260px;
   }
 
   .ad-banner {
-    width: 140px;
-    height: 525px;
+    width: 260px;
+    height: 520px;
     /* Proportional scaling */
   }
 }
