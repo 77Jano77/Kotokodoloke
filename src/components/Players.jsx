@@ -1376,6 +1376,11 @@ const Players = ({ tournamentData, audioControls, auth }) => {
         const aliveCaptured = capturedPokemon.filter(p => !p.isDead); // Solo vivos
         const currentInsurances = player.deathInsurances || [];
 
+        // Contar cuántas recompensas de seguros tiene (cada una da 2 seguros)
+        const insuranceRewards = (player.rewards || []).filter(r => r === '🛡️ 2 Seguros de Muerte').length;
+        const maxInsurances = insuranceRewards * 2; // 2 seguros por cada recompensa
+        const remainingSlots = maxInsurances - currentInsurances.length;
+
         // Combinar seguros actuales con selección temporal
         const totalSelected = currentInsurances.length + selectedInsurancePokemon.length;
 
@@ -1390,13 +1395,25 @@ const Players = ({ tournamentData, audioControls, auth }) => {
             tournamentData.addDeathInsurance(player.id, identifier);
           });
 
-          // Marcar recompensa como usada si se completaron los 2 seguros
+          // Marcar recompensa como usada si se completaron los 2 seguros de ESA recompensa
           const updatedPlayer = (tournamentData.players || []).find(p => p.id === player.id);
-          if (updatedPlayer && (updatedPlayer.deathInsurances || []).length >= 2) {
-            const rewardIndex = (updatedPlayer.rewards || []).findIndex(r => r === '🛡️ 2 Seguros de Muerte');
-            if (rewardIndex !== -1 && !(updatedPlayer.usedRewards || []).includes(rewardIndex)) {
-              tournamentData.toggleRewardUsed(player.id, rewardIndex);
-            }
+          if (updatedPlayer) {
+            // Marcar cada recompensa que ahora esté completa
+            (updatedPlayer.rewards || []).forEach((reward, index) => {
+              if (reward === '🛡️ 2 Seguros de Muerte' && !(updatedPlayer.usedRewards || []).includes(index)) {
+                // Calcular cuántos seguros se han usado de esta recompensa
+                // Por simplicidad, marcamos como usada cuando se alcanzan múltiplos de 2
+                const totalInsurances = (updatedPlayer.deathInsurances || []).length;
+                const completedRewards = Math.floor(totalInsurances / 2);
+                const unusedRewards = (updatedPlayer.rewards || []).filter((r, i) =>
+                  r === '🛡️ 2 Seguros de Muerte' && !(updatedPlayer.usedRewards || []).includes(i)
+                ).length;
+
+                if (completedRewards > 0 && unusedRewards > 0) {
+                  tournamentData.toggleRewardUsed(player.id, index);
+                }
+              }
+            });
           }
 
           alert(`✅ ${selectedInsurancePokemon.length} seguro(s) de muerte activado(s)`);
@@ -1409,10 +1426,9 @@ const Players = ({ tournamentData, audioControls, auth }) => {
             // Deseleccionar
             setSelectedInsurancePokemon(prev => prev.filter(id => id !== identifier));
           } else {
-            // Seleccionar (máximo 2 - seguros actuales)
-            const maxAllowed = 2 - currentInsurances.length;
-            if (selectedInsurancePokemon.length >= maxAllowed) {
-              alert(`⚠️ Solo puedes seleccionar ${maxAllowed} Pokémon más`);
+            // Seleccionar (máximo = slots restantes)
+            if (selectedInsurancePokemon.length >= remainingSlots) {
+              alert(`⚠️ Solo puedes seleccionar ${remainingSlots} Pokémon más (tienes ${insuranceRewards} recompensa(s) = ${maxInsurances} seguros máximo)`);
               return;
             }
             setSelectedInsurancePokemon(prev => [...prev, identifier]);
@@ -1427,13 +1443,15 @@ const Players = ({ tournamentData, audioControls, auth }) => {
             <div className="modal-content pixel-card death-insurance-modal" onClick={(e) => e.stopPropagation()}>
               <h2>🛡️ ACTIVAR SEGUROS DE MUERTE</h2>
               <p className="modal-subtitle">
-                Selecciona hasta {2 - currentInsurances.length} Pokémon vivos para proteger
+                Selecciona hasta {remainingSlots} Pokémon vivos para proteger
                 ({selectedInsurancePokemon.length} seleccionado{selectedInsurancePokemon.length !== 1 ? 's' : ''})
+                <br />
+                <small>Tienes {insuranceRewards} recompensa(s) = {maxInsurances} seguros máximo | {currentInsurances.length} activos</small>
               </p>
 
-              {currentInsurances.length >= 2 ? (
+              {remainingSlots <= 0 ? (
                 <div className="insurance-full">
-                  <p>✅ Ya has asignado los 2 seguros de muerte disponibles</p>
+                  <p>✅ Ya has asignado todos los seguros de muerte disponibles ({currentInsurances.length}/{maxInsurances})</p>
                   <p className="hint">Puedes eliminar un seguro haciendo click en el escudo 🛡️ del Pokémon</p>
                 </div>
               ) : (

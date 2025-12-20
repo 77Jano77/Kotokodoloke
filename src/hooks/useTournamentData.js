@@ -612,9 +612,13 @@ export const useTournamentData = () => {
 
     const deathInsurances = player.deathInsurances || [];
 
-    // Verificar que no tenga ya 2 seguros activos
-    if (deathInsurances.length >= 2) {
-      alert('❌ Ya tienes 2 Pokémon con seguro de muerte activo');
+    // Contar cuántas recompensas de seguros tiene (cada una da 2 seguros)
+    const insuranceRewards = (player.rewards || []).filter(r => r === '🛡️ 2 Seguros de Muerte').length;
+    const maxInsurances = insuranceRewards * 2;
+
+    // Verificar que no exceda el máximo permitido
+    if (deathInsurances.length >= maxInsurances) {
+      alert(`❌ Ya tienes ${maxInsurances} Pokémon con seguro de muerte activo (${insuranceRewards} recompensa(s) × 2)`);
       return false;
     }
 
