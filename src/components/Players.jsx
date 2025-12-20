@@ -16,6 +16,7 @@ const AVAILABLE_SPRITES = [
   { id: 'pescador_jano', name: 'Pescador Jano', image: '/sprites/Pescador Jano.jpg' },
   { id: 'rupert', name: 'Rupert', image: '/sprites/Rupert.jpg' },
   { id: 'smoke', name: 'Smoke', image: '/sprites/Smoke.jpg' },
+  { id: 'svein', name: 'Svein', image: '/sprites/Svein.jpg' },
   { id: 'yas', name: 'Yas', image: '/sprites/Yas.jpg' },
   { id: 'zainys', name: 'Zainys', image: '/sprites/Zainys.jpg' },
   { id: 'dano', name: 'Dano', image: '/sprites/Dano.jpg' },
