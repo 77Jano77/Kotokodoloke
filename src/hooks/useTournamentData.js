@@ -59,6 +59,8 @@ export const useTournamentData = () => {
       team: Array(6).fill(null),
       badges: Array(8).fill(false),
       rewards: [],
+      usedRewards: [], // Índices de recompensas usadas
+      deathInsurances: [], // Pokémon con seguro de muerte
       points: 0,
       matchScores: {},
       manualExtraRolls: 0,
@@ -580,6 +582,96 @@ export const useTournamentData = () => {
     updateFirebase(newData);
   };
 
+  // Marcar/desmarcar recompensa como usada
+  const toggleRewardUsed = (playerId, rewardIndex) => {
+    const player = (data.players || []).find(p => p.id === playerId);
+    if (!player) return;
+
+    const usedRewards = player.usedRewards || [];
+    const isUsed = usedRewards.includes(rewardIndex);
+
+    const newUsedRewards = isUsed
+      ? usedRewards.filter(idx => idx !== rewardIndex)
+      : [...usedRewards, rewardIndex];
+
+    const newData = {
+      ...data,
+      players: (data.players || []).map(p =>
+        p.id === playerId
+          ? { ...p, usedRewards: newUsedRewards }
+          : p
+      ),
+    };
+    updateFirebase(newData);
+  };
+
+  // Añadir seguro de muerte a un Pokémon
+  const addDeathInsurance = (playerId, pokemonIdentifier) => {
+    const player = (data.players || []).find(p => p.id === playerId);
+    if (!player) return;
+
+    const deathInsurances = player.deathInsurances || [];
+
+    // Verificar que no tenga ya 2 seguros activos
+    if (deathInsurances.length >= 2) {
+      alert('❌ Ya tienes 2 Pokémon con seguro de muerte activo');
+      return false;
+    }
+
+    // Verificar que este Pokémon no tenga ya seguro
+    if (deathInsurances.some(ins => ins.identifier === pokemonIdentifier)) {
+      alert('⚠️ Este Pokémon ya tiene seguro de muerte');
+      return false;
+    }
+
+    const newInsurance = {
+      identifier: pokemonIdentifier,
+      addedAt: Date.now()
+    };
+
+    const newData = {
+      ...data,
+      players: (data.players || []).map(p =>
+        p.id === playerId
+          ? { ...p, deathInsurances: [...deathInsurances, newInsurance] }
+          : p
+      ),
+    };
+    updateFirebase(newData);
+    return true;
+  };
+
+  // Remover seguro de muerte de un Pokémon
+  const removeDeathInsurance = (playerId, pokemonIdentifier) => {
+    const player = (data.players || []).find(p => p.id === playerId);
+    if (!player) return;
+
+    const deathInsurances = player.deathInsurances || [];
+    const newDeathInsurances = deathInsurances.filter(
+      ins => ins.identifier !== pokemonIdentifier
+    );
+
+    const newData = {
+      ...data,
+      players: (data.players || []).map(p =>
+        p.id === playerId
+          ? { ...p, deathInsurances: newDeathInsurances }
+          : p
+      ),
+    };
+    updateFirebase(newData);
+  };
+
+  // Verificar si un Pokémon tiene seguro de muerte
+  const hasDeathInsurance = (playerId, pokemonIdentifier) => {
+    const player = (data.players || []).find(p => p.id === playerId);
+    if (!player) return false;
+
+    const deathInsurances = player.deathInsurances || [];
+    return deathInsurances.some(ins => ins.identifier === pokemonIdentifier);
+  };
+
+
   return {
     ...data,
     loading,
@@ -613,6 +705,10 @@ export const useTournamentData = () => {
     consumeReward,
     updateAdBanners,
     togglePokemonDeathStatus,
+    toggleRewardUsed,
+    addDeathInsurance,
+    removeDeathInsurance,
+    hasDeathInsurance,
     selectedAdBanners: data.selectedAdBanners || [],
   };
 };

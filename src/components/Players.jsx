@@ -108,6 +108,7 @@ const Players = ({ tournamentData, audioControls, auth }) => {
   const [showCustomizeModal, setShowCustomizeModal] = useState(null); // playerId
   const [showAddRewardModal, setShowAddRewardModal] = useState(null); // playerId
   const [selectedReward, setSelectedReward] = useState('');
+  const [showDeathInsuranceModal, setShowDeathInsuranceModal] = useState(null); // {playerId, playerName}
 
   // Verificar si el usuario ya tiene un jugador creado
   const userPlayer = auth.currentUser?.hasPlayer
@@ -745,15 +746,35 @@ const Players = ({ tournamentData, audioControls, auth }) => {
                             )}
 
                             {/* Sprite del Pokémon */}
-                            {pokemonData && (
-                              <div className="pokemon-sprite-container">
-                                <img
-                                  src={`https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/${pokemonData.number}.png`}
-                                  alt={pokemonData.name}
-                                  className="pokemon-team-sprite"
-                                />
-                              </div>
-                            )}
+                            {pokemonData && (() => {
+                              const pokemonName = typeof pokemon === 'object' ? pokemon.name : pokemon;
+                              const pokemonIdentifier = `team-${player.id}-${index}-${pokemonName}`;
+                              const hasInsurance = tournamentData.hasDeathInsurance(player.id, pokemonIdentifier);
+
+                              return (
+                                <div className="pokemon-sprite-container">
+                                  <img
+                                    src={`https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/${pokemonData.number}.png`}
+                                    alt={pokemonData.name}
+                                    className="pokemon-team-sprite"
+                                  />
+                                  {hasInsurance && (
+                                    <div
+                                      className="death-insurance-badge"
+                                      onClick={() => {
+                                        if (confirm('¿Has utilizado ya tu seguro de muerte?')) {
+                                          tournamentData.removeDeathInsurance(player.id, pokemonIdentifier);
+                                          alert('🛡️ Seguro de muerte utilizado');
+                                        }
+                                      }}
+                                      title="Seguro de muerte activo - Click si lo has usado"
+                                    >
+                                      🛡️
+                                    </div>
+                                  )}
+                                </div>
+                              );
+                            })()}
 
                             {/* Selector de habilidad con búsqueda */}
                             <div className="searchable-select">
@@ -877,25 +898,52 @@ const Players = ({ tournamentData, audioControls, auth }) => {
                 </div>
                 {(player.rewards || []).length > 0 ? (
                   <ul className="rewards-list">
-                    {(player.rewards || []).map((reward, index) => (
-                      <li key={index} className="reward-item">
-                        <span>{reward}</span>
-                        {canEdit && (
-                          <button
-                            className="remove-reward-btn"
-                            onClick={() => {
-                              if (confirm(`¿Eliminar la recompensa "${reward}"?`)) {
-                                handleRemoveReward(player.id, index);
-                                alert('✅ Recompensa eliminada correctamente');
-                              }
-                            }}
-                            title="Eliminar recompensa"
-                          >
-                            ✕
-                          </button>
-                        )}
-                      </li>
-                    ))}
+                    {(player.rewards || []).map((reward, index) => {
+                      const isUsed = (player.usedRewards || []).includes(index);
+                      const isDeathInsurance = reward === '🛡️ 2 Seguros de Muerte';
+
+                      return (
+                        <li key={index} className={`reward-item ${isUsed ? 'used' : ''}`}>
+                          <div className="reward-content">
+                            {canEdit && (
+                              <input
+                                type="checkbox"
+                                className="reward-checkbox"
+                                checked={isUsed}
+                                onChange={() => tournamentData.toggleRewardUsed(player.id, index)}
+                                title={isUsed ? "Marcar como no usada" : "Marcar como usada"}
+                              />
+                            )}
+                            <span className="reward-text">{reward}</span>
+                            {isDeathInsurance && canEdit && !isUsed && (
+                              <button
+                                className="activate-insurance-btn pixel-button"
+                                onClick={() => {
+                                  setShowDeathInsuranceModal({ playerId: player.id, playerName: player.name });
+                                }}
+                                title="Activar seguros de muerte"
+                              >
+                                🛡️ Activar
+                              </button>
+                            )}
+                          </div>
+                          {canEdit && (
+                            <button
+                              className="remove-reward-btn"
+                              onClick={() => {
+                                if (confirm(`¿Eliminar la recompensa "${reward}"?`)) {
+                                  handleRemoveReward(player.id, index);
+                                  alert('✅ Recompensa eliminada correctamente');
+                                }
+                              }}
+                              title="Eliminar recompensa"
+                            >
+                              ✕
+                            </button>
+                          )}
+                        </li>
+                      );
+                    })}
                   </ul>
                 ) : (
                   <p className="no-rewards">SIN RECOMPENSAS</p>
@@ -955,6 +1003,26 @@ const Players = ({ tournamentData, audioControls, auth }) => {
                             alt={`#${pokemon.pokemon}`}
                           />
                           {pokemon.isDead && <div className="dead-overlay">💀</div>}
+                          {(() => {
+                            const pokemonName = pokemonData ? pokemonData.name : `#${pokemon.pokemon}`;
+                            const pokemonIdentifier = `captured-${showCapturedModal.playerId}-${pokemon.pokemon}-${pokemon.zone}`;
+                            const hasInsurance = tournamentData.hasDeathInsurance(showCapturedModal.playerId, pokemonIdentifier);
+
+                            return hasInsurance && (
+                              <div
+                                className="death-insurance-badge"
+                                onClick={() => {
+                                  if (confirm('¿Has utilizado ya tu seguro de muerte?')) {
+                                    tournamentData.removeDeathInsurance(showCapturedModal.playerId, pokemonIdentifier);
+                                    alert('🛡️ Seguro de muerte utilizado');
+                                  }
+                                }}
+                                title="Seguro de muerte activo - Click si lo has usado"
+                              >
+                                🛡️
+                              </div>
+                            );
+                          })()}
                         </div>
                         <div className="captured-info">
                           <h4>{pokemon.nickname || (pokemonData ? pokemonData.name : `#${pokemon.pokemon}`)}</h4>
@@ -1285,6 +1353,124 @@ const Players = ({ tournamentData, audioControls, auth }) => {
           </div>
         </div>
       )}
+
+      {/* Death Insurance Modal */}
+      {showDeathInsuranceModal && (() => {
+        const player = (tournamentData.players || []).find(p => p.id === showDeathInsuranceModal.playerId);
+        if (!player) return null;
+
+        const team = safeTeamToArray(player.team).filter(p => p); // Pokémon en el equipo
+        const capturedPokemon = tournamentData.getCapturedPokemonByPlayer(showDeathInsuranceModal.playerName);
+        const aliveCaptured = capturedPokemon.filter(p => !p.isDead); // Solo vivos
+        const currentInsurances = player.deathInsurances || [];
+
+        return (
+          <div className="modal-overlay" onClick={() => setShowDeathInsuranceModal(null)}>
+            <div className="modal-content pixel-card death-insurance-modal" onClick={(e) => e.stopPropagation()}>
+              <h2>🛡️ ACTIVAR SEGUROS DE MUERTE</h2>
+              <p className="modal-subtitle">Selecciona 2 Pokémon vivos para proteger ({currentInsurances.length}/2)</p>
+
+              {currentInsurances.length >= 2 ? (
+                <div className="insurance-full">
+                  <p>✅ Ya has asignado los 2 seguros de muerte disponibles</p>
+                  <p className="hint">Puedes eliminar un seguro haciendo click en el escudo 🛡️ del Pokémon</p>
+                </div>
+              ) : (
+                <>
+                  {/* Equipo */}
+                  {team.length > 0 && (
+                    <div className="insurance-section">
+                      <h3>👥 EQUIPO</h3>
+                      <div className="insurance-pokemon-grid">
+                        {team.map((pokemon, index) => {
+                          const pokemonName = typeof pokemon === 'object' ? pokemon.name : pokemon;
+                          const pokemonData = POKEDEX_DATA.find(p => p.name === pokemonName);
+                          const pokemonIdentifier = `team-${player.id}-${index}-${pokemonName}`;
+                          const hasInsurance = currentInsurances.some(ins => ins.identifier === pokemonIdentifier);
+
+                          return pokemonData && (
+                            <div
+                              key={index}
+                              className={`insurance-pokemon-card ${hasInsurance ? 'has-insurance' : ''}`}
+                              onClick={() => {
+                                if (hasInsurance) {
+                                  alert('⚠️ Este Pokémon ya tiene seguro de muerte');
+                                  return;
+                                }
+                                if (tournamentData.addDeathInsurance(player.id, pokemonIdentifier)) {
+                                  alert(`✅ Seguro de muerte añadido a ${pokemonName}`);
+                                  if (currentInsurances.length + 1 >= 2) {
+                                    setShowDeathInsuranceModal(null);
+                                  }
+                                }
+                              }}
+                            >
+                              <img
+                                src={`https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/${pokemonData.number}.png`}
+                                alt={pokemonName}
+                              />
+                              <span>{pokemonName}</span>
+                              {hasInsurance && <div className="insurance-badge">🛡️</div>}
+                            </div>
+                          );
+                        })}
+                      </div>
+                    </div>
+                  )}
+
+                  {/* Capturados */}
+                  {aliveCaptured.length > 0 && (
+                    <div className="insurance-section">
+                      <h3>📦 CAPTURADOS VIVOS</h3>
+                      <div className="insurance-pokemon-grid">
+                        {aliveCaptured.map((pokemon, index) => {
+                          const pokemonData = POKEDEX_DATA.find(p => p.number === parseInt(pokemon.pokemon));
+                          const pokemonName = pokemonData ? pokemonData.name : `#${pokemon.pokemon}`;
+                          const pokemonIdentifier = `captured-${player.id}-${pokemon.pokemon}-${pokemon.zone}`;
+                          const hasInsurance = currentInsurances.some(ins => ins.identifier === pokemonIdentifier);
+
+                          return pokemonData && (
+                            <div
+                              key={index}
+                              className={`insurance-pokemon-card ${hasInsurance ? 'has-insurance' : ''}`}
+                              onClick={() => {
+                                if (hasInsurance) {
+                                  alert('⚠️ Este Pokémon ya tiene seguro de muerte');
+                                  return;
+                                }
+                                if (tournamentData.addDeathInsurance(player.id, pokemonIdentifier)) {
+                                  alert(`✅ Seguro de muerte añadido a ${pokemon.nickname || pokemonName}`);
+                                  if (currentInsurances.length + 1 >= 2) {
+                                    setShowDeathInsuranceModal(null);
+                                  }
+                                }
+                              }}
+                            >
+                              <img
+                                src={`https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/${pokemon.pokemon}.png`}
+                                alt={pokemonName}
+                              />
+                              <span>{pokemon.nickname || pokemonName}</span>
+                              {hasInsurance && <div className="insurance-badge">🛡️</div>}
+                            </div>
+                          );
+                        })}
+                      </div>
+                    </div>
+                  )}
+                </>
+              )}
+
+              <button
+                className="close-modal-btn pixel-button"
+                onClick={() => setShowDeathInsuranceModal(null)}
+              >
+                ✕ CERRAR
+              </button>
+            </div>
+          </div>
+        );
+      })()}
     </div>
   );
 };
