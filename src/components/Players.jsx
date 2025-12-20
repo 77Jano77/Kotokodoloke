@@ -937,7 +937,16 @@ const Players = ({ tournamentData, audioControls, auth }) => {
                       });
 
                       return displayRewards.map((item, displayIndex) => {
-                        const isUsed = (player.usedRewards || []).includes(item.originalIndex);
+                        // Para seguros, verificar si este seguro específico ha sido usado
+                        let isUsed;
+                        if (item.isInsurance) {
+                          // Verificar si este insuranceId específico está en algún deathInsurance
+                          const deathInsurances = player.deathInsurances || [];
+                          isUsed = deathInsurances.some(ins => ins.insuranceId === item.insuranceId);
+                        } else {
+                          // Para otras recompensas, usar el sistema normal
+                          isUsed = (player.usedRewards || []).includes(item.originalIndex);
+                        }
 
                         return (
                           <li key={`${item.originalIndex}-${displayIndex}`} className={`reward-item ${isUsed ? 'used' : ''} ${item.isInsurance ? 'insurance-item' : ''}`}>
@@ -969,6 +978,26 @@ const Players = ({ tournamentData, audioControls, auth }) => {
                                 {item.displayText}
                               </span>
                             </div>
+                            {/* Admin puede eliminar seguros incluso si están usados */}
+                            {isAdmin && item.isInsurance && isUsed && (
+                              <button
+                                className="remove-reward-btn"
+                                onClick={() => {
+                                  if (confirm(`¿Eliminar el seguro "${item.displayText}"? Esto también eliminará el seguro del Pokémon que lo tenga.`)) {
+                                    // Encontrar y eliminar el seguro del Pokémon
+                                    const deathInsurances = player.deathInsurances || [];
+                                    const insuranceToRemove = deathInsurances.find(ins => ins.insuranceId === item.insuranceId);
+                                    if (insuranceToRemove) {
+                                      tournamentData.removeDeathInsurance(player.id, insuranceToRemove.identifier);
+                                    }
+                                    alert('✅ Seguro eliminado correctamente');
+                                  }
+                                }}
+                                title="Eliminar seguro (Admin)"
+                              >
+                                ✕
+                              </button>
+                            )}
                             {canEdit && !item.isInsurance && (
                               <button
                                 className="remove-reward-btn"
