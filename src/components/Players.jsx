@@ -748,7 +748,17 @@ const Players = ({ tournamentData, audioControls, auth }) => {
                             {/* Sprite del Pokémon */}
                             {pokemonData && (() => {
                               const pokemonName = typeof pokemon === 'object' ? pokemon.name : pokemon;
-                              const pokemonIdentifier = `team-${player.id}-${index}-${pokemonName}`;
+                              // Buscar el Pokémon en capturados para obtener su identificador original
+                              const capturedPokemon = tournamentData.getCapturedPokemonByPlayer(player.name);
+                              const captured = capturedPokemon.find(p => {
+                                const capPokemonData = POKEDEX_DATA.find(pd => pd.number === parseInt(p.pokemon));
+                                return capPokemonData && capPokemonData.name === pokemonName;
+                              });
+
+                              // Usar identificador basado en zona de captura si existe, sino usar genérico
+                              const pokemonIdentifier = captured
+                                ? `captured-${player.id}-${captured.pokemon}-${captured.zone}`
+                                : `team-${player.id}-${pokemonName}`;
                               const hasInsurance = tournamentData.hasDeathInsurance(player.id, pokemonIdentifier);
 
                               return (
@@ -1385,7 +1395,16 @@ const Players = ({ tournamentData, audioControls, auth }) => {
                         {team.map((pokemon, index) => {
                           const pokemonName = typeof pokemon === 'object' ? pokemon.name : pokemon;
                           const pokemonData = POKEDEX_DATA.find(p => p.name === pokemonName);
-                          const pokemonIdentifier = `team-${player.id}-${index}-${pokemonName}`;
+
+                          // Buscar en capturados para obtener identificador original
+                          const captured = capturedPokemon.find(p => {
+                            const capPokemonData = POKEDEX_DATA.find(pd => pd.number === parseInt(p.pokemon));
+                            return capPokemonData && capPokemonData.name === pokemonName;
+                          });
+
+                          const pokemonIdentifier = captured
+                            ? `captured-${player.id}-${captured.pokemon}-${captured.zone}`
+                            : `team-${player.id}-${pokemonName}`;
                           const hasInsurance = currentInsurances.some(ins => ins.identifier === pokemonIdentifier);
 
                           return pokemonData && (
@@ -1397,10 +1416,18 @@ const Players = ({ tournamentData, audioControls, auth }) => {
                                   alert('⚠️ Este Pokémon ya tiene seguro de muerte');
                                   return;
                                 }
-                                if (tournamentData.addDeathInsurance(player.id, pokemonIdentifier)) {
+                                const success = tournamentData.addDeathInsurance(player.id, pokemonIdentifier);
+                                if (success) {
                                   alert(`✅ Seguro de muerte añadido a ${pokemonName}`);
-                                  if (currentInsurances.length + 1 >= 2) {
-                                    setShowDeathInsuranceModal(null);
+                                  // Verificar si ahora tiene 2 seguros
+                                  const updatedPlayer = (tournamentData.players || []).find(p => p.id === player.id);
+                                  if (updatedPlayer && (updatedPlayer.deathInsurances || []).length >= 2) {
+                                    // Marcar recompensa como usada
+                                    const rewardIndex = (updatedPlayer.rewards || []).findIndex(r => r === '🛡️ 2 Seguros de Muerte');
+                                    if (rewardIndex !== -1 && !(updatedPlayer.usedRewards || []).includes(rewardIndex)) {
+                                      tournamentData.toggleRewardUsed(player.id, rewardIndex);
+                                    }
+                                    setTimeout(() => setShowDeathInsuranceModal(null), 500);
                                   }
                                 }
                               }}
@@ -1438,10 +1465,18 @@ const Players = ({ tournamentData, audioControls, auth }) => {
                                   alert('⚠️ Este Pokémon ya tiene seguro de muerte');
                                   return;
                                 }
-                                if (tournamentData.addDeathInsurance(player.id, pokemonIdentifier)) {
+                                const success = tournamentData.addDeathInsurance(player.id, pokemonIdentifier);
+                                if (success) {
                                   alert(`✅ Seguro de muerte añadido a ${pokemon.nickname || pokemonName}`);
-                                  if (currentInsurances.length + 1 >= 2) {
-                                    setShowDeathInsuranceModal(null);
+                                  // Verificar si ahora tiene 2 seguros
+                                  const updatedPlayer = (tournamentData.players || []).find(p => p.id === player.id);
+                                  if (updatedPlayer && (updatedPlayer.deathInsurances || []).length >= 2) {
+                                    // Marcar recompensa como usada
+                                    const rewardIndex = (updatedPlayer.rewards || []).findIndex(r => r === '🛡️ 2 Seguros de Muerte');
+                                    if (rewardIndex !== -1 && !(updatedPlayer.usedRewards || []).includes(rewardIndex)) {
+                                      tournamentData.toggleRewardUsed(player.id, rewardIndex);
+                                    }
+                                    setTimeout(() => setShowDeathInsuranceModal(null), 500);
                                   }
                                 }
                               }}
