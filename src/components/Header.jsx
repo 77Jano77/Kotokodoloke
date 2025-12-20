@@ -53,11 +53,28 @@ function Header({ currentSection, setCurrentSection, currentUser, onLogout, audi
 
       {/* Main Header Content */}
       <div className="header-content">
+        {/* Title with Kakuna sprites on both sides */}
         <div className="header-brand">
-          <img src="/recursos/copakakuna.jpg" alt="Copa Kakuna" className="kakuna-logo" />
+          <img
+            src="/recursos/kakuna.gif"
+            alt="Kakuna"
+            className="kakuna-logo kakuna-left"
+            onClick={() => setCurrentSection('home')}
+            style={{ cursor: 'pointer' }}
+            title="Ir a Inicio"
+          />
           <h1 className="pixel-title">KOTOKODOS CUP</h1>
+          <img
+            src="/recursos/kakuna.gif"
+            alt="Kakuna"
+            className="kakuna-logo kakuna-right"
+            onClick={() => setCurrentSection('home')}
+            style={{ cursor: 'pointer' }}
+            title="Ir a Inicio"
+          />
         </div>
 
+        {/* Navigation buttons below */}
         <nav className="pixel-nav">
           {menuItems.map((item) => {
             const Icon = item.icon;
