@@ -196,7 +196,8 @@ const Players = ({ tournamentData, audioControls, auth }) => {
       return;
     }
 
-    const newTeam = [...(player.team || [])];
+    const team = safeTeamToArray(player.team);
+    const newTeam = [...team];
     if (pokemonName) {
       newTeam[slotIndex] = typeof newTeam[slotIndex] === 'object'
         ? { ...newTeam[slotIndex], name: pokemonName }
@@ -204,7 +205,11 @@ const Players = ({ tournamentData, audioControls, auth }) => {
     } else {
       newTeam[slotIndex] = null;
     }
-    tournamentData.updatePlayer(playerId, { team: newTeam });
+
+    // Limpiar undefined
+    const cleanTeam = newTeam.map(slot => slot === undefined ? null : slot);
+
+    tournamentData.updatePlayer(playerId, { team: cleanTeam });
 
     // Limpiar el valor temporal de búsqueda
     const key = `${playerId}-${slotIndex}`;
@@ -221,30 +226,50 @@ const Players = ({ tournamentData, audioControls, auth }) => {
       return;
     }
 
-    const newTeam = [...(player.team || [])];
+    const team = safeTeamToArray(player.team);
+    const newTeam = [...team];
     if (newTeam[slotIndex]) {
       newTeam[slotIndex] = typeof newTeam[slotIndex] === 'object'
         ? { ...newTeam[slotIndex], ability: abilityName || null }
         : { name: newTeam[slotIndex], ability: abilityName || null };
     }
-    tournamentData.updatePlayer(playerId, { team: newTeam });
+
+    // Limpiar undefined
+    const cleanTeam = newTeam.map(slot => slot === undefined ? null : slot);
+
+    tournamentData.updatePlayer(playerId, { team: cleanTeam });
   };
 
   const handleNicknameChange = (playerId, slotIndex, nickname) => {
     const player = (tournamentData.players || []).find(p => p.id === playerId);
     if (!player) return;
 
-    const newTeam = [...(player.team || [])];
+    const team = safeTeamToArray(player.team);
+    const newTeam = [...team];
     if (newTeam[slotIndex]) {
       newTeam[slotIndex] = typeof newTeam[slotIndex] === 'object'
         ? { ...newTeam[slotIndex], nickname: nickname || null }
         : { name: newTeam[slotIndex], nickname: nickname || null };
     }
-    tournamentData.updatePlayer(playerId, { team: newTeam });
+
+    // Limpiar undefined
+    const cleanTeam = newTeam.map(slot => slot === undefined ? null : slot);
+
+    tournamentData.updatePlayer(playerId, { team: cleanTeam });
   };
 
   const handleRemoveFromTeam = (playerId, slotIndex) => {
-    handleTeamChange(playerId, slotIndex, null);
+    const player = (tournamentData.players || []).find(p => p.id === playerId);
+    if (!player) return;
+
+    const team = safeTeamToArray(player.team);
+    const newTeam = [...team];
+    newTeam[slotIndex] = null;
+
+    // Limpiar undefined
+    const cleanTeam = newTeam.map(slot => slot === undefined ? null : slot);
+
+    tournamentData.updatePlayer(playerId, { team: cleanTeam });
   };
 
   const handleChangeBackground = (playerId, backgroundId) => {
@@ -283,7 +308,8 @@ const Players = ({ tournamentData, audioControls, auth }) => {
     const player = (tournamentData.players || []).find(p => p.id === playerId);
     if (!player) return;
 
-    const currentPokemon = player.team[slotIndex];
+    const team = safeTeamToArray(player.team);
+    const currentPokemon = team[slotIndex];
     const pokemonName = typeof currentPokemon === 'object' ? currentPokemon.name : currentPokemon;
     const currentPokemonData = POKEDEX_DATA.find(p => p.name === pokemonName);
 
@@ -305,12 +331,15 @@ const Players = ({ tournamentData, audioControls, auth }) => {
       return;
     }
 
-    const newTeam = [...(player.team || [])];
+    const newTeam = [...team];
     newTeam[slotIndex] = typeof currentPokemon === 'object'
       ? { ...currentPokemon, name: evolvedPokemonName }
       : evolvedPokemonName;
 
-    tournamentData.updatePlayer(playerId, { team: newTeam });
+    // Limpiar undefined
+    const cleanTeam = newTeam.map(slot => slot === undefined ? null : slot);
+
+    tournamentData.updatePlayer(playerId, { team: cleanTeam });
     alert(`✨ ${pokemonName} ha evolucionado a ${evolvedPokemonName}!`);
   };
 
@@ -318,7 +347,8 @@ const Players = ({ tournamentData, audioControls, auth }) => {
     const player = (tournamentData.players || []).find(p => p.id === playerId);
     if (!player) return;
 
-    const currentPokemon = player.team[slotIndex];
+    const team = safeTeamToArray(player.team);
+    const currentPokemon = team[slotIndex];
     const pokemonName = typeof currentPokemon === 'object' ? currentPokemon.name : currentPokemon;
     const currentPokemonData = POKEDEX_DATA.find(p => p.name === pokemonName);
 
@@ -340,12 +370,15 @@ const Players = ({ tournamentData, audioControls, auth }) => {
       return;
     }
 
-    const newTeam = [...(player.team || [])];
+    const newTeam = [...team];
     newTeam[slotIndex] = typeof currentPokemon === 'object'
       ? { ...currentPokemon, name: previousPokemon.name }
       : previousPokemon.name;
 
-    tournamentData.updatePlayer(playerId, { team: newTeam });
+    // Limpiar undefined
+    const cleanTeam = newTeam.map(slot => slot === undefined ? null : slot);
+
+    tournamentData.updatePlayer(playerId, { team: cleanTeam });
     alert(`🔙 ${pokemonName} ha devuelto a ${previousPokemon.name}!`);
   };
 
