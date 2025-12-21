@@ -1310,6 +1310,23 @@ const Players = ({ tournamentData, audioControls, auth }) => {
                               );
                             })()}
                           </div>
+
+                          {/* Skull icon for marking as dead */}
+                          {canEdit && !pokemon.isDead && (
+                            <div
+                              className="death-marker-icon"
+                              onClick={() => {
+                                if (confirm(`¿${pokemon.nickname || (pokemonData ? pokemonData.name : 'Este Pokémon')} ha muerto?`)) {
+                                  tournamentData.togglePokemonDeathStatus(pokemon);
+                                  alert('⚰️ Pokémon marcado como muerto');
+                                }
+                              }}
+                              title="Marcar como muerto"
+                            >
+                              💀
+                            </div>
+                          )}
+
                           <div className="captured-info">
                             <h4>{pokemon.nickname || (pokemonData ? pokemonData.name : `#${pokemon.pokemon}`)}</h4>
                             {pokemon.nickname && pokemonData && (
