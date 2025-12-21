@@ -1972,4 +1972,5 @@
 .starter-btn:hover,
 .sync-btn:hover {
   opacity: 1;
-}
+}/ *   R e w a r d s   s e c t i o n   d a r k   b a c k g r o u n d   * /   . r e w a r d s - s e c t i o n   {   b a c k g r o u n d :   r g b a ( 0 ,   0 ,   0 ,   0 . 3 ) ;   p a d d i n g :   1 r e m ;   b o r d e r - r a d i u s :   8 p x ;   }   . r e w a r d - i c o n - s m a l l   {   w i d t h :   2 4 p x ;   h e i g h t :   2 4 p x ;   m a r g i n - r i g h t :   0 . 5 r e m ;   v e r t i c a l - a l i g n :   m i d d l e ;   i m a g e - r e n d e r i n g :   p i x e l a t e d ;   }  
+ 

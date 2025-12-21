@@ -33,6 +33,19 @@ const KANTO_BADGES = [
   { id: 'earth', name: 'Tierra', image: '/recursos/Tierra.png' }
 ];
 
+// Fallback for potential legacy references
+const BADGES = KANTO_BADGES;
+
+// Helper function to get reward icon
+const getRewardIcon = (rewardName) => {
+  if (rewardName.includes('Artículo') || rewardName.includes('🛒')) return '/iconos/objeto.png';
+  if (rewardName.includes('Captura Extra') || rewardName.includes('➕')) return '/iconos/captura.png';
+  if (rewardName.includes('Captura Ruta Anterior') || rewardName.includes('🔙') || rewardName.includes('Anterior')) return '/iconos/capturanterior.png';
+  if (rewardName.includes('Revivir') || rewardName.includes('💚')) return '/iconos/revivir.png';
+  if (rewardName.includes('Seguro') || rewardName.includes('🛡️')) return '/iconos/seguro.png';
+  return null; // No icon for unknown rewards
+};
+
 const CARD_BACKGROUNDS = [
   { id: 'default', name: 'Predeterminado', gradient: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)' },
   { id: 'fire', name: 'Fuego', gradient: 'linear-gradient(135deg, #f093fb 0%, #f5576c 100%)' },
@@ -1140,8 +1153,15 @@ const Players = ({ tournamentData, audioControls, auth }) => {
                                     }}
                                     title={item.isInsurance && !isUsed ? "Click para aplicar este seguro a un Pokémon" : ""}
                                   >
+                                    {getRewardIcon(item.displayText) && (
+                                      <img
+                                        src={getRewardIcon(item.displayText)}
+                                        alt=""
+                                        className="reward-icon-small"
+                                      />
+                                    )}
                                     {isUsed && item.isInsurance && '✅ '}
-                                    {item.displayText}
+                                    {item.displayText.replace(/🛒|➕|🔙|💚|🛡️/g, '').trim()}
                                   </span>
                                 </div>
                                 {/* Admin puede eliminar seguros */}
