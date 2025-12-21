@@ -1074,23 +1074,27 @@ const Players = ({ tournamentData, audioControls, auth }) => {
                           const deletedInsurances = player.deletedInsurances || [];
 
                           (player.rewards || []).forEach((reward, index) => {
-                            // Detectar seguros por patrón (🛡️ Seguro #N)
-                            const isInsuranceReward = reward.startsWith('🛡️ Seguro #');
+                            // Manejar tanto formato string (legacy) como objeto (nuevo)
+                            const rewardText = typeof reward === 'string' ? reward : reward.text;
+                            const isInsuranceReward = rewardText?.startsWith('🛡️ Seguro #');
+                            const isExtraItem = typeof reward === 'object' && reward.isExtraItem;
 
                             if (isInsuranceReward) {
                               // Solo mostrar si no ha sido eliminado
-                              if (!deletedInsurances.includes(reward)) {
+                              if (!deletedInsurances.includes(rewardText)) {
                                 displayRewards.push({
                                   originalIndex: index,
-                                  displayText: reward,
-                                  insuranceId: reward,
-                                  isInsurance: true
+                                  displayText: rewardText,
+                                  isInsurance: true,
+                                  insuranceId: typeof reward === 'object' ? reward.insuranceId : rewardText
                                 });
                               }
                             } else {
                               displayRewards.push({
                                 originalIndex: index,
-                                displayText: reward,
+                                displayText: rewardText,
+                                isExtraItem: isExtraItem,
+                                itemNumber: typeof reward === 'object' ? reward.itemNumber : null,
                                 insuranceId: null,
                                 isInsurance: false
                               });
