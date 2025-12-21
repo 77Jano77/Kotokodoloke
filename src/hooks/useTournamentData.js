@@ -721,6 +721,56 @@ export const useTournamentData = () => {
 
 
 
+  
+  // Resucitar un Pokémon muerto usando la recompensa de revivir
+  const revivePokemon = (playerId, pokemonRecordId, zoneId, regionKey, rewardIndex) => {
+    const player = (data.players || []).find(p => p.id === playerId);
+    if (!player) return false;
+
+    const record = (data.captureRecords || []).find(r => r.id === pokemonRecordId);
+    if (!record) return false;
+
+    const zones = record[regionKey];
+    if (!zones) return false;
+
+    let pokemonFound = false;
+    const updatedZones = zones.map(z => {
+      if (z.id === zoneId && z.capturedPokemon && z.capturedPokemon.isDead) {
+        pokemonFound = true;
+        return {
+          ...z,
+          capturedPokemon: {
+            ...z.capturedPokemon,
+            isDead: false
+          }
+        };
+      }
+      return z;
+    });
+
+    if (!pokemonFound) return false;
+
+    const updatedCaptureRecords = (data.captureRecords || []).map(r =>
+      r.id === pokemonRecordId ? { ...r, [regionKey]: updatedZones } : r
+    );
+
+    const usedRewards = player.usedRewards || [];
+    const newUsedRewards = usedRewards.includes(rewardIndex)
+      ? usedRewards
+      : [...usedRewards, rewardIndex];
+
+    const newData = {
+      ...data,
+      captureRecords: updatedCaptureRecords,
+      players: (data.players || []).map(p =>
+        p.id === playerId ? { ...p, usedRewards: newUsedRewards } : p
+      ),
+    };
+
+    updateFirebase(newData);
+    return true;
+  };
+
   return {
     ...data,
     loading,
@@ -763,3 +813,4 @@ export const useTournamentData = () => {
     selectedAdBanners: data.selectedAdBanners || [],
   };
 };
+
