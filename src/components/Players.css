@@ -311,7 +311,8 @@
 .player-card:not(.compact) .badges-section {
   grid-column: 1;
   grid-row: 3;
-  margin-top: -1rem;
+  margin-top: -1.5rem;
+  padding: 0.5rem;
 }
 
 .player-card:not(.compact) .team-section {
@@ -759,9 +760,9 @@
 
 /* Badges Section */
 .badges-section h3 {
-  font-size: 1rem;
+  font-size: 0.9rem;
   color: var(--poke-red);
-  margin-bottom: 1rem;
+  margin-bottom: 0.5rem;
 }
 
 .badges-grid {
@@ -1721,4 +1722,15 @@
   font-weight: bold;
   border: 2px solid white;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
-}
+}/ *   I n c r e a s e   P o k e m o n   s p r i t e   s i z e   i n   t e a m   s l o t s   * /  
+ . p o k e m o n - s p r i t e - c o n t a i n e r   i m g   {  
+         w i d t h :   1 2 0 p x   ! i m p o r t a n t ;  
+         h e i g h t :   1 2 0 p x   ! i m p o r t a n t ;  
+         i m a g e - r e n d e r i n g :   p i x e l a t e d ;  
+ }  
+  
+ . p l a y e r - c a r d : n o t ( . c o m p a c t )   . p o k e m o n - s p r i t e - c o n t a i n e r   i m g   {  
+         w i d t h :   1 4 0 p x   ! i m p o r t a n t ;  
+         h e i g h t :   1 4 0 p x   ! i m p o r t a n t ;  
+ }  
+ 
