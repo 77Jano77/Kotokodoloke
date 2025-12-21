@@ -299,7 +299,7 @@ const Roulette = ({ tournamentData, audioControls, auth }) => {
                   {(player.rewards || []).map((reward, index) => (
                     <li key={index}>
                       <span className="reward-bullet">▸</span>
-                      {reward}
+                      {typeof reward === 'string' ? reward : reward.text}
                     </li>
                   ))}
                 </ul>
