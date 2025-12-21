@@ -311,6 +311,7 @@
 .player-card:not(.compact) .badges-section {
   grid-column: 1;
   grid-row: 3;
+  margin-top: -1rem;
 }
 
 .player-card:not(.compact) .team-section {
