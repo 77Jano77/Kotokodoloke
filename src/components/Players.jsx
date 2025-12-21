@@ -1318,18 +1318,13 @@ const Players = ({ tournamentData, audioControls, auth }) => {
                             {pokemon.ability && (
                               <span className="pokemon-ability">⚡ {pokemon.ability}</span>
                             )}
+                            <span className="pokemon-ability">⚡ {pokemon.ability}</span>
                             <span className="pokemon-location">📍 {pokemon.zone}</span>
                             <span className="pokemon-region">{pokemon.region}</span>
                           </div>
                           {canEdit && (
                             <div className="captured-actions">
-                              <button
-                                className={`status-toggle-btn pixel-button ${pokemon.isDead ? 'dead' : 'alive'}`}
-                                onClick={() => tournamentData.togglePokemonDeathStatus(pokemon)}
-                                title={pokemon.isDead ? "Revivir Pokémon" : "Marcar como muerto"}
-                              >
-                                {pokemon.isDead ? "💀 MUERTO" : "❤️ VIVO"}
-                              </button>
+                              {/* Death toggle removed - only revive reward can remove death status */}
 
                               <button
                                 className="add-to-team-btn pixel-button"
