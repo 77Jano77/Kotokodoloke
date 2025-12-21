@@ -1967,12 +1967,265 @@
   font-size: 0.55rem !important;
   padding: 0.4rem 0.5rem !important;
   opacity: 0.8;
+  ```css width: 35px;
+  height: 35px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.2rem;
+  cursor: pointer;
+  transition: all 0.2s;
+  z-index: 10;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+  animation: pulse-shield 2s ease-in-out infinite;
+}
+
+.death-insurance-badge:hover {
+  transform: scale(1.15);
+  box-shadow: 0 4px 12px rgba(251, 191, 36, 0.6);
+}
+
+@keyframes pulse-shield {
+
+  0%,
+  100% {
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+  }
+
+  50% {
+    box-shadow: 0 4px 16px rgba(251, 191, 36, 0.8);
+  }
+}
+
+.pokemon-sprite-container {
+  position: relative;
+}
+
+.captured-sprite {
+  position: relative;
+}
+
+/* Modal de seguros de muerte */
+.death-insurance-modal {
+  max-width: 800px;
+  max-height: 85vh;
+  overflow-y: auto;
+}
+
+.insurance-full {
+  text-align: center;
+  padding: 2rem;
+  background: var(--shadow-light);
+  border-radius: 8px;
+  margin: 1rem 0;
+}
+
+.insurance-full .hint {
+  font-size: 0.75rem;
+  color: #666;
+  margin-top: 0.5rem;
+}
+
+.insurance-section {
+  margin: 1.5rem 0;
+}
+
+.insurance-section h3 {
+  color: var(--poke-blue);
+  margin-bottom: 1rem;
+  font-size: 0.9rem;
+}
+
+.insurance-pokemon-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+  gap: 1rem;
+}
+
+.insurance-pokemon-card {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 0.75rem;
+  background: white;
+  border: 3px solid var(--shadow-dark);
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.2s;
+  position: relative;
+}
+
+.insurance-pokemon-card:hover {
+  transform: translateY(-4px);
+  border-color: var(--poke-blue);
+  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2);
+}
+
+.insurance-pokemon-card.has-insurance {
+  border-color: #fbbf24;
+  background: #fef3c7;
+  cursor: not-allowed;
+}
+
+.insurance-pokemon-card.has-insurance:hover {
+  transform: none;
+  box-shadow: none;
+}
+
+.insurance-pokemon-card img {
+  width: 80px;
+  height: 80px;
+  image-rendering: pixelated;
+}
+
+.insurance-pokemon-card span {
+  font-size: 0.75rem;
+  text-align: center;
+  margin-top: 0.5rem;
+  color: var(--poke-blue);
+  font-weight: bold;
+}
+
+.insurance-badge {
+  position: absolute;
+  top: 5px;
+  right: 5px;
+  font-size: 1.5rem;
+  filter: drop-shadow(2px 2px 4px rgba(0, 0, 0, 0.3));
+}
+
+.insurance-pokemon-card.selected {
+  border-color: #10b981;
+  background: #d1fae5;
+  transform: translateY(-4px);
+  box-shadow: 0 6px 12px rgba(16, 185, 129, 0.4);
+}
+
+.selection-badge {
+  position: absolute;
+  top: 5px;
+  left: 5px;
+  background: #10b981;
+  color: white;
+  width: 25px;
+  height: 25px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1rem;
+  font-weight: bold;
+  border: 2px solid white;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+}
+
+/* Increase Pokemon sprite size in team slots */
+.pokemon-sprite-container img {
+  width: 120px !important;
+  height: 120px !important;
+  image-rendering: pixelated;
+}
+
+.player-card:not(.compact) .pokemon-sprite-container img {
+  width: 140px !important;
+  height: 140px !important;
+}
+
+/* Team buttons styling */
+.team-buttons {
+  display: flex;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+}
+
+/* Captured button - large and prominent */
+.captured-btn {
+  flex: 1 1 100%;
+  font-size: 0.9rem !important;
+  padding: 0.8rem 1rem !important;
+  background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%) !important;
+  border: 3px solid #1e40af !important;
+  font-weight: bold;
+  box-shadow: 0 4px 8px rgba(37, 99, 235, 0.3);
+}
+
+.captured-btn:hover {
+  background: linear-gradient(135deg, #2563eb 0%, #1d4ed8 100%) !important;
+  transform: translateY(-2px);
+  box-shadow: 0 6px 12px rgba(37, 99, 235, 0.5);
+}
+
+/* Starter and Sync buttons - smaller and subtle */
+.starter-btn,
+.sync-btn {
+  flex: 1;
+  font-size: 0.55rem !important;
+  padding: 0.4rem 0.5rem !important;
+  opacity: 0.8;
 }
 
 .starter-btn:hover,
 .sync-btn:hover {
   opacity: 1;
-}/ *   R e w a r d s   s e c t i o n   d a r k   b a c k g r o u n d   * /   . r e w a r d s - s e c t i o n   {   b a c k g r o u n d :   r g b a ( 0 ,   0 ,   0 ,   0 . 3 ) ;   p a d d i n g :   1 r e m ;   b o r d e r - r a d i u s :   8 p x ;   }   . r e w a r d - i c o n - s m a l l   {   w i d t h :   2 4 p x ;   h e i g h t :   2 4 p x ;   m a r g i n - r i g h t :   0 . 5 r e m ;   v e r t i c a l - a l i g n :   m i d d l e ;   i m a g e - r e n d e r i n g :   p i x e l a t e d ;   }  
- . c l o s e - c a r d - b t n   {   p o s i t i o n :   a b s o l u t e ;   t o p :   1 0 p x ;   r i g h t :   1 0 p x ;   b a c k g r o u n d :   r g b a ( 2 5 5 ,   0 ,   0 ,   0 . 8 ) ;   c o l o r :   w h i t e ;   b o r d e r :   n o n e ;   w i d t h :   4 0 p x ;   h e i g h t :   4 0 p x ;   b o r d e r - r a d i u s :   5 0 % ;   f o n t - s i z e :   1 . 5 r e m ;   c u r s o r :   p o i n t e r ;   z - i n d e x :   1 0 0 ;   d i s p l a y :   f l e x ;   a l i g n - i t e m s :   c e n t e r ;   j u s t i f y - c o n t e n t :   c e n t e r ;   t r a n s i t i o n :   a l l   0 . 2 s ;   f o n t - f a m i l y :   ' P r e s s   S t a r t   2 P ' ,   c u r s i v e ;   }   . c l o s e - c a r d - b t n : h o v e r   {   b a c k g r o u n d :   r g b a ( 2 5 5 ,   0 ,   0 ,   1 ) ;   t r a n s f o r m :   s c a l e ( 1 . 1 ) ;   }  
- . c a r d - a c t i o n s - f o o t e r   {   d i s p l a y :   f l e x ;   g a p :   0 . 5 r e m ;   m a r g i n - t o p :   1 r e m ;   f l e x - w r a p :   w r a p ;   }   . c a r d - a c t i o n s - f o o t e r   . p i x e l - b u t t o n ,   . c a r d - a c t i o n s - f o o t e r   . p i x e l - b u t t o n - d a n g e r   {   f l e x :   1 ;   m i n - w i d t h :   1 5 0 p x ;   f o n t - s i z e :   0 . 7 r e m ;   p a d d i n g :   0 . 6 r e m   1 r e m ;   }  
- 
+}
+
+/*Rewards section dark background */
+.rewards-section {
+  background: rgba(0, 0, 0, 0.3);
+  padding: 1rem;
+  border-radius: 8px;
+}
+
+.reward-icon-small {
+  width: 24px;
+  height: 24px;
+  margin-right: 0.5rem;
+  vertical-align: middle;
+  image-rendering: pixelated;
+}
+
+.close-card-btn {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  background: #ef4444;
+  color: white;
+  border: 2px solid #dc2626;
+  width: 28px;
+  height: 28px;
+  border-radius: 4px;
+  font-size: 1rem;
+  cursor: pointer;
+  z-index: 100;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s;
+  font-family: 'Press Start 2P', cursive;
+  line-height: 1;
+  padding: 0;
+}
+
+.close-card-btn:hover {
+  background: #dc2626;
+  transform: scale(1.1);
+}
+
+.card-actions-footer {
+  display: flex;
+  gap: 0.5rem;
+  margin-left: auto;
+}
+
+.player-stats-footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1rem;
+  background: rgba(0, 0, 0, 0.1);
+  border-top: 2px solid rgba(255, 255, 255, 0.2);
+  flex-wrap: wrap;
+  gap: 1rem;
+}
+
+```
