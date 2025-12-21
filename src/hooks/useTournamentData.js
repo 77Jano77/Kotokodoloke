@@ -762,3 +762,4 @@ export const useTournamentData = () => {
     revivePokemon,
     selectedAdBanners: data.selectedAdBanners || [],
   };
+};
