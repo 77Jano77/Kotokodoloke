@@ -311,13 +311,16 @@
 .player-card:not(.compact) .badges-section {
   grid-column: 1;
   grid-row: 3;
-  margin-top: 0.5rem;
+  align-self: end;
+  margin-top: 0;
   padding: 0;
 }
 
 .player-card:not(.compact) .team-section {
   grid-column: 2;
   grid-row: 2 / 4;
+  display: flex;
+  flex-direction: column;
 }
 
 .player-card:not(.compact) .pokemon-slots {
