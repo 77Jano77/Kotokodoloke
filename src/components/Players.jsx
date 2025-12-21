@@ -1090,9 +1090,11 @@ const Players = ({ tournamentData, audioControls, auth }) => {
                                 });
                               }
                             } else {
+                              // Para items extra, usar el texto completo con descripción si existe
+                              const fullText = typeof reward === 'object' && reward.text ? reward.text : rewardText;
                               displayRewards.push({
                                 originalIndex: index,
-                                displayText: rewardText,
+                                displayText: fullText,
                                 isExtraItem: isExtraItem,
                                 itemNumber: typeof reward === 'object' ? reward.itemNumber : null,
                                 insuranceId: null,
