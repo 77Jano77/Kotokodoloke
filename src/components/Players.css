@@ -1932,3 +1932,41 @@
   width: 140px !important;
   height: 140px !important;
 }
+
+/* Team buttons styling */
+.team-buttons {
+  display: flex;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+}
+
+/* Captured button - large and prominent */
+.captured-btn {
+  flex: 1 1 100%;
+  font-size: 0.9rem !important;
+  padding: 0.8rem 1rem !important;
+  background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%) !important;
+  border: 3px solid #1e40af !important;
+  font-weight: bold;
+  box-shadow: 0 4px 8px rgba(37, 99, 235, 0.3);
+}
+
+.captured-btn:hover {
+  background: linear-gradient(135deg, #2563eb 0%, #1d4ed8 100%) !important;
+  transform: translateY(-2px);
+  box-shadow: 0 6px 12px rgba(37, 99, 235, 0.5);
+}
+
+/* Starter and Sync buttons - smaller and subtle */
+.starter-btn,
+.sync-btn {
+  flex: 1;
+  font-size: 0.55rem !important;
+  padding: 0.4rem 0.5rem !important;
+  opacity: 0.8;
+}
+
+.starter-btn:hover,
+.sync-btn:hover {
+  opacity: 1;
+}
