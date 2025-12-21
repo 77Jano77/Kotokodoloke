@@ -752,6 +752,15 @@ const Players = ({ tournamentData, audioControls, auth }) => {
               {/* Full Card Content - Only When Expanded */}
               {isExpanded && (
                 <>
+                  {/* Close button at top */}
+                  <button
+                    className="close-card-btn"
+                    onClick={() => toggleCard(player.id)}
+                    title="Cerrar ficha"
+                  >
+                    ✕
+                  </button>
+
                   {/* Card Header */}
                   <div className="player-card-header">
                     <div className="player-info-top">
