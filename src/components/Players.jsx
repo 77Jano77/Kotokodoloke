@@ -1076,7 +1076,7 @@ const Players = ({ tournamentData, audioControls, auth }) => {
                           (player.rewards || []).forEach((reward, index) => {
                             // Manejar tanto formato string (legacy) como objeto (nuevo)
                             const rewardText = typeof reward === 'string' ? reward : reward.text;
-                            const isInsuranceReward = rewardText?.startsWith('🛡️ Seguro #');
+                            const isInsuranceReward = (typeof reward === 'object' && reward.isInsurance) || rewardText?.includes('🛡️ Seguro de Muerte');
                             const isExtraItem = typeof reward === 'object' && reward.isExtraItem;
 
                             if (isInsuranceReward) {
@@ -1097,6 +1097,7 @@ const Players = ({ tournamentData, audioControls, auth }) => {
                                 displayText: fullText,
                                 isExtraItem: isExtraItem,
                                 itemNumber: typeof reward === 'object' ? reward.itemNumber : null,
+                                purchaseDescription: typeof reward === 'object' ? reward.purchaseDescription : null,
                                 insuranceId: null,
                                 isInsurance: false
                               });
@@ -1151,11 +1152,10 @@ const Players = ({ tournamentData, audioControls, auth }) => {
                                         if (purchase && purchase.trim()) {
                                           const updatedRewards = player.rewards.map((r, idx) =>
                                             idx === item.originalIndex
-                                              ? { ...r, purchaseDescription: purchase.trim(), text: `🛒 Objeto Extra #${r.itemNumber}: ${purchase.trim()}` }
+                                              ? { ...r, purchaseDescription: purchase.trim() }
                                               : r
                                           );
                                           tournamentData.updatePlayer(player.id, { rewards: updatedRewards });
-                                          tournamentData.toggleRewardUsed(player.id, item.originalIndex);
                                           alert(`✅ Objeto guardado: ${purchase.trim()}`);
                                         }
                                       }
@@ -1171,6 +1171,7 @@ const Players = ({ tournamentData, audioControls, auth }) => {
                                     )}
                                     {isUsed && item.isInsurance && '✅ '}
                                     {item.displayText.replace(/🛒|➕|🔙|💚|🛡️/g, '').trim()}
+                                    {item.purchaseDescription ? ` (${item.purchaseDescription})` : ''}
                                   </span>
                                 </div>
                                 {/* Admin puede eliminar seguros */}
@@ -1638,7 +1639,7 @@ const Players = ({ tournamentData, audioControls, auth }) => {
                   onChange={(e) => setSelectedReward(e.target.value)}
                 >
                   <option value="">-- Selecciona una recompensa --</option>
-                  <option value="🛒 Artículo de Tienda">🛒 Artículo de Tienda</option>
+                  <option value="🛒 Objetos de Tienda">🛒 Objetos de Tienda</option>
                   <option value="➕ Captura Extra">➕ Captura Extra</option>
                   <option value="🔙 Captura Ruta Anterior">🔙 Captura Ruta Anterior</option>
                   <option value="💚 Revivir Pokémon">💚 Revivir Pokémon</option>

@@ -1,0 +1,30 @@
+﻿  const addRouletteReward = (playerId, reward) => {
+    const player = (data.players || []).find(p => p.id === playerId);
+    if (!player) return;
+    let rewardsToAdd = [];
+    if (reward.includes('Objetos de Tienda') || (reward.includes('Objetos') && reward.includes('Tienda'))) {
+      rewardsToAdd = [
+        { text: ' Objeto Extra #1', isExtraItem: true, itemNumber: 1, purchaseDescription: '' },
+        { text: ' Objeto Extra #2', isExtraItem: true, itemNumber: 2, purchaseDescription: '' },
+        { text: ' Objeto Extra #3', isExtraItem: true, itemNumber: 3, purchaseDescription: '' }
+      ];
+    } else if (reward.includes('2 Seguros de Muerte') || reward.includes('Seguros')) {
+      const existingInsurances = player.rewards?.filter(r => r.text?.includes(' Seguro de Muerte')) || [];
+      const insuranceCounter = existingInsurances.length + 1;
+      rewardsToAdd = [
+        { text: `` Seguro de Muerte #${insuranceCounter}``, isInsurance: true, insuranceId: ``insurance-${playerId}-${Date.now()}-1`` },
+        { text: `` Seguro de Muerte #${insuranceCounter + 1}``, isInsurance: true, insuranceId: ``insurance-${playerId}-${Date.now()}-2`` }
+      ];
+    } else {
+      rewardsToAdd = [{ text: reward }];
+    }
+    const newData = {
+      ...data,
+      players: (data.players || []).map(p =>
+        p.id === playerId
+          ? { ...p, rewards: [...(p.rewards || []), ...rewardsToAdd] }
+          : p
+      ),
+    };
+    updateFirebase(newData);
+  };

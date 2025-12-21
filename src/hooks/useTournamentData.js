@@ -1,4 +1,4 @@
-﻿import { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import { database, ref, onValue, set } from '../config/firebase';
 import { POKEDEX_DATA } from '../data/pokedex';
 
@@ -166,19 +166,28 @@ export const useTournamentData = () => {
     let rewardsToAdd = [];
     if (reward.includes('Objetos de Tienda') || (reward.includes('Objetos') && reward.includes('Tienda'))) {
       rewardsToAdd = [
-        { text: ' Objeto Extra #1', isExtraItem: true, itemNumber: 1, purchaseDescription: '' },
-        { text: ' Objeto Extra #2', isExtraItem: true, itemNumber: 2, purchaseDescription: '' },
-        { text: ' Objeto Extra #3', isExtraItem: true, itemNumber: 3, purchaseDescription: '' }
+        { text: '🛒 Objeto Extra #1', isExtraItem: true, itemNumber: 1, purchaseDescription: '' },
+        { text: '🛒 Objeto Extra #2', isExtraItem: true, itemNumber: 2, purchaseDescription: '' },
+        { text: '🛒 Objeto Extra #3', isExtraItem: true, itemNumber: 3, purchaseDescription: '' }
       ];
     } else if (reward.includes('2 Seguros de Muerte') || reward.includes('Seguros')) {
-      const existingInsurances = player.rewards?.filter(r => r.text?.includes(' Seguro de Muerte')) || [];
+      const existingInsurances = player.rewards?.filter(r => r.text?.includes('🛡️ Seguro de Muerte')) || [];
       const insuranceCounter = existingInsurances.length + 1;
       rewardsToAdd = [
-        { text: ` Seguro de Muerte #${insuranceCounter}`, isInsurance: true, insuranceId: `insurance-${playerId}-${Date.now()}-1` },
-        { text: ` Seguro de Muerte #${insuranceCounter + 1}`, isInsurance: true, insuranceId: `insurance-${playerId}-${Date.now()}-2` }
+        { text: `🛡️ Seguro de Muerte #${insuranceCounter}`, isInsurance: true, insuranceId: `insurance-${playerId}-${Date.now()}-1` },
+        { text: `🛡️ Seguro de Muerte #${insuranceCounter + 1}`, isInsurance: true, insuranceId: `insurance-${playerId}-${Date.now()}-2` }
       ];
     } else {
-      rewardsToAdd = [{ text: reward }];
+      // Add emoji prefix based on reward type
+      let rewardText = reward;
+      if (reward.includes('Captura Extra')) {
+        rewardText = `➕ ${reward}`;
+      } else if (reward.includes('Captura Ruta Anterior')) {
+        rewardText = `🔙 ${reward}`;
+      } else if (reward.includes('Revivir')) {
+        rewardText = `💚 ${reward}`;
+      }
+      rewardsToAdd = [{ text: rewardText }];
     }
     const newData = {
       ...data,
@@ -634,8 +643,15 @@ export const useTournamentData = () => {
     }
 
     // Verificar que el jugador tenga al menos un seguro disponible
+    // Manejar tanto formato objeto (nuevo) como string (legacy)
     const rewards = player.rewards || [];
-    const hasAnyInsurance = rewards.some(r => r.startsWith('🛡️ Seguro #'));
+    const hasAnyInsurance = rewards.some(r => {
+      // Nuevo formato: objeto con isInsurance
+      if (typeof r === 'object' && r.isInsurance) return true;
+      // Legacy formato: string que empieza con emoji de seguro
+      if (typeof r === 'string' && (r.includes('🛡️ Seguro') || r.includes('Seguro de Muerte'))) return true;
+      return false;
+    });
 
     if (!hasAnyInsurance) {
       alert('❌ No tienes recompensas de seguro de muerte disponibles');
