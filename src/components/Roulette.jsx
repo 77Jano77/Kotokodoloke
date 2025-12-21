@@ -2,11 +2,11 @@ import { useState, useEffect, useRef } from 'react';
 import './Roulette.css';
 
 const REWARDS = [
-  { id: 1, name: '🛒 Artículo de Tienda', probability: 4 },
-  { id: 2, name: '➕ Captura Extra', probability: 4 },
-  { id: 3, name: '🔙 Captura Ruta Anterior', probability: 2 },
-  { id: 4, name: '💚 Revivir Pokémon', probability: 1 },
-  { id: 5, name: '🛡️ 2 Seguros de Muerte', probability: 1 }
+  { id: 1, name: 'Artículo de Tienda', icon: '/iconos/objeto.png', probability: 4 },
+  { id: 2, name: 'Captura Extra', icon: '/iconos/captura.png', probability: 4 },
+  { id: 3, name: 'Captura Ruta Anterior', icon: '/iconos/capturanterior.png', probability: 2 },
+  { id: 4, name: 'Revivir Pokémon', icon: '/iconos/revivir.png', probability: 1 },
+  { id: 5, name: '2 Seguros de Muerte', icon: '/iconos/seguro.png', probability: 1 }
 ];
 
 const DICE_FACES = ['⚀', '⚁', '⚂', '⚃', '⚄', '⚅'];
@@ -153,7 +153,10 @@ const Roulette = ({ tournamentData, audioControls, auth }) => {
         <div className="rewards-list-info">
           {REWARDS.map(reward => (
             <div key={reward.id} className="reward-info-item">
-              <span className="reward-name">{reward.name}</span>
+              <span className="reward-name">
+                <img src={reward.icon} alt={reward.name} className="reward-icon" />
+                {reward.name}
+              </span>
               <span className="reward-prob">
                 {reward.probability}/12 ({((reward.probability / 12) * 100).toFixed(1)}%)
               </span>
