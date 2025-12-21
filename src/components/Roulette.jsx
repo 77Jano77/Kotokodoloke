@@ -2,7 +2,7 @@ import { useState, useEffect, useRef } from 'react';
 import './Roulette.css';
 
 const REWARDS = [
-  { id: 1, name: 'Artículo de Tienda', icon: '/iconos/objeto.png', probability: 4 },
+  { id: 1, name: 'Objetos de Tienda', icon: '/iconos/objeto.png', probability: 4 },
   { id: 2, name: 'Captura Extra', icon: '/iconos/captura.png', probability: 4 },
   { id: 3, name: 'Captura Ruta Anterior', icon: '/iconos/capturanterior.png', probability: 2 },
   { id: 4, name: 'Revivir Pokémon', icon: '/iconos/revivir.png', probability: 1 },

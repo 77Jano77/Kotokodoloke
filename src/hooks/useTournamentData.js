@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+﻿import { useState, useEffect } from 'react';
 import { database, ref, onValue, set } from '../config/firebase';
 import { POKEDEX_DATA } from '../data/pokedex';
 
@@ -137,65 +137,42 @@ export const useTournamentData = () => {
     updateFirebase(newData);
   };
 
-  const addRouletteReward = (playerId, reward) => {
-    const players = data.players || [];
-    const player = players.find(p => p.id === playerId);
+    const addRouletteReward = (playerId, reward) => {
+    const player = (data.players || []).find(p => p.id === playerId);
     if (!player) return;
 
-    let newCaptureRecords = data.captureRecords || [];
-
-    // Si es captura extra o captura ruta anterior, crear casilla automáticamente
-    if (reward === '➕ Captura Extra' || reward === '🔙 Captura Ruta Anterior') {
-      newCaptureRecords = newCaptureRecords.map(record => {
-        if (record.playerName === player.name) {
-          const newSlot = {
-            id: `extra_${Date.now()}`,
-            captured: false,
-            name: reward === '➕ Captura Extra' ? 'Captura Extra' : 'Captura Ruta Anterior',
-            isExtra: true,
-            rewardType: reward
-          };
-          return {
-            ...record,
-            extraCaptureSlots: [...(record.extraCaptureSlots || []), newSlot]
-          };
-        }
-        return record;
-      });
-    }
-
-    // Si es seguro de muerte, crear 2 items individuales con IDs únicos
     let rewardsToAdd = [];
-    let updatedPlayer = { ...player };
 
-    if (reward === '🛡️ 2 Seguros de Muerte') {
-      // Obtener el contador actual de seguros del jugador
-      const insuranceCounter = player.insuranceCounter || 0;
-
-      // Crear 2 seguros con IDs únicos e incrementales
+    // Si es "Objetos de Tienda", añadir 3 items separados
+    if (reward.includes('Objetos de Tienda') || reward.includes('')) {
       rewardsToAdd = [
-        `🛡️ Seguro #${insuranceCounter + 1}`,
-        `🛡️ Seguro #${insuranceCounter + 2}`
+        { text: ' Objeto Extra #1', isExtraItem: true, itemNumber: 1, purchaseDescription: '' },
+        { text: ' Objeto Extra #2', isExtraItem: true, itemNumber: 2, purchaseDescription: '' },
+        { text: ' Objeto Extra #3', isExtraItem: true, itemNumber: 3, purchaseDescription: '' }
       ];
-
-      // Actualizar el contador
-      updatedPlayer.insuranceCounter = insuranceCounter + 2;
+    } else if (reward.includes('2 Seguros de Muerte') || reward.includes('')) {
+      // Lógica de seguros de muerte...
+      const player = (data.players || []).find(p => p.id === playerId);
+      if (!player) return;
+      const existingInsurances = player.rewards?.filter(r => r.text?.includes(' Seguro de Muerte')) || [];
+      const insuranceCounter = existingInsurances.length + 1;
+      rewardsToAdd = [
+        { text: ` Seguro de Muerte #``, isInsurance: true, insuranceId: `insurance-`-`-1` },
+        { text: ` Seguro de Muerte #``, isInsurance: true, insuranceId: `insurance-`-`-2` }
+      ];
     } else {
-      rewardsToAdd = [reward];
+      rewardsToAdd = [{ text: reward }];
     }
 
     const newData = {
       ...data,
-      players: players.map(p =>
+      players: (data.players || []).map(p =>
         p.id === playerId
-          ? {
-            ...updatedPlayer,
-            rewards: [...(p.rewards || []), ...rewardsToAdd]
-          }
+          ? { ...p, rewards: [...(p.rewards || []), ...rewardsToAdd] }
           : p
       ),
-      captureRecords: newCaptureRecords
     };
+
     updateFirebase(newData);
   };
 
@@ -722,7 +699,7 @@ export const useTournamentData = () => {
 
 
   
-  // Resucitar un Pok�mon muerto usando la recompensa de revivir
+  // Resucitar un Pok�mon muerto usando la recompensa de revivir
   const revivePokemon = (playerId, pokemonRecordId, zoneId, regionKey, rewardIndex) => {
     const player = (data.players || []).find(p => p.id === playerId);
     if (!player) return false;
@@ -813,4 +790,5 @@ export const useTournamentData = () => {
     selectedAdBanners: data.selectedAdBanners || [],
   };
 };
+
 

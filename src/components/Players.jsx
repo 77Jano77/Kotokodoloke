@@ -1122,7 +1122,7 @@ const Players = ({ tournamentData, audioControls, auth }) => {
                                     />
                                   )}
                                   <span
-                                    className={`reward-text ${item.isInsurance && !isUsed ? 'clickable-insurance' : ''} ${(item.displayText.includes('Revivir') || item.displayText.includes('💚')) && !isUsed ? 'clickable-revive' : ''}`}
+                                    className={`reward-text ${item.isInsurance && !isUsed ? 'clickable-insurance' : ''} ${(item.displayText.includes('Revivir') || item.displayText.includes('💚')) && !isUsed ? 'clickable-revive' : ''} ${item.isExtraItem && !isUsed ? 'clickable-extra-item' : ''} ${item.isExtraItem && isUsed ? 'used-extra-item' : ''}`}
                                     onClick={() => {
                                       if (item.isInsurance && !isUsed && canEdit) {
                                         // Abrir modal para aplicar este seguro específico
@@ -1139,9 +1139,22 @@ const Players = ({ tournamentData, audioControls, auth }) => {
                                           rewardIndex: item.originalIndex,
                                           rewardId: item.displayText
                                         });
+                                      } else if (item.isExtraItem && !isUsed && canEdit) {
+                                        // Prompt para objeto extra
+                                        const purchase = prompt('¿Qué objeto has comprado?');
+                                        if (purchase && purchase.trim()) {
+                                          const updatedRewards = player.rewards.map((r, idx) =>
+                                            idx === item.originalIndex
+                                              ? { ...r, purchaseDescription: purchase.trim(), text: `🛒 Objeto Extra #${r.itemNumber}: ${purchase.trim()}` }
+                                              : r
+                                          );
+                                          tournamentData.updatePlayer(player.id, { rewards: updatedRewards });
+                                          tournamentData.toggleRewardUsed(player.id, item.originalIndex);
+                                          alert(`✅ Objeto guardado: ${purchase.trim()}`);
+                                        }
                                       }
                                     }}
-                                    title={item.isInsurance && !isUsed ? "Click para aplicar este seguro a un Pokémon" : (item.displayText.includes('Revivir') || item.displayText.includes('💚')) && !isUsed ? "Click para resucitar un Pokémon muerto" : ""}
+                                    title={item.isInsurance && !isUsed ? "Click para aplicar este seguro a un Pokémon" : (item.displayText.includes('Revivir') || item.displayText.includes('💚')) && !isUsed ? "Click para resucitar un Pokémon muerto" : item.isExtraItem && !isUsed ? "Click para registrar tu compra" : ""}
                                   >
                                     {getRewardIcon(item.displayText) && (
                                       <img
