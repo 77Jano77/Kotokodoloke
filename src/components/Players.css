@@ -310,11 +310,9 @@
 
 .player-card:not(.compact) .badges-section {
   grid-column: 1;
-  grid-row: 2 / 4;
-  margin-top: -0.2rem;
-  padding: 0.5rem;
-  display: flex;
-  flex-direction: column;
+  grid-row: 3;
+  margin-top: 0.5rem;
+  padding: 0;
 }
 
 .player-card:not(.compact) .team-section {
@@ -773,7 +771,6 @@
   grid-template-columns: repeat(2, 1fr);
   grid-template-rows: repeat(4, 1fr);
   gap: 0.5rem;
-  flex: 1;
 }
 
 .badge-btn {
