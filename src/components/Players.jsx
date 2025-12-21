@@ -38,7 +38,7 @@ const BADGES = KANTO_BADGES;
 
 // Helper function to get reward icon
 const getRewardIcon = (rewardName) => {
-  if (rewardName.includes('Artículo') || rewardName.includes('🛒')) return '/iconos/objeto.png';
+  if (rewardName.includes('Artículo') || rewardName.includes('Objeto') || rewardName.includes('🛒')) return '/iconos/objeto.png';
   if (rewardName.includes('Captura Extra') || rewardName.includes('➕')) return '/iconos/captura.png';
   if (rewardName.includes('Captura Ruta Anterior') || rewardName.includes('🔙') || rewardName.includes('Anterior')) return '/iconos/capturanterior.png';
   if (rewardName.includes('Revivir') || rewardName.includes('💚')) return '/iconos/revivir.png';
