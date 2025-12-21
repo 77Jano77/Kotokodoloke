@@ -290,34 +290,32 @@
   width: 1100px;
   max-width: 95vw;
   box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
-  display: flex;
-  flex-direction: row;
-  flex-wrap: wrap;
+  display: grid;
+  grid-template-columns: 280px 1fr;
+  grid-template-rows: auto auto auto auto auto;
   gap: 1.5rem;
   padding: 1.5rem !important;
 }
 
-/* Landscape layout sections */
+/* Grid layout */
 .player-card:not(.compact) .player-card-header {
-  width: 100%;
-  order: 1;
+  grid-column: 1 / -1;
+  grid-row: 1;
 }
 
-/* Left column container for sprite + badges */
 .player-card:not(.compact) .player-avatar-section {
-  flex: 0 0 280px;
-  order: 2;
+  grid-column: 1;
+  grid-row: 2;
 }
 
 .player-card:not(.compact) .badges-section {
-  flex: 0 0 280px;
-  order: 3;
+  grid-column: 1;
+  grid-row: 3;
 }
 
-/* Right: Team Pokemon in 3x2 grid */
 .player-card:not(.compact) .team-section {
-  flex: 1;
-  order: 2;
+  grid-column: 2;
+  grid-row: 2 / 4;
 }
 
 .player-card:not(.compact) .pokemon-slots {
@@ -327,15 +325,14 @@
   gap: 1rem;
 }
 
-/* Bottom: Rewards + Stats */
 .player-card:not(.compact) .rewards-section {
-  width: 100%;
-  order: 4;
+  grid-column: 1 / -1;
+  grid-row: 4;
 }
 
 .player-card:not(.compact) .player-stats-footer {
-  width: 100%;
-  order: 5;
+  grid-column: 1 / -1;
+  grid-row: 5;
 }
 
 .player-card-compact-header {
