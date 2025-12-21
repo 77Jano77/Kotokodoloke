@@ -778,34 +778,6 @@ const Players = ({ tournamentData, audioControls, auth }) => {
                       </span>
                       {!canEdit && <span className="view-only-badge">👁️ SOLO LECTURA</span>}
                     </div>
-
-                    {canEdit && (
-                      <div className="card-actions">
-                        <button
-                          className="customize-btn pixel-button"
-                          onClick={() => setShowCustomizeModal(player.id)}
-                          title="Personalizar ficha"
-                        >
-                          🎨
-                        </button>
-                        <button
-                          className="delete-btn pixel-button-danger"
-                          onClick={async () => {
-                            if (confirm(`¿Eliminar a ${player.name}?`)) {
-                              tournamentData.deletePlayer(player.id);
-                              if (player.id === auth.currentUser?.playerId) {
-                                await auth.deleteUserPlayer();
-                                alert('✅ Jugador eliminado correctamente. Ahora puedes crear uno nuevo.');
-                                // Forzar recarga de la página para actualizar el estado
-                                window.location.reload();
-                              }
-                            }
-                          }}
-                        >
-                          🗑️
-                        </button>
-                      </div>
-                    )}
                   </div>
 
                   {/* Avatar Section */}
@@ -1228,6 +1200,34 @@ const Players = ({ tournamentData, audioControls, auth }) => {
                       <span className="stat-label">PUNTOS</span>
                       <span className="stat-value">{player.points}</span>
                     </div>
+
+                    {canEdit && (
+                      <div className="card-actions-footer">
+                        <button
+                          className="customize-btn pixel-button"
+                          onClick={() => setShowCustomizeModal(player.id)}
+                          title="Personalizar ficha"
+                        >
+                          🎨 PERSONALIZAR
+                        </button>
+                        <button
+                          className="delete-btn pixel-button-danger"
+                          onClick={async () => {
+                            if (confirm(`¿Eliminar a ${player.name}?`)) {
+                              tournamentData.deletePlayer(player.id);
+                              if (player.id === auth.currentUser?.playerId) {
+                                await auth.deleteUserPlayer();
+                                alert('✅ Jugador eliminado correctamente. Ahora puedes crear uno nuevo.');
+                                // Forzar recarga de la página para actualizar el estado
+                                window.location.reload();
+                              }
+                            }
+                          }}
+                        >
+                          🗑️ ELIMINAR
+                        </button>
+                      </div>
+                    )}
                   </div>
                 </>
               )}
