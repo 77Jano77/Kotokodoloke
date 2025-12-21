@@ -759,6 +759,6 @@ export const useTournamentData = () => {
     removeDeathInsurance,
     hasDeathInsurance,
     getInsuranceId,
+    revivePokemon,
     selectedAdBanners: data.selectedAdBanners || [],
   };
-};

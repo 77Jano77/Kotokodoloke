@@ -124,6 +124,7 @@ const Players = ({ tournamentData, audioControls, auth }) => {
   const [selectedReward, setSelectedReward] = useState('');
   const [showDeathInsuranceModal, setShowDeathInsuranceModal] = useState(null); // {playerId, playerName}
   const [selectedInsurancePokemon, setSelectedInsurancePokemon] = useState([]); // Selección temporal de seguros
+  const [showReviveModal, setShowReviveModal] = useState(null); // {playerId, playerName, rewardIndex, rewardId}
   const [expandedCards, setExpandedCards] = useState(new Set());
 
   // Verificar si el usuario ya tiene un jugador creado
@@ -1121,7 +1122,7 @@ const Players = ({ tournamentData, audioControls, auth }) => {
                                     />
                                   )}
                                   <span
-                                    className={`reward-text ${item.isInsurance && !isUsed ? 'clickable-insurance' : ''}`}
+                                    className={`reward-text ${item.isInsurance && !isUsed ? 'clickable-insurance' : ''} ${(item.displayText.includes('Revivir') || item.displayText.includes('💚')) && !isUsed ? 'clickable-revive' : ''}`}
                                     onClick={() => {
                                       if (item.isInsurance && !isUsed && canEdit) {
                                         // Abrir modal para aplicar este seguro específico
@@ -1130,9 +1131,17 @@ const Players = ({ tournamentData, audioControls, auth }) => {
                                           playerName: player.name,
                                           insuranceId: item.insuranceId
                                         });
+                                      } else if ((item.displayText.includes('Revivir') || item.displayText.includes('💚')) && !isUsed && canEdit) {
+                                        // Abrir modal para resucitar pokémon
+                                        setShowReviveModal({
+                                          playerId: player.id,
+                                          playerName: player.name,
+                                          rewardIndex: item.originalIndex,
+                                          rewardId: item.displayText
+                                        });
                                       }
                                     }}
-                                    title={item.isInsurance && !isUsed ? "Click para aplicar este seguro a un Pokémon" : ""}
+                                    title={item.isInsurance && !isUsed ? "Click para aplicar este seguro a un Pokémon" : (item.displayText.includes('Revivir') || item.displayText.includes('💚')) && !isUsed ? "Click para resucitar un Pokémon muerto" : ""}
                                   >
                                     {getRewardIcon(item.displayText) && (
                                       <img
@@ -1758,6 +1767,93 @@ const Players = ({ tournamentData, audioControls, auth }) => {
                         );
                       })}
                     </div>
+                  </div>
+                )}
+
+                <button
+                  className="close-modal-btn pixel-button"
+                  onClick={handleCloseModal}
+                >
+                  ✕ CANCELAR
+                </button>
+              </div>
+            </div>
+          );
+        })()
+      }
+
+      {/* Revive Pokemon Modal */}
+      {
+        showReviveModal && (() => {
+          const player = (tournamentData.players || []).find(p => p.id === showReviveModal.playerId);
+          if (!player) return null;
+
+          const rewardIndex = showReviveModal.rewardIndex;
+          const capturedPokemon = tournamentData.getCapturedPokemonByPlayer(showReviveModal.playerName);
+          const deadPokemon = capturedPokemon.filter(p => p.isDead); // Solo muertos
+
+          const handleRevivePokemon = (pokemon) => {
+            // Aplicar la resucitación
+            const success = tournamentData.revivePokemon(
+              player.id,
+              pokemon.recordId,
+              pokemon.zoneId,
+              pokemon.regionKey,
+              rewardIndex
+            );
+
+            if (success) {
+              alert(`✅ ${POKEDEX_DATA.find(p => p.number === parseInt(pokemon.pokemon))?.name || 'Pokémon'} ha sido resucitado!`);
+              setShowReviveModal(null);
+            } else {
+              alert('❌ Error al resucitar el Pokémon');
+            }
+          };
+
+          const handleCloseModal = () => {
+            setShowReviveModal(null);
+          };
+
+          return (
+            <div className="modal-overlay" onClick={handleCloseModal}>
+              <div className="modal-content pixel-card death-insurance-modal" onClick={(e) => e.stopPropagation()}>
+                <h2>💚 RESUCITAR POKÉMON</h2>
+                <p className="modal-subtitle">
+                  {showReviveModal.rewardId}
+                  <br />
+                  <small>Selecciona un Pokémon muerto para resucitarlo</small>
+                </p>
+
+                {deadPokemon.length > 0 ? (
+                  <div className="insurance-section">
+                    <h3>⚰️ POKÉMON MUERTOS</h3>
+                    <div className="insurance-pokemon-grid">
+                      {deadPokemon.map((pokemon, index) => {
+                        const pokemonData = POKEDEX_DATA.find(p => p.number === parseInt(pokemon.pokemon));
+                        const pokemonName = pokemonData?.name || 'Desconocido';
+
+                        return (
+                          <div
+                            key={index}
+                            className="insurance-pokemon-card clickable"
+                            onClick={() => handleRevivePokemon(pokemon)}
+                          >
+                            <img
+                              src={`https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/${pokemon.pokemon}.png`}
+                              alt={pokemonName}
+                              style={{ filter: 'grayscale(100%)' }}
+                            />
+                            <span>{pokemon.nickname || pokemonName}</span>
+                            <div className="insurance-badge">💀</div>
+                          </div>
+                        );
+                      })}
+                    </div>
+                  </div>
+                ) : (
+                  <div className="insurance-full">
+                    <p>✨ No tienes Pokémon muertos para resucitar</p>
+                    <p className="hint">¡Todos tus Pokémon están vivos!</p>
                   </div>
                 )}
 
