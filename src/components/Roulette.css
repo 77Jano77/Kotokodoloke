@@ -210,7 +210,13 @@
   animation: diceRoll 0.1s linear infinite;
 }
 
-.roulette-gif {}
+.roulette-gif {
+  width: 300px;
+  height: 300px;
+  object-fit: contain;
+  image-rendering: pixelated;
+  animation: pixelPulse 1s ease-in-out infinite;
+}
 
 .reward-icon {
   width: 36px;
@@ -218,7 +224,6 @@
   margin-right: 0.8rem;
   vertical-align: middle;
   image-rendering: pixelated;
-  animation: pixelPulse 1s ease-in-out infinite;
 }
 
 @keyframes diceRoll {
