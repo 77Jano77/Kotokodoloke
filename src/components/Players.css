@@ -310,9 +310,11 @@
 
 .player-card:not(.compact) .badges-section {
   grid-column: 1;
-  grid-row: 3;
-  margin-top: -1.5rem;
+  grid-row: 2 / 4;
+  margin-top: -0.2rem;
   padding: 0.5rem;
+  display: flex;
+  flex-direction: column;
 }
 
 .player-card:not(.compact) .team-section {
@@ -760,15 +762,18 @@
 
 /* Badges Section */
 .badges-section h3 {
-  font-size: 0.9rem;
+  font-size: 0.85rem;
   color: var(--poke-red);
   margin-bottom: 0.5rem;
+  margin-top: 0;
 }
 
 .badges-grid {
   display: grid;
-  grid-template-columns: repeat(4, 1fr);
+  grid-template-columns: repeat(2, 1fr);
+  grid-template-rows: repeat(4, 1fr);
   gap: 0.5rem;
+  flex: 1;
 }
 
 .badge-btn {
