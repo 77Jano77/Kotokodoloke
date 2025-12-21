@@ -303,29 +303,39 @@
   order: 1;
 }
 
+/* Left column container for sprite + badges */
 .player-card:not(.compact) .player-avatar-section {
   flex: 0 0 280px;
   order: 2;
 }
 
-.player-card:not(.compact) .team-section {
-  flex: 1 1 400px;
+.player-card:not(.compact) .badges-section {
+  flex: 0 0 280px;
   order: 3;
 }
 
-.player-card:not(.compact) .badges-section {
-  flex: 0 0 280px;
-  order: 4;
+/* Right: Team Pokemon in 3x2 grid */
+.player-card:not(.compact) .team-section {
+  flex: 1;
+  order: 2;
 }
 
+.player-card:not(.compact) .pokemon-slots {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  grid-template-rows: repeat(2, 1fr);
+  gap: 1rem;
+}
+
+/* Bottom: Rewards + Stats */
 .player-card:not(.compact) .rewards-section {
   width: 100%;
-  order: 5;
+  order: 4;
 }
 
 .player-card:not(.compact) .player-stats-footer {
   width: 100%;
-  order: 6;
+  order: 5;
 }
 
 .player-card-compact-header {
