@@ -462,7 +462,7 @@ const Resources = ({ audioControls, tournamentData, auth, resourceAction, setRes
 
                 <div className="pokemon-image">
                   <img
-                    src={`https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/${pokemon.number}.png`}
+                    src={`/sprites/pmd/${String(pokemon.number).padStart(4, '0')}.png`}
                     alt={pokemon.name}
                     onError={(e) => e.target.style.display = 'none'}
                   />

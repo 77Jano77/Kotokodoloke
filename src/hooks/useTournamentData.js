@@ -492,8 +492,21 @@ export const useTournamentData = () => {
 
     // 2. Actualizar la zona específica
     const zones = record[regionKey];
+
+    // Para extraCaptureSlots, la estructura es diferente
     const updatedZones = zones.map(z => {
       if (z.id === zoneId) {
+        // Para slots extra, actualizar capturedPokemon.isDead
+        if (regionKey === 'extraCaptureSlots') {
+          return {
+            ...z,
+            capturedPokemon: {
+              ...z.capturedPokemon,
+              isDead: newDeadStatus
+            }
+          };
+        }
+        // Para zonas regulares (Kanto/Sevi)
         return {
           ...z,
           capturedPokemon: {

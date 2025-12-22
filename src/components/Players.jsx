@@ -925,7 +925,7 @@ const Players = ({ tournamentData, audioControls, auth }) => {
                                   return (
                                     <div className="pokemon-sprite-container">
                                       <img
-                                        src={`https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/${pokemonData.number}.png`}
+                                        src={`/sprites/pmd/${String(pokemonData.number).padStart(4, '0')}.png`}
                                         alt={pokemonData.name}
                                         className="pokemon-team-sprite"
                                       />
