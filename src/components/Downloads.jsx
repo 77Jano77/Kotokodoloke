@@ -48,7 +48,7 @@ const Downloads = ({ audioControls, auth, tournamentData }) => {
       id: 1,
       title: 'EMULADOR',
       platform: 'Windows/Mac/Linux',
-      icon: '🎮',
+      icon: '/sprites/pokemon/porygon.png',
       description: 'Emulador para jugar Pokémon GBA',
       link: 'https://drive.google.com/drive/folders/1Z6o-fGIKCEfEC55hwgW-0jOULh0se3XN?usp=sharing'
     },
@@ -56,7 +56,7 @@ const Downloads = ({ audioControls, auth, tournamentData }) => {
       id: 2,
       title: 'ROMS POKÉMON',
       platform: 'GBA',
-      icon: '🔥',
+      icon: '/sprites/pokemon/porygon2.png',
       description: 'ROMs de Pokémon para el torneo',
       link: 'https://drive.google.com/drive/folders/1arRReS-lCgo3SjGe66ruHtz3GiZoCjKM?usp=sharing'
     },
@@ -64,9 +64,17 @@ const Downloads = ({ audioControls, auth, tournamentData }) => {
       id: 3,
       title: 'RADMIN VPN',
       platform: 'Windows',
-      icon: '🌐',
+      icon: '/sprites/pokemon/porygon-z.png',
       description: 'VPN para jugar en red local',
       link: 'https://download.radmin-vpn.com/download/files/Radmin_VPN_2.0.4899.9.exe'
+    },
+    {
+      id: 4,
+      title: 'OTROS JUEGOS DE POKÉMON',
+      platform: 'Varios',
+      icon: '/sprites/pokemon/ditto.png',
+      description: 'Más juegos de Pokémon para explorar',
+      link: 'https://drive.google.com/drive/folders/1A_n6XjOXfg2nV24ChgHlHr-MhL9k7K9E?usp=sharing'
     }
   ];
 
@@ -100,7 +108,7 @@ const Downloads = ({ audioControls, auth, tournamentData }) => {
 
     console.log('Buscando jugador con userId:', auth.currentUser?.id);
     console.log('Buscando jugador con playerId:', auth.currentUser?.playerId);
-    
+
     // Buscar por playerId si existe, si no buscar por userId
     let player = null;
     if (auth.currentUser?.playerId) {
@@ -109,9 +117,9 @@ const Downloads = ({ audioControls, auth, tournamentData }) => {
       // Buscar por userId
       player = (tournamentData.players || []).find(p => p.userId === auth.currentUser?.id);
     }
-    
+
     console.log('Jugador encontrado:', player);
-    
+
     if (!player) {
       alert('⚠️ No se encontró tu personaje en el torneo. Debes crear un personaje primero en la sección JUGADORES.');
       return;
@@ -159,15 +167,17 @@ const Downloads = ({ audioControls, auth, tournamentData }) => {
       <div className="downloads-grid">
         {downloadLinks.map(item => (
           <div key={item.id} className="download-card pixel-card">
-            <div className="download-icon">{item.icon}</div>
-            
+            <div className="download-icon">
+              <img src={item.icon} alt={item.title} className="pokemon-sprite" />
+            </div>
+
             <div className="download-info">
               <h3 className="download-title">{item.title}</h3>
               <span className="download-platform">{item.platform}</span>
               <p className="download-description">{item.description}</p>
             </div>
 
-            <button 
+            <button
               className="pixel-button download-btn"
               onClick={() => handleDownload(item)}
             >
@@ -245,7 +255,7 @@ const Downloads = ({ audioControls, auth, tournamentData }) => {
           <div className="modal-content rom-modal pixel-card" onClick={(e) => e.stopPropagation()}>
             <h2>🔥 SELECCIÓN DE ROM</h2>
             <p className="modal-subtitle">Elige un número del 1 al 20 para tu ROM</p>
-            
+
             {/* Info del usuario actual */}
             {auth.currentUser && (() => {
               // Buscar por playerId si existe, si no buscar por userId
@@ -257,7 +267,7 @@ const Downloads = ({ audioControls, auth, tournamentData }) => {
               }
               return (
                 <div style={{ background: currentPlayer ? '#e3f2fd' : '#fff3cd', padding: '0.75rem', borderRadius: '8px', marginBottom: '1rem', textAlign: 'center' }}>
-                  <strong>Seleccionando para:</strong> {currentPlayer?.name || '⚠️ Sin personaje'} 
+                  <strong>Seleccionando para:</strong> {currentPlayer?.name || '⚠️ Sin personaje'}
                   <span style={{ fontSize: '0.75rem', color: '#666', marginLeft: '0.5rem' }}>
                     ({auth.currentUser.username})
                   </span>
