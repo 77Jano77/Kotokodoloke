@@ -1012,41 +1012,39 @@ const Resources = ({ audioControls, tournamentData, auth, resourceAction, setRes
             </button>
 
             <h2>🎮 GUÍA DE CONEXIÓN ONLINE</h2>
-            <p className="guide-intro">Sigue estos pasos para conectar dos emuladores GBA y jugar Pokémon online</p>
+            <p className="guide-intro">Guía rápida para conectar mGBA usando el script GBA-PK-multiplayer y Radmin VPN</p>
 
             <div className="connection-steps">
               <div className="step-item">
                 <div className="step-number">1</div>
                 <div className="step-content">
-                  <h3>Instalar Radmin VPN</h3>
-                  <p>Descarga e instala <strong>Radmin VPN</strong> desde su página oficial (es gratis).</p>
-                  <a href="https://www.radmin-vpn.com/" target="_blank" rel="noopener noreferrer" className="pixel-button download-link">
-                    🔗 Ir a Radmin VPN
-                  </a>
+                  <h3>Preparación de Red (Radmin)</h3>
+                  <p><strong>Host (Jugador A):</strong> Crea una red en Radmin VPN y dile el nombre y contraseña a tu amigo.</p>
+                  <p><strong>Cliente (Jugador B):</strong> Únete a la red de tu amigo.</p>
+                  <div className="connection-data">
+                    <div><strong>⚠️ Importante:</strong> El Jugador B debe copiar la IP de Radmin del Jugador A (el Host).</div>
+                  </div>
                 </div>
               </div>
 
               <div className="step-item">
                 <div className="step-number">2</div>
                 <div className="step-content">
-                  <h3>Unirse a la red</h3>
-                  <p>Abre Radmin VPN y únete a la red con estos datos:</p>
-                  <div className="connection-data">
-                    <div><strong>Red:</strong> <code>Kotokodos Cup</code></div>
-                    <div><strong>Contraseña:</strong> <code>Somalia</code></div>
-                  </div>
+                  <h3>Preparación del Emulador</h3>
+                  <p>Ambos deben abrir <strong>mGBA</strong> y cargar la misma ROM de Pokémon Rojo Fuego.</p>
+                  <p><strong>💡 Consejo:</strong> Guarden partida dentro de un Centro Pokémon para que sea más rápido.</p>
                 </div>
               </div>
 
               <div className="step-item">
                 <div className="step-number">3</div>
                 <div className="step-content">
-                  <h3>Copiar IP del host</h3>
-                  <p>El jugador que va a ser el <strong>anfitrión</strong> debe:</p>
+                  <h3>Cargar el Script LUA</h3>
+                  <p>Ambos deben hacer lo siguiente:</p>
                   <ul>
-                    <li>Ver su IP en Radmin VPN (aparece junto a tu nombre)</li>
-                    <li>Copiar esa IP (ejemplo: 26.123.45.67)</li>
-                    <li>Compartirla con el otro jugador</li>
+                    <li>En el menú superior de mGBA, ve a <strong>Herramientas (Tools)</strong> → <strong>Scripting</strong></li>
+                    <li>Se abrirá una ventana pequeña. Haz clic en <strong>Archivo (File)</strong> → <strong>Cargar script (Load script)</strong></li>
+                    <li>Selecciona el archivo <code>.lua</code> que descargaron</li>
                   </ul>
                 </div>
               </div>
@@ -1054,46 +1052,45 @@ const Resources = ({ audioControls, tournamentData, auth, resourceAction, setRes
               <div className="step-item">
                 <div className="step-number">4</div>
                 <div className="step-content">
-                  <h3>Configurar emulador (VBA Link)</h3>
-                  <p>Ambos jugadores deben usar <strong>VisualBoy Advance Link</strong>:</p>
+                  <h3>La Conexión (El paso clave)</h3>
+                  <p>Ahora las configuraciones son distintas para cada uno:</p>
+                  <p><strong>Jugador A (HOST):</strong></p>
                   <ul>
-                    <li><strong>Primero:</strong> Options → Link → Type → <strong>Game Boy Advance</strong></li>
-                    <li><strong>Host:</strong> Options → Link → Start Network Link → Server</li>
-                    <li><strong>Cliente:</strong> Options → Link → Start Network Link → Client → Introducir IP del host</li>
+                    <li>En la ventana del script, selecciona la pestaña o modo <strong>Server</strong> (o "Host")</li>
+                    <li>Deja el puerto que viene por defecto (normalmente <code>1234</code>)</li>
+                    <li>Haz clic en <strong>Listen</strong> o <strong>Start Server</strong></li>
                   </ul>
+                  <p><strong>Jugador B (CLIENTE):</strong></p>
+                  <ul>
+                    <li>En la ventana del script, selecciona la pestaña o modo <strong>Client</strong></li>
+                    <li>Donde pide la IP, pega la IP de Radmin del Jugador A</li>
+                    <li>Usa el mismo puerto (<code>1234</code>)</li>
+                    <li>Haz clic en <strong>Connect</strong></li>
+                  </ul>
+                  <p>Si lo hicieron bien, en la consola del script debería aparecer un mensaje como <code>"Connected to peer"</code>.</p>
                 </div>
               </div>
 
               <div className="step-item">
                 <div className="step-number">5</div>
                 <div className="step-content">
-                  <h3>Conectar en el juego</h3>
-                  <p>Una vez conectados los emuladores:</p>
+                  <h3>Dentro del Juego</h3>
                   <ul>
-                    <li>Entra al <strong>Centro Pokémon</strong> en el juego</li>
-                    <li>Ve al segundo piso</li>
-                    <li>Habla con la mujer del centro</li>
-                    <li>Selecciona la opción de intercambio/combate por cable</li>
+                    <li>Suban al segundo piso de cualquier <strong>Centro Pokémon</strong></li>
+                    <li>Hablen al mismo tiempo con la chica del medio (Club de Enlace de Cable Link)</li>
+                    <li>Elijan <strong>Centro de Batalla</strong> o <strong>Centro de Cambio</strong></li>
+                    <li>El juego detectará la conexión como si tuvieran el cable físico puesto</li>
                   </ul>
-                </div>
-              </div>
-
-              <div className="step-item">
-                <div className="step-number">6</div>
-                <div className="step-content">
-                  <h3>¡A jugar!</h3>
-                  <p>Si todo salió bien, deberías poder intercambiar o combatir. ¡Disfruta el torneo! 🏆</p>
                 </div>
               </div>
             </div>
 
             <div className="guide-tips">
-              <h3>💡 CONSEJOS</h3>
+              <h3>💡 TIPS DE ERRORES COMUNES</h3>
               <ul>
-                <li>Asegúrate de que ambos jugadores estén en la misma red de Radmin VPN</li>
-                <li>Si no conecta, revisa que el firewall no esté bloqueando el emulador</li>
-                <li>Usa la misma versión del ROM (Fire Red o Leaf Green)</li>
-                <li>Guarda antes de intentar conectar por si hay problemas</li>
+                <li><strong>Firewall:</strong> Si no conecta, asegúrense de que el Firewall de Windows no esté bloqueando a mGBA</li>
+                <li><strong>Versión del Script:</strong> Asegúrense de que ambos estén usando exactamente el mismo archivo .lua</li>
+                <li><strong>Velocidad:</strong> No usen el botón de "Fast Forward" (acelerar el juego) mientras están conectados, ya que esto desincroniza la conexión y les dará error</li>
               </ul>
             </div>
           </div>
