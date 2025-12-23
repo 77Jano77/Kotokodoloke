@@ -2308,3 +2308,38 @@
 }
 
      
+
+/* Death marker icon for captured Pokemon */
+.death-marker-icon {
+  position: absolute;
+  top: 5px;
+  left: 5px;
+  font-size: 1.2rem;
+  cursor: pointer;
+  background: rgba(0, 0, 0, 0.7);
+  border-radius: 50%;
+  width: 28px;
+  height: 28px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s;
+  z-index: 100;
+  user-select: none;
+}
+
+.death-marker-icon:hover {
+  transform: scale(1.2);
+  background: rgba(255, 0, 0, 0.8);
+}
+
+/* Captured sprite container needs position relative */
+.captured-sprite {
+  position: relative;
+  display: inline-block;
+}
+
+/* Pokemon sprite container needs position relative for death marker */
+.pokemon-sprite-container {
+  position: relative;
+}

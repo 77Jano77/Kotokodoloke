@@ -916,6 +916,13 @@ const Players = ({ tournamentData, audioControls, auth }) => {
                                     return capPokemonData && capPokemonData.name === pokemonName;
                                   });
 
+                                  console.log('🔍 DEBUG CALAVERA EQUIPO:', {
+                                    pokemonName,
+                                    canEdit,
+                                    captured: captured ? 'EXISTE' : 'NULL',
+                                    isDead: captured?.isDead
+                                  });
+
                                   // Usar identificador basado en zona de captura si existe, sino usar genérico
                                   const pokemonIdentifier = captured
                                     ? `captured-${player.id}-${captured.pokemon}-${captured.zone}`
@@ -929,6 +936,22 @@ const Players = ({ tournamentData, audioControls, auth }) => {
                                         alt={pokemonData.name}
                                         className="pokemon-team-sprite"
                                       />
+
+                                      {/* Botón de calavera para marcar como muerto */}
+                                      {canEdit && captured && !captured.isDead && (
+                                        <div
+                                          className="death-marker-icon"
+                                          onClick={(e) => {
+                                            e.stopPropagation();
+                                            tournamentData.togglePokemonDeathStatus(captured);
+                                            alert('⚰️ Pokémon marcado como muerto');
+                                          }}
+                                          title="Marcar como muerto"
+                                        >
+                                          💀
+                                        </div>
+                                      )}
+
                                       {hasInsurance && (
                                         <div
                                           className="death-insurance-badge"
@@ -1069,154 +1092,120 @@ const Players = ({ tournamentData, audioControls, auth }) => {
                     </div>
                     {(player.rewards || []).length > 0 ? (
                       <ul className="rewards-list">
-                        {(() => {
-                          const displayRewards = [];
+                        {(player.rewards || []).map((reward, rewardIndex) => {
+                          // Manejar tanto formato string (legacy) como objeto (nuevo)
+                          const rewardText = typeof reward === 'string' ? reward : reward.text;
+                          const isInsuranceReward = (typeof reward === 'object' && reward.isInsurance) || rewardText?.includes('🛡️ Seguro de Muerte');
+                          const isExtraItem = typeof reward === 'object' && reward.isExtraItem;
                           const deletedInsurances = player.deletedInsurances || [];
 
-                          (player.rewards || []).forEach((reward, index) => {
-                            // Manejar tanto formato string (legacy) como objeto (nuevo)
-                            const rewardText = typeof reward === 'string' ? reward : reward.text;
-                            const isInsuranceReward = (typeof reward === 'object' && reward.isInsurance) || rewardText?.includes('🛡️ Seguro de Muerte');
-                            const isExtraItem = typeof reward === 'object' && reward.isExtraItem;
+                          // Ocultar seguros eliminados
+                          if (isInsuranceReward && deletedInsurances.includes(rewardText)) {
+                            return null;
+                          }
 
-                            if (isInsuranceReward) {
-                              // Solo mostrar si no ha sido eliminado
-                              if (!deletedInsurances.includes(rewardText)) {
-                                displayRewards.push({
-                                  originalIndex: index,
-                                  displayText: rewardText,
-                                  isInsurance: true,
-                                  insuranceId: typeof reward === 'object' ? reward.insuranceId : rewardText
-                                });
-                              }
-                            } else {
-                              // Para items extra, usar el texto completo con descripción si existe
-                              const fullText = typeof reward === 'object' && reward.text ? reward.text : rewardText;
-                              displayRewards.push({
-                                originalIndex: index,
-                                displayText: fullText,
-                                isExtraItem: isExtraItem,
-                                itemNumber: typeof reward === 'object' ? reward.itemNumber : null,
-                                purchaseDescription: typeof reward === 'object' ? reward.purchaseDescription : null,
-                                insuranceId: null,
-                                isInsurance: false
-                              });
-                            }
-                          });
+                          // Determinar si la recompensa ha sido usada
+                          let isUsed;
+                          if (isInsuranceReward) {
+                            // Para seguros, verificar si este insuranceId específico está en algún deathInsurance
+                            const insuranceId = typeof reward === 'object' ? reward.insuranceId : rewardText;
+                            const deathInsurances = player.deathInsurances || [];
+                            isUsed = deathInsurances.some(ins => ins.insuranceId === insuranceId);
+                          } else {
+                            // Para otras recompensas, usar el sistema normal
+                            isUsed = (player.usedRewards || []).includes(rewardIndex);
+                          }
 
-                          return displayRewards.map((item, displayIndex) => {
-                            // Para seguros, verificar si este seguro específico ha sido usado
-                            let isUsed;
-                            if (item.isInsurance) {
-                              // Verificar si este insuranceId específico está en algún deathInsurance
-                              const deathInsurances = player.deathInsurances || [];
-                              isUsed = deathInsurances.some(ins => ins.insuranceId === item.insuranceId);
-                            } else {
-                              // Para otras recompensas, usar el sistema normal
-                              isUsed = (player.usedRewards || []).includes(item.originalIndex);
-                            }
+                          const fullText = typeof reward === 'object' && reward.text ? reward.text : rewardText;
+                          const insuranceId = typeof reward === 'object' ? reward.insuranceId : (isInsuranceReward ? rewardText : null);
+                          const purchaseDescription = typeof reward === 'object' ? reward.purchaseDescription : null;
 
-                            return (
-                              <li key={`${item.originalIndex}-${displayIndex}`} className={`reward-item ${isUsed ? 'used' : ''} ${item.isInsurance ? 'insurance-item' : ''}`}>
-                                <div className="reward-content">
-                                  {canEdit && !item.isInsurance && (
-                                    <input
-                                      type="checkbox"
-                                      className="reward-checkbox"
-                                      checked={isUsed}
-                                      onChange={() => tournamentData.toggleRewardUsed(player.id, item.originalIndex)}
-                                      title={isUsed ? "Marcar como no usada" : "Marcar como usada"}
+                          return (
+                            <li key={rewardIndex} className={`reward-item ${isUsed ? 'used' : ''} ${isInsuranceReward ? 'insurance-item' : ''}`}>
+                              <div className="reward-content">
+                                {canEdit && !isInsuranceReward && (
+                                  <input
+                                    type="checkbox"
+                                    className="reward-checkbox"
+                                    checked={isUsed}
+                                    onChange={() => tournamentData.toggleRewardUsed(player.id, rewardIndex)}
+                                    title={isUsed ? "Marcar como no usada" : "Marcar como usada"}
+                                  />
+                                )}
+                                <span
+                                  className={`reward-text ${isInsuranceReward && !isUsed ? 'clickable-insurance' : ''} ${(fullText.includes('Revivir') || fullText.includes('💚')) && !isUsed ? 'clickable-revive' : ''} ${isExtraItem && !isUsed ? 'clickable-extra-item' : ''} ${isExtraItem && isUsed ? 'used-extra-item' : ''}`}
+                                  onClick={() => {
+                                    if (isInsuranceReward && !isUsed && canEdit) {
+                                      // Abrir modal para aplicar este seguro específico
+                                      setShowDeathInsuranceModal({
+                                        playerId: player.id,
+                                        playerName: player.name,
+                                        insuranceId: insuranceId
+                                      });
+                                    } else if ((fullText.includes('Revivir') || fullText.includes('💚')) && !isUsed && canEdit) {
+                                      // Abrir modal para resucitar pokémon
+                                      setShowReviveModal({
+                                        playerId: player.id,
+                                        playerName: player.name,
+                                        rewardIndex: rewardIndex,
+                                        rewardId: fullText
+                                      });
+                                    } else if (isExtraItem && !isUsed && canEdit) {
+                                      // Prompt para objeto extra
+                                      const purchase = prompt('¿Qué objeto has comprado?');
+                                      if (purchase && purchase.trim()) {
+                                        const updatedRewards = player.rewards.map((r, idx) =>
+                                          idx === rewardIndex
+                                            ? { ...r, purchaseDescription: purchase.trim() }
+                                            : r
+                                        );
+                                        tournamentData.updatePlayer(player.id, { rewards: updatedRewards });
+                                        alert(`✅ Objeto guardado: ${purchase.trim()}`);
+                                      }
+                                    }
+                                  }}
+                                  title={isInsuranceReward && !isUsed ? "Click para aplicar este seguro a un Pokémon" : (fullText.includes('Revivir') || fullText.includes('💚')) && !isUsed ? "Click para resucitar un Pokémon muerto" : isExtraItem && !isUsed ? "Click para registrar tu compra" : ""}
+                                >
+                                  {getRewardIcon(fullText) && (
+                                    <img
+                                      src={getRewardIcon(fullText)}
+                                      alt=""
+                                      className="reward-icon-small"
                                     />
                                   )}
-                                  <span
-                                    className={`reward-text ${item.isInsurance && !isUsed ? 'clickable-insurance' : ''} ${(item.displayText.includes('Revivir') || item.displayText.includes('💚')) && !isUsed ? 'clickable-revive' : ''} ${item.isExtraItem && !isUsed ? 'clickable-extra-item' : ''} ${item.isExtraItem && isUsed ? 'used-extra-item' : ''}`}
-                                    onClick={() => {
-                                      if (item.isInsurance && !isUsed && canEdit) {
-                                        // Abrir modal para aplicar este seguro específico
-                                        setShowDeathInsuranceModal({
-                                          playerId: player.id,
-                                          playerName: player.name,
-                                          insuranceId: item.insuranceId
-                                        });
-                                      } else if ((item.displayText.includes('Revivir') || item.displayText.includes('💚')) && !isUsed && canEdit) {
-                                        // Abrir modal para resucitar pokémon
-                                        setShowReviveModal({
-                                          playerId: player.id,
-                                          playerName: player.name,
-                                          rewardIndex: item.originalIndex,
-                                          rewardId: item.displayText
-                                        });
-                                      } else if (item.isExtraItem && !isUsed && canEdit) {
-                                        // Prompt para objeto extra
-                                        const purchase = prompt('¿Qué objeto has comprado?');
-                                        if (purchase && purchase.trim()) {
-                                          const updatedRewards = player.rewards.map((r, idx) =>
-                                            idx === item.originalIndex
-                                              ? { ...r, purchaseDescription: purchase.trim() }
-                                              : r
-                                          );
-                                          tournamentData.updatePlayer(player.id, { rewards: updatedRewards });
-                                          alert(`✅ Objeto guardado: ${purchase.trim()}`);
-                                        }
-                                      }
-                                    }}
-                                    title={item.isInsurance && !isUsed ? "Click para aplicar este seguro a un Pokémon" : (item.displayText.includes('Revivir') || item.displayText.includes('💚')) && !isUsed ? "Click para resucitar un Pokémon muerto" : item.isExtraItem && !isUsed ? "Click para registrar tu compra" : ""}
-                                  >
-                                    {getRewardIcon(item.displayText) && (
-                                      <img
-                                        src={getRewardIcon(item.displayText)}
-                                        alt=""
-                                        className="reward-icon-small"
-                                      />
-                                    )}
-                                    {isUsed && item.isInsurance && '✅ '}
-                                    {item.displayText.replace(/🛒|➕|🔙|💚|🛡️/g, '').trim()}
-                                    {item.purchaseDescription ? ` (${item.purchaseDescription})` : ''}
-                                  </span>
-                                </div>
-                                {/* Admin puede eliminar seguros */}
-                                {isAdmin && item.isInsurance && (
-                                  <button
-                                    className="remove-reward-btn"
-                                    onClick={() => {
-                                      if (confirm(`¿Eliminar el seguro "${item.displayText}"?${isUsed ? ' Esto también eliminará el seguro del Pokémon que lo tenga.' : ''}`)) {
-                                        if (isUsed) {
-                                          // Encontrar y eliminar el seguro del Pokémon
-                                          const deathInsurances = player.deathInsurances || [];
-                                          const insuranceToRemove = deathInsurances.find(ins => ins.insuranceId === item.insuranceId);
-                                          if (insuranceToRemove) {
-                                            tournamentData.removeDeathInsurance(player.id, insuranceToRemove.identifier);
-                                          }
-                                        }
+                                  {isUsed && isInsuranceReward && '✅ '}
+                                  {fullText.replace(/🛒|➕|🔙|💚|🛡️/g, '').trim()}
+                                  {purchaseDescription ? ` (${purchaseDescription})` : ''}
+                                </span>
+                              </div>
+                              {/* Solo admin puede eliminar recompensas */}
+                              {isAdmin && (
+                                <button
+                                  className="remove-reward-btn"
+                                  onClick={(e) => {
+                                    e.stopPropagation();
 
-                                        // Eliminar el item de la lista de recompensas
-                                        handleRemoveReward(player.id, item.originalIndex);
-                                        alert('✅ Seguro eliminado correctamente');
+                                    if (isInsuranceReward && isUsed) {
+                                      // Encontrar y eliminar el seguro del Pokémon
+                                      const deathInsurances = player.deathInsurances || [];
+                                      const insuranceToRemove = deathInsurances.find(ins => ins.insuranceId === insuranceId);
+                                      if (insuranceToRemove) {
+                                        tournamentData.removeDeathInsurance(player.id, insuranceToRemove.identifier);
                                       }
-                                    }}
-                                    title={`Eliminar seguro (Admin)${isUsed ? ' - Usado' : ' - Disponible'}`}
-                                  >
-                                    ✕
-                                  </button>
-                                )}
-                                {canEdit && !item.isInsurance && (
-                                  <button
-                                    className="remove-reward-btn"
-                                    onClick={() => {
-                                      if (confirm(`¿Eliminar la recompensa "${item.displayText}"?`)) {
-                                        handleRemoveReward(player.id, item.originalIndex);
-                                        alert('✅ Recompensa eliminada correctamente');
-                                      }
-                                    }}
-                                    title="Eliminar recompensa"
-                                  >
-                                    ✕
-                                  </button>
-                                )}
-                              </li>
-                            );
-                          });
-                        })()}
+                                    }
+
+                                    // Eliminar el item de la lista de recompensas
+                                    handleRemoveReward(player.id, rewardIndex);
+                                    alert('✅ Recompensa eliminada correctamente');
+                                  }}
+                                  title={isInsuranceReward ? `Eliminar seguro (Admin)${isUsed ? ' - Usado' : ' - Disponible'}` : "Eliminar recompensa (Admin)"}
+                                >
+                                  ✕
+                                </button>
+                              )}
+                            </li>
+                          );
+                        })}
                       </ul>
                     ) : (
                       <p className="no-rewards">SIN RECOMPENSAS</p>
@@ -1335,11 +1324,10 @@ const Players = ({ tournamentData, audioControls, auth }) => {
                           {canEdit && !pokemon.isDead && (
                             <div
                               className="death-marker-icon"
-                              onClick={() => {
-                                if (confirm(`¿${pokemon.nickname || (pokemonData ? pokemonData.name : 'Este Pokémon')} ha muerto?`)) {
-                                  tournamentData.togglePokemonDeathStatus(pokemon);
-                                  alert('⚰️ Pokémon marcado como muerto');
-                                }
+                              onClick={(e) => {
+                                e.stopPropagation();
+                                tournamentData.togglePokemonDeathStatus(pokemon);
+                                alert('⚰️ Pokémon marcado como muerto');
                               }}
                               title="Marcar como muerto"
                             >
