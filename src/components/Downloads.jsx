@@ -8,6 +8,7 @@ const Downloads = ({ audioControls, auth, tournamentData }) => {
   const [showRomModal, setShowRomModal] = useState(false);
   const [selectedNumber, setSelectedNumber] = useState('');
   const [showMediaModal, setShowMediaModal] = useState(false);
+  const [showEmulatorModal, setShowEmulatorModal] = useState(false);
 
   useEffect(() => {
     if (audioRef.current) {
@@ -51,7 +52,8 @@ const Downloads = ({ audioControls, auth, tournamentData }) => {
       platform: 'Windows/Mac/Linux',
       icon: '/sprites/pokemon/porygon.png',
       description: 'Emulador para jugar Pokémon GBA',
-      link: 'https://drive.google.com/drive/folders/1Z6o-fGIKCEfEC55hwgW-0jOULh0se3XN?usp=sharing'
+      link: null,
+      type: 'emulator'
     },
     {
       id: 2,
@@ -107,6 +109,8 @@ const Downloads = ({ audioControls, auth, tournamentData }) => {
       setShowRomModal(true);
     } else if (item.type === 'media') { // SERIES Y PELÍCULAS
       setShowMediaModal(true);
+    } else if (item.type === 'emulator') { // EMULADOR
+      setShowEmulatorModal(true);
     } else {
       window.open(item.link, '_blank');
     }
@@ -411,6 +415,62 @@ const Downloads = ({ audioControls, auth, tournamentData }) => {
             <button
               className="pixel-button-secondary"
               onClick={() => setShowMediaModal(false)}
+              style={{ marginTop: '1rem' }}
+            >
+              ✕ CANCELAR
+            </button>
+          </div>
+        </div>
+      )}
+
+      {/* Emulator Selection Modal */}
+      {showEmulatorModal && (
+        <div className="modal-overlay" onClick={() => setShowEmulatorModal(false)}>
+          <div className="modal-content media-modal pixel-card" onClick={(e) => e.stopPropagation()}>
+            <h2>🎮 ELIGE TU DESCARGA</h2>
+            <p className="modal-subtitle">¿Qué necesitas descargar?</p>
+
+            <div className="media-options">
+              <button
+                className="media-option-btn pixel-button"
+                onClick={() => {
+                  window.open('https://github.com/mgba-emu/mgba/releases/download/0.10.5/mGBA-0.10.5-win32.7z', '_blank');
+                  setShowEmulatorModal(false);
+                }}
+              >
+                <div className="media-icon">💻</div>
+                <div className="media-title">EMULADOR mGBA</div>
+                <div className="media-description">Emulador principal v0.10.5</div>
+              </button>
+
+              <button
+                className="media-option-btn pixel-button"
+                onClick={() => {
+                  window.open('https://drive.google.com/file/d/1yVHk2n4B9PDVtC2mc2FzNq-rKEPLoGF-/view?usp=sharing', '_blank');
+                  setShowEmulatorModal(false);
+                }}
+              >
+                <div className="media-icon">🖥️</div>
+                <div className="media-title">LUA SERVER</div>
+                <div className="media-description">Para hospedar partidas multijugador</div>
+              </button>
+
+              <button
+                className="media-option-btn pixel-button"
+                onClick={() => {
+                  window.open('https://drive.google.com/file/d/1jqXNoHKQqlowacVsp_KNqpkuX-HLpAU6/view?usp=sharing', '_blank');
+                  setShowEmulatorModal(false);
+                }}
+              >
+                <div className="media-icon">👥</div>
+                <div className="media-title">LUA CLIENT</div>
+                <div className="media-description">Para unirse a partidas multijugador</div>
+              </button>
+            </div>
+
+            <button
+              className="pixel-button-secondary"
+              onClick={() => setShowEmulatorModal(false)}
               style={{ marginTop: '1rem' }}
             >
               ✕ CANCELAR
