@@ -7,6 +7,7 @@ const Downloads = ({ audioControls, auth, tournamentData }) => {
   const [romSelections, setRomSelections] = useState([]);
   const [showRomModal, setShowRomModal] = useState(false);
   const [selectedNumber, setSelectedNumber] = useState('');
+  const [showMediaModal, setShowMediaModal] = useState(false);
 
   useEffect(() => {
     if (audioRef.current) {
@@ -86,19 +87,12 @@ const Downloads = ({ audioControls, auth, tournamentData }) => {
     },
     {
       id: 6,
-      title: 'SERIES',
+      title: 'SERIES Y PELÍCULAS',
       platform: 'Ver Online',
       icon: '/sprites/pokemon/lugia.png',
-      description: 'Ver episodios de Pokémon',
-      link: 'https://pkproject.net/episodios/'
-    },
-    {
-      id: 7,
-      title: 'PELÍCULAS',
-      platform: 'Ver Online',
-      icon: '/sprites/pokemon/lugia.png',
-      description: 'Ver películas de Pokémon',
-      link: 'https://pkproject.net/peliculas/'
+      description: 'Disfruta de series y películas Pokémon',
+      link: null,
+      type: 'media'
     }
   ];
 
@@ -111,6 +105,8 @@ const Downloads = ({ audioControls, auth, tournamentData }) => {
       console.log('Usuario actual:', auth.currentUser);
       console.log('Jugadores disponibles:', tournamentData.players);
       setShowRomModal(true);
+    } else if (item.type === 'media') { // SERIES Y PELÍCULAS
+      setShowMediaModal(true);
     } else {
       window.open(item.link, '_blank');
     }
@@ -375,6 +371,50 @@ const Downloads = ({ audioControls, auth, tournamentData }) => {
                 ✕ CANCELAR
               </button>
             </div>
+          </div>
+        </div>
+      )}
+
+      {/* Media Selection Modal (Series/Películas) */}
+      {showMediaModal && (
+        <div className="modal-overlay" onClick={() => setShowMediaModal(false)}>
+          <div className="modal-content media-modal pixel-card" onClick={(e) => e.stopPropagation()}>
+            <h2>🎬 ELIGE TU CONTENIDO</h2>
+            <p className="modal-subtitle">¿Qué quieres ver?</p>
+
+            <div className="media-options">
+              <button
+                className="media-option-btn pixel-button"
+                onClick={() => {
+                  window.open('https://pkproject.net/episodios/', '_blank');
+                  setShowMediaModal(false);
+                }}
+              >
+                <div className="media-icon">📺</div>
+                <div className="media-title">SERIES</div>
+                <div className="media-description">Ver episodios de Pokémon</div>
+              </button>
+
+              <button
+                className="media-option-btn pixel-button"
+                onClick={() => {
+                  window.open('https://pkproject.net/peliculas/', '_blank');
+                  setShowMediaModal(false);
+                }}
+              >
+                <div className="media-icon">🎥</div>
+                <div className="media-title">PELÍCULAS</div>
+                <div className="media-description">Ver películas de Pokémon</div>
+              </button>
+            </div>
+
+            <button
+              className="pixel-button-secondary"
+              onClick={() => setShowMediaModal(false)}
+              style={{ marginTop: '1rem' }}
+            >
+              ✕ CANCELAR
+            </button>
           </div>
         </div>
       )}
