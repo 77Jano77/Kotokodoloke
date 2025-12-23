@@ -75,6 +75,30 @@ const Downloads = ({ audioControls, auth, tournamentData }) => {
       icon: '/sprites/pokemon/ditto.png',
       description: 'Más juegos de Pokémon para explorar',
       link: 'https://drive.google.com/drive/folders/1A_n6XjOXfg2nV24ChgHlHr-MhL9k7K9E?usp=sharing'
+    },
+    {
+      id: 5,
+      title: 'MANGAS POKÉMON',
+      platform: 'Lectura Online',
+      icon: '/sprites/pokemon/poliwhirl.png',
+      description: 'Lee los mangas de Pokémon Adventures',
+      link: 'https://pkproject.net/manga/pokemon-adventures/sagas'
+    },
+    {
+      id: 6,
+      title: 'SERIES',
+      platform: 'Ver Online',
+      icon: '/sprites/pokemon/lugia.png',
+      description: 'Ver episodios de Pokémon',
+      link: 'https://pkproject.net/episodios/'
+    },
+    {
+      id: 7,
+      title: 'PELÍCULAS',
+      platform: 'Ver Online',
+      icon: '/sprites/pokemon/lugia.png',
+      description: 'Ver películas de Pokémon',
+      link: 'https://pkproject.net/peliculas/'
     }
   ];
 
